@@ -28,6 +28,23 @@
 <!-- TODO: Discord Group -->
 </div>
 
+---
+
+## **Disclaimer - Project under construction**
+This project is currently under early stages of construction.
+
+It is **not recommended** to use it yet due to possible:
+- bugs
+- malfunctions
+- starting problems
+- security flaws
+
+### Statuses
+* Backend: early develop stages.
+* Frontend: not started.
+
+---
+
 ## Technologies Used
 Inventio is built using the following technologies:
 
