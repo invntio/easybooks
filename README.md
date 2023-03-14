@@ -71,7 +71,7 @@ npm install
 
     Note: Inventio uses PostgreSQL as its default database. You can configure your own database by setting the environment variables in the .env file.
 
-``` makefile
+``` dosini
 DATABASE_HOST=your_database_host
 DATABASE_PORT=your_database_port
 DATABASE_NAME=your_database_name
@@ -81,7 +81,7 @@ DATABASE_PASSWORD=your_database_password
 
 Alternatively, you can use the default values:
 
-``` makefile
+``` dosini
 DATABASE_HOST=localhost
 DATABASE_PORT=5432
 DATABASE_NAME=inventio
