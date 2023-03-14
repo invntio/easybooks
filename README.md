@@ -16,7 +16,6 @@
 [![Inventio](https://img.shields.io/website?url=https%3A%2F%2Finventio.github.io)](https://inventio.github.io)
 [![Docs](https://img.shields.io/badge/docs-open%20source-orange.svg)](https://inventio.github.io)
 [![GitHub issues](https://img.shields.io/github/issues/vvelc/inventio)](https://github.com/vvelc/inventio/issues)
-[![Dependency status](https://deps.rs/repo/github/vvelc/inventio/status.svg)](https://deps.rs/repo/github/vvelc/inventio) 
 ![Build status](https://img.shields.io/github/actions/workflow/status/vvelc/inventio/build.yml)
 [![Known Vulnerabilities](https://img.shields.io/snyk/vulnerabilities/github/vvelc/inventio)](https://snyk.io/test/github/vvelc/inventio)
 [![License: MIT](https://img.shields.io/github/license/vvelc/inventio)](https://opensource.org/licenses/MIT)
