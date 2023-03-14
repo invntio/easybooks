@@ -31,6 +31,8 @@
 ## Technologies Used
 Inventio is built using the following technologies:
 
+<!-- TODO: Change names to badges-->
+
 * Backend: NestJS
 * Frontend: Angular
 * Database: PostgreSQL
@@ -53,8 +55,6 @@ Clone the project repository to your local machine:
 ``` bash
 git clone https://github.com/yourusername/inventory-management-system.git
 ```
-
-After downloading the project, follow the next steps.
 
 ### Backend
 
