@@ -31,23 +31,35 @@
 ## Technologies Used
 Inventio is built using the following technologies:
 
-<!-- TODO: Change names to badges-->
+### Backend
+[![NestJS](https://img.shields.io/badge/nestjs-%23E0234E.svg?style=for-the-badge&logo=nestjs&logoColor=white)](https://nestjs.com)
 
-* Backend: NestJS
-* Frontend: Angular
-* Database: PostgreSQL
-* Containerization: Docker and Kubernetes
-* CI/CD: GitHub Actions and ArgoCD
-* Hosting: Netlify and DigitalOcean
+### Frontend
+[![Angular](https://img.shields.io/badge/angular-%23DD0031.svg?style=for-the-badge&logo=angular&logoColor=white)](https://angular.io)
+
+### Database
+[![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+
+### Containerization
+[![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)](https://docker.com)
+[![Kubernetes](https://img.shields.io/badge/kubernetes-%23326ce5.svg?style=for-the-badge&logo=kubernetes&logoColor=white)](https://kubernetes.io)
+
+### CI/CD
+[![GitHub Actions](https://img.shields.io/badge/github%20actions-%232671E5.svg?style=for-the-badge&logo=githubactions&logoColor=white)](https://github.com/features/actions)
+[![ArgoCD](https://img.shields.io/badge/argoCD-%23103D66.svg?style=for-the-badge&logo=argo&logoColor=white)](https://argoproj.github.io/cd/)
+
+### Hosting
+[![Netlify](https://img.shields.io/badge/netlify-%23000000.svg?style=for-the-badge&logo=netlify&logoColor=#00C7B7)](https://netlify.com/)
+[![DigitalOcean](https://img.shields.io/badge/DigitalOcean-%230167ff.svg?style=for-the-badge&logo=digitalOcean&logoColor=white)](https://www.digitalocean.com/)
 
 ## Installation
 To get started with Inventio, follow these steps:
 
 ### Requirements
 Before installing Inventio, make sure you have the following requirements:
-* Node.js
-* NestJS CLI
-* Angular CLI
+* [Node.js](https://nodejs.org/)
+* [NestJS CLI](https://docs.nestjs.com/)
+* [Angular CLI](https://angular.io/cli)
 
 ### Download
 Clone the project repository to your local machine:
@@ -71,7 +83,7 @@ npm install
 
     Note: Inventio uses PostgreSQL as its default database. You can configure your own database by setting the environment variables in the .env file.
 
-``` makefile
+``` dosini
 DATABASE_HOST=your_database_host
 DATABASE_PORT=your_database_port
 DATABASE_NAME=your_database_name
@@ -81,7 +93,7 @@ DATABASE_PASSWORD=your_database_password
 
 Alternatively, you can use the default values:
 
-``` makefile
+``` dosini
 DATABASE_HOST=localhost
 DATABASE_PORT=5432
 DATABASE_NAME=inventio
