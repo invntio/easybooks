@@ -7,26 +7,32 @@ assignees: ''
 
 ---
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+**Thank you in advance for helping us to improve Invetio!** Your attention to detail here is greatly appreciated and will help us respond as quickly as possible.  
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+To avoid duplicates, please search existing Issues before submitting one here.
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+By submitting an Issue to this repository, you agree to the terms within the [Inventio Code of Conduct](https://github.com/vvelc/inventio/blob/main/CODE_OF_CONDUCT.md).
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+### Description
 
-**Device:**
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
+> Provide a clear and concise description of the issue, including what you expected to happen.
 
-**Additional context**
-Add any other context about the problem here.
+### Reproduction
+
+> Detail the steps taken to reproduce this error, what was expected, and whether this issue can be reproduced consistently or if it is intermittent.
+>
+> Where applicable, please include:
+>
+> - Code sample to reproduce the issue
+> - Log files (redact/remove sensitive information)
+> - Application settings (redact/remove sensitive information)
+> - Screenshots
+
+### Environment
+
+> Please provide the following:
+
+- **Version of Inventio used:**
+- **Version of the platform or framework used, if applicable:**
+- **Other relevant versions (OS, browser):**
+- **Other modules/plugins/libraries that might be involved:**
