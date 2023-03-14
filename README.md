@@ -184,8 +184,7 @@ We appreciate feedback and contribution to this project! Before you get started,
 * [Inventio's Contributor Guidelines](CONTRIBUTING.md)
 * [Inventio's Contributor Terms](CONTRIBUTING.md#contributor-terms)
 
-Any contribution intentionally submitted for inclusion in an Inventio project, shall comply with the licensing model (MIT) and therefore licensed as described below, without any additional terms or conditions:
-
+Any contribution intentionally submitted for inclusion in the Inventio project, shall comply with the MIT License and therefore licensed as described below, without any additional terms or conditions:
 
 ## License
 Inventio is licensed under the MIT License. See [LICENSE](LICENSE) for more information.
