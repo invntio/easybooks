@@ -1,0 +1,18 @@
+# TODO: Replace this line with the commented ones to actually run the action in your repo(s)
+on: public
+# on:
+#   push:
+#     branches:
+#       - main
+#     tags:
+#       - "*"
+#   pull_request:
+
+name: Build
+jobs:
+  test:
+    name: Test-Action
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: echo "Testing Actions!"
