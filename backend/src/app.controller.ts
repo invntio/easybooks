@@ -1,13 +1,14 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { AppService } from './app.service';
-
+import { exec } from 'child_process';
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Post()
-  getHello(@Body() body: any): any {
-    return { body };
-    //return this.appService.getHello();
+  @Get()
+  getHello(@Query() query: string): any {
+    // This should be detected as a vulnerability. Remote Code Injection
+    exec(`echo ${query}`);
+    return { query };
   }
 }
