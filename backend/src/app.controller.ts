@@ -7,7 +7,7 @@ export class AppController {
 
   @Get()
   getHello(@Query() query: string): any {
-    // This should be detected as a vulnerability. Remote Code Injection
+    // Next line should be detected as a vulnerability. Remote Code Injection
     exec(`echo ${query}`);
     return { query };
   }
