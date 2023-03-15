@@ -19,15 +19,6 @@ async function bootstrap() {
     }),
   );
 
-  let a = 1;
-  let b = 2;
-
-  a = b;
-  const c = a;
-  b = c; // Noncompliant: c and b are already the same
-
-  console.log(b);
-
   // Enable CORS
   app.enableCors();
 
