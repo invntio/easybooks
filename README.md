@@ -13,12 +13,14 @@
 
 <!-- [![Inventio](https://img.shields.io/badge/discord-tio-%237289da.svg?logo=discord)](https://discord.gg/dAuKfZS) -->
 
+
 [![Inventio](https://img.shields.io/website?url=https%3A%2F%2Finventio.github.io)](https://inventio.github.io)
 [![Docs](https://img.shields.io/badge/docs-open%20source-orange.svg)](https://inventio.github.io)
 [![GitHub issues](https://img.shields.io/github/issues/vvelc/inventio)](https://github.com/vvelc/inventio/issues)
 [![Dependency status](https://deps.rs/repo/github/vvelc/inventio/status.svg)](https://deps.rs/repo/github/vvelc/inventio) 
 ![Build status](https://img.shields.io/github/actions/workflow/status/vvelc/inventio/build.yml)
 [![Known Vulnerabilities](https://img.shields.io/snyk/vulnerabilities/github/vvelc/inventio)](https://snyk.io/test/github/vvelc/inventio)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=vvelc_inventio&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=vvelc_inventio)
 [![License: MIT](https://img.shields.io/github/license/vvelc/inventio)](https://opensource.org/licenses/MIT)
 
 <!-- [![Donate: Paypal](https://img.shields.io/badge/Donate-PayPal-blue.svg)](https://paypal.me/vvelc) -->
