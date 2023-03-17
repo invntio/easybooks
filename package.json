@@ -19,7 +19,7 @@
     "url": "https://github.com/vvelc/inventio/issues"
   },
   "homepage": "https://github.com/vvelc/inventio#readme",
-  "subPackages": [
-    "./backend"
-  ]
+  "exports": {
+    "./backend": "./backend"
+  }
 }
