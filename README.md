@@ -18,7 +18,7 @@
 [![Docs](https://img.shields.io/badge/docs-open%20source-orange.svg)](https://inventio.github.io)
 [![GitHub issues](https://img.shields.io/github/issues/vvelc/inventio)](https://github.com/vvelc/inventio/issues)
 ![Build status](https://img.shields.io/github/actions/workflow/status/vvelc/inventio/build.yml)
-[![Known Vulnerabilities](https://img.shields.io/snyk/vulnerabilities/github/vvelc/inventio)](https://snyk.io/test/github/vvelc/inventio)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=vvelc_inventio&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=vvelc_inventio)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=vvelc_inventio&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=vvelc_inventio)
 [![License: MIT](https://img.shields.io/github/license/vvelc/inventio)](https://opensource.org/licenses/MIT)
 
@@ -122,19 +122,18 @@ DATABASE_PASSWORD=password
 If you prefer to use a different database, you can change the typeorm configuration in the `config/ormconfig.js` file.
 
 ``` js
-module.exports = {
-  "type": "postgres",
-  "host": "your_database_host",
-  "port": your_database_port,
-  "database": "your_database_name",
-  "username": "your_database_user",
-  "password": "your_database_password",
-  "synchronize": true,
-  "logging": false,
-  "entities": [
-    "src/**/*.entity.ts"
-  ]
-}
+export default () => ({
+  type: 'postgres',
+  host: 'your_database_host',
+  port: your_database_port,
+  database: 'your_database_name',
+  username: 'your_database_user',
+  password: 'your_database_password',
+  synchronize: true,
+  logging: false,
+  entities: ['src/**/*.entity.ts'],
+});
+
 ```
 
 3. Start backend server:
