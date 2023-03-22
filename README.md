@@ -17,7 +17,7 @@
 [![Inventio](https://img.shields.io/website?url=https%3A%2F%2Finventio.github.io)](https://inventio.github.io)
 [![Docs](https://img.shields.io/badge/docs-open%20source-orange.svg)](https://inventio.github.io)
 [![GitHub issues](https://img.shields.io/github/issues/vvelc/inventio)](https://github.com/vvelc/inventio/issues)
-![Build status](https://img.shields.io/github/actions/workflow/status/vvelc/inventio/build.yml)
+[![Build](https://github.com/vvelc/inventio/actions/workflows/build.yml/badge.svg)](https://github.com/vvelc/inventio/actions/workflows/build.yml)
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=vvelc_inventio&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=vvelc_inventio)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=vvelc_inventio&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=vvelc_inventio)
 [![License: MIT](https://img.shields.io/github/license/vvelc/inventio)](https://opensource.org/licenses/MIT)
