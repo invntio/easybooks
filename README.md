@@ -83,7 +83,7 @@ Before installing Inventio, make sure you have the following requirements:
 Clone the project repository to your local machine:
 
 ``` bash
-git clone https://github.com/yourusername/inventory-management-system.git
+git clone https://github.com/vvelc/inventio.git
 ```
 
 ### Backend
