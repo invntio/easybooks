@@ -348,8 +348,6 @@ describe('CategoriesController', () => {
   });
 });
 
-// TODO: check if can validate body in tests with class validator
-
 /*
   REQUISITOS GENERALES DEL CONTROLADOR
 

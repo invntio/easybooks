@@ -31,6 +31,4 @@ function devSqliteConnection() {
   };
 }
 
-// TODO: Add process env variables to Sqlite connection
-
 export default devSqliteConnection;
