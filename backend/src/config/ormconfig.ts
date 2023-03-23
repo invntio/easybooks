@@ -6,11 +6,11 @@ function devPostgresConnection() {
   return {
     database: {
       type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      database: 'inventiodb',
-      username: 'postgres',
-      password: 'postgres',
+      host: process.env['DATABASE_HOST'] || 'localhost',
+      port: parseInt(process.env['DATABASE_PORT']) || 5432,
+      database: process.env['DATABASE_NAME'] || 'inventiodb',
+      username: process.env['DATABASE_USER'] || 'postgres',
+      password: process.env['DATABASE_PASSWORD'],
       synchronize: true,
       //logging: false,
       autoLoadEntities: true,
@@ -31,6 +31,6 @@ function devSqliteConnection() {
   };
 }
 
-// TODO: Add process.env to connection objects
+// TODO: Add process env variables to Sqlite connection
 
 export default devSqliteConnection;
