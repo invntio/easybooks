@@ -31,4 +31,6 @@ function devSqliteConnection() {
   };
 }
 
+// TODO: Add process.env to connection objects
+
 export default devSqliteConnection;
