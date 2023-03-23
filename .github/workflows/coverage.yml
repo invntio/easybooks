@@ -1,11 +1,27 @@
-on:
-  - pull_request
-  - push
+on: pull_request
 
 name: Coverage Test
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Install Node
+        uses: actions/setup-node@v3
+      - name: Install Dependencies
+        working-directory: ./backend
+        run: npm install
+      - name: Build
+        working-directory: ./backend
+        run: npm run build --if-present
+      - name: Run Test Coverage
+        working-directory: ./backend
+        run: npm run test:cov
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
+        with:
+          files: ./backend/coverage/clover.xml
+          #flags: unittests # optional
+          fail_ci_if_error: true
+          verbose: true

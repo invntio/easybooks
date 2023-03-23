@@ -43,4 +43,27 @@ describe('XSSInterceptor', () => {
     expect(xssCleanObjectSpyFn).toHaveReturnedTimes(3);
     expect(result).toEqual(null);
   });
+
+  it('should return empty object if empty object is passed', async () => {
+    const interceptor = app.get<XSSInterceptor>(XSSInterceptor);
+
+    const context = {
+      switchToHttp: () => ({
+        getRequest: () => ({}),
+      }),
+    } as ExecutionContext;
+
+    const handler = {
+      handle: () => of(null),
+    } as CallHandler;
+
+    const xssCleanObjectSpyFn = jest.spyOn(XSSCleanUtil, 'xssCleanObject');
+    const result = await firstValueFrom(
+      interceptor.intercept(context, handler),
+    );
+
+    expect(xssCleanObjectSpyFn).toHaveBeenCalled();
+    expect(xssCleanObjectSpyFn).toHaveReturnedTimes(3);
+    expect(result).toEqual(null);
+  });
 });
