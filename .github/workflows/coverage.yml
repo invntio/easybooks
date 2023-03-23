@@ -2,7 +2,7 @@ on:
   - pull_request
   - push
 
-name: Test
+name: Coverage Test
 jobs:
   test:
     runs-on: ubuntu-latest
