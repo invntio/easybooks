@@ -20,6 +20,8 @@ const config: Config = {
     '.module.ts',
     'main.ts',
     '.mock.ts',
+    '.dto.ts',
+    '.params.ts',
   ],
   testEnvironment: 'node',
   moduleNameMapper: {
