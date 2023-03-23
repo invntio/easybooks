@@ -1,0 +1,11 @@
+on:
+  - pull_request
+  - push
+
+name: Test
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
