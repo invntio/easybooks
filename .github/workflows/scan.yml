@@ -34,5 +34,6 @@ jobs:
             -Dsonar.projectKey=vvelc_inventio
             -Dsonar.organization=vvelc
             -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info
+            -Dsonar.test.exclusions=*.spec.ts
             -Dsonar.verbose=true
                 
