@@ -17,7 +17,7 @@ export class XSSInterceptor implements NestInterceptor {
     // Sanitize inputs with XSS Clean Util
     if (req.body) req.body = xssCleanObject(req.body);
     if (req.query) req.query = xssCleanObject(req.query);
-    if (req.params) req.params = xssCleanObject(req.query);
+    if (req.params) req.params = xssCleanObject(req.params);
 
     return next.handle();
   }

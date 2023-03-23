@@ -1,10 +1,16 @@
 import { XSSInterceptor } from '@common/interceptors/xss.interceptor';
-import { Logger, ValidationPipe } from '@nestjs/common';
+import {
+  ClassSerializerInterceptor,
+  Logger,
+  ValidationPipe,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
+import { FormatResponseInterceptor } from '@common/interceptors/formatresponse.interceptor';
+import { TransformResponseFilter } from '@common/filters/transformresponse.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -30,14 +36,27 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
+      whitelist: true,
+      disableErrorMessages: false,
+      forbidNonWhitelisted: true,
     }),
   );
+
+  // Enable Response Serialization
+  app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
+
+  // Enable Format Response Interceptor
+  app.useGlobalInterceptors(new FormatResponseInterceptor(app.get(Reflector)));
+
+  // Enable Format Response Filter
+  app.useGlobalFilters(new TransformResponseFilter());
 
   // Configure Swagger documentation
   const options = new DocumentBuilder()
     .setTitle('Inventio')
     .setDescription('Open-source Inventory Management System')
     .setVersion('0.1.0')
+    .setLicense('MIT', 'https://github.com/vvelc/inventio/blob/main/LICENSE')
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('api', app, document);
