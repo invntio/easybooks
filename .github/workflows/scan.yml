@@ -7,6 +7,22 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v1
+
+      - name: Install Node
+        uses: actions/setup-node@v3
+
+      - name: Install Dependencies
+        working-directory: ./backend
+        run: npm install
+
+      - name: Build
+        working-directory: ./backend
+        run: npm run build --if-present
+
+      - name: Run Test Coverage
+        working-directory: ./backend
+        run: npm run test:cov
+
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
@@ -14,3 +30,9 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           projectBaseDir: backend/
+          args: >
+            -Dsonar.projectKey=vvelc_inventio
+            -Dsonar.organization=vvelc
+            -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info
+            -Dsonar.verbose=true
+                
