@@ -1,18 +1,27 @@
-# TODO: Replace this line with the commented ones to actually run the action in your repo(s)
-on: public
-# on:
-#   push:
-#     branches:
-#       - main
-#     tags:
-#       - "*"
-#   pull_request:
+name: Node.js CI
 
-name: Build
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
 jobs:
-  test:
-    name: Test-Action
+  build:
+
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v3
-      - run: echo "Testing Actions!"
+
+      - name: Install Node
+        uses: actions/setup-node@v3
+
+      - name: Install Dependencies
+        working-directory: ./backend
+        run: npm ci
+
+      - name: Build
+        working-directory: ./backend
+        run: npm run build
+  
