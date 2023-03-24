@@ -44,8 +44,6 @@ Documentation should have the following structure:
         
 *   FAQ
     
-    *   Support
-        
 *   Support us
 
 <br/>
