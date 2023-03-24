@@ -6,47 +6,7 @@ app_version: 1.4.7
 ---
 
 <!-- Intro - Do not remove this comment -->
-Documentation should have the following structure:
-
-*   Introduction
-    
-*   Overview
-    
-    *   Getting started
-        
-*   Fundamentals
-    
-    *   Inventio API
-        
-    *   Response
-        
-    *   Errors
-        
-*   Features
-    
-    *   Categories
-        
-    *   Products
-        
-*   Techniques
-    
-    *   Configuration
-        
-    *   Database
-        
-    *   Testing
-        
-*   Security
-    
-    *   Overview
-        
-    *   Authentication
-        
-*   FAQ
-    
-    *   Support
-        
-*   Support us
+Inventio Documentation
 
 <br/>
 
