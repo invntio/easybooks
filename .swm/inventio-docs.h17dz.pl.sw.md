@@ -44,7 +44,21 @@ Documentation should have the following structure:
         
 *   FAQ
     
+    *   Support
+        
 *   Support us
+
+<br/>
+
+<!-- Steps - Do not remove this comment -->
+1. [Overview](overview.pwmcw.pl.sw.md)
+2. [Fundamentals](fundamentals.nftao.pl.sw.md)
+3. [Features](features.cz2p9.pl.sw.md)
+4. [Techniques](techniques.b9fqt.pl.sw.md)
+5. [Security](security.bhwr6.pl.sw.md)
+6. [FAQ](faq.fpfu2.sw.md)
+7. [Support us](support-us.833s9.sw.md)
+
 
 <br/>
 
