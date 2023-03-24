@@ -6,9 +6,8 @@ app_version: 1.4.7
 ---
 
 <!-- Steps - Do not remove this comment -->
-1. [Configuration](configuration.o5neq.sw.md)
-2. [Database](database.pjsn8.sw.md)
-3. [Testing](testing.y52re.sw.md)
+1. [Categories](categories.o2in1.sw.md)
+2. [Products](products.0qrwv.sw.md)
 
 
 <br/>
