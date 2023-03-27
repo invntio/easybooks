@@ -4,7 +4,7 @@ Welcome! This project is created by the team at [Inventio](https://inventio.gith
 
 At Inventio, we aspire to empower everyone to create interactive experiences. To do this, we're exploring and pushing the boundaries of new technologies, and sharing our learnings with the open source community.
 
-If you have ideas for collaboration, email us at victorvelazquezcid@gmail.com
+If you have ideas for collaboration, email us at victorvelazquezcid@gmail.com.
 <!-- 
 We're also hiring full-time engineers to work with us in Stockholm! Check out our current job postings [here](https://www.embark-studios.com/jobs). -->
 
