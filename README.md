@@ -6,7 +6,9 @@
 
 <div align="center">
 
-# `📕 Invntio`
+<p align="center">
+    <img src="https://user-images.githubusercontent.com/76626605/229325142-54538aa5-1fd8-45a6-b91d-f484ad086be0.png" width="480">
+</p>
 
 **Invntio - An open-source inventory management system.**
 
