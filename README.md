@@ -20,8 +20,8 @@
 [![Build](https://github.com/vvelc/inventio/actions/workflows/build.yml/badge.svg)](https://github.com/vvelc/inventio/actions/workflows/build.yml)
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=vvelc_inventio&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=vvelc_inventio)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=vvelc_inventio&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=vvelc_inventio)
-[![codecov](https://codecov.io/gh/vvelc/inventio/branch/main/graph/badge.svg?token=V6WDKGCSP7)](https://codecov.io/gh/vvelc/inventio)
-[![License: MIT](https://img.shields.io/github/license/vvelc/inventio?color=%239d2235)](https://opensource.org/licenses/MIT)
+[![codecov](https://codecov.io/gh/vvelc/invntio/branch/main/graph/badge.svg?token=V6WDKGCSP7)](https://codecov.io/gh/vvelc/invntio)
+[![License: MIT](https://img.shields.io/github/license/vvelc/invntio?color=%239d2235)](https://opensource.org/licenses/MIT)
 
 <!-- [![Donate: Paypal](https://img.shields.io/badge/Donate-PayPal-blue.svg)](https://paypal.me/vvelc) -->
 
