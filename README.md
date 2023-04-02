@@ -6,17 +6,17 @@
 
 <div align="center">
 
-# `📕 Inventio`
+# `📕 Invntio`
 
-**Inventio - An open-source inventory management system.**
-
-
-<!-- [![Inventio](https://img.shields.io/badge/discord-tio-%237289da.svg?logo=discord)](https://discord.gg/dAuKfZS) -->
+**Invntio - An open-source inventory management system.**
 
 
-[![Inventio](https://img.shields.io/website?url=https%3A%2F%2Finventio.github.io)](https://inventio.github.io)
-[![Docs](https://img.shields.io/badge/docs-open%20source-orange.svg)](https://inventio.github.io)
-[![GitHub issues](https://img.shields.io/github/issues/vvelc/inventio)](https://github.com/vvelc/inventio/issues)
+<!-- [![Invntio](https://img.shields.io/badge/discord-tio-%237289da.svg?logo=discord)](https://discord.gg/dAuKfZS) -->
+
+
+[![Invntio](https://img.shields.io/website?url=https%3A%2F%2Finvntio.github.io)](https://invntio.github.io)
+[![Docs](https://img.shields.io/badge/docs-open%20source-orange.svg)](https://invntio.github.io)
+[![GitHub issues](https://img.shields.io/github/issues/vvelc/invntio)](https://github.com/vvelc/invntio/issues)
 [![Build](https://github.com/vvelc/invntio/actions/workflows/build.yml/badge.svg)](https://github.com/vvelc/invntio/actions/workflows/build.yml)
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=vvelc_inventio&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=vvelc_inventio)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=vvelc_inventio&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=vvelc_inventio)
@@ -48,7 +48,7 @@ It is **not recommended** to use it yet due to possible:
 ---
 
 ## Technologies Used
-Inventio is built using the following technologies:
+Invntio is built using the following technologies:
 
 ### Backend
 [![NestJS](https://img.shields.io/badge/nestjs-%23E0234E.svg?style=for-the-badge&logo=nestjs&logoColor=white)](https://nestjs.com)
@@ -72,10 +72,10 @@ Inventio is built using the following technologies:
 [![DigitalOcean](https://img.shields.io/badge/DigitalOcean-%230167ff.svg?style=for-the-badge&logo=digitalOcean&logoColor=white)](https://www.digitalocean.com/)
 
 ## Installation
-To get started with Inventio, follow these steps:
+To get started with Invntio, follow these steps:
 
 ### Requirements
-Before installing Inventio, make sure you have the following requirements:
+Before installing Invntio, make sure you have the following requirements:
 * [Node.js](https://nodejs.org/)
 * [NestJS CLI](https://docs.nestjs.com/)
 * [Angular CLI](https://angular.io/cli)
@@ -84,7 +84,7 @@ Before installing Inventio, make sure you have the following requirements:
 Clone the project repository to your local machine:
 
 ``` bash
-git clone https://github.com/vvelc/inventio.git
+git clone https://github.com/vvelc/invntio.git
 ```
 
 ### Backend
@@ -93,14 +93,14 @@ git clone https://github.com/vvelc/inventio.git
 
 ```bash
 # move to backend directory
-cd inventio/backend
+cd invntio/backend
 # Install dependencies
 npm install
 ```
 
 2. Configure database settings.
 
-    Note: Inventio uses PostgreSQL as its default database. You can configure your own database by setting the environment variables in the .env file.
+    Note: Invntio uses PostgreSQL as its default database. You can configure your own database by setting the environment variables in the .env file.
 
 ``` dosini
 DATABASE_HOST=your_database_host
@@ -115,7 +115,7 @@ Alternatively, you can use the default values:
 ``` dosini
 DATABASE_HOST=localhost
 DATABASE_PORT=5432
-DATABASE_NAME=inventio
+DATABASE_NAME=invntio
 DATABASE_USER=postgres
 DATABASE_PASSWORD=password
 ```
@@ -150,7 +150,7 @@ npm run start
 
 ``` bash
 # Move to frontend directory
-cd inventio/frontend
+cd invntio/frontend
 # Install dependencies
 npm install
 ```
@@ -199,8 +199,8 @@ The project includes a suite of unit tests that can be run using the `npm run te
 
 We appreciate feedback and contribution to this project! Before you get started, please see the following:
 
-* [Inventio's Contributor Guidelines](CONTRIBUTING.md)
-* [Inventio's Contributor Terms](CONTRIBUTING.md#contributor-terms)
+* [Invntio's Contributor Guidelines](CONTRIBUTING.md)
+* [Invntio's Contributor Terms](CONTRIBUTING.md#contributor-terms)
 
 Any contribution intentionally submitted for inclusion in the Inventio project, shall comply with the MIT License and therefore licensed as described below, without any additional terms or conditions:
 
