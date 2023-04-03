@@ -1,12 +1,10 @@
-# Inventio Contributor Guidelines
+# Invntio Contributor Guidelines
 
-Welcome! This project is created by the team at [Inventio](https://inventio.github.io). We're glad you're interested in contributing! We welcome contributions from people of all backgrounds who are interested in making great software with us.
+Welcome! This project is created by the team at [Invntio](https://invntio.com). We're glad you're interested in contributing! We welcome contributions from people of all backgrounds who are interested in making great software with us.
 
-At Inventio, we aspire to empower everyone to create interactive experiences. To do this, we're exploring and pushing the boundaries of new technologies, and sharing our learnings with the open source community.
+At Invntio, we aspire to empower everyone to create interactive experiences. To do this, we're exploring and pushing the boundaries of new technologies, and sharing our learnings with the open source community.
 
 If you have ideas for collaboration, email us at victorvelazquezcid@gmail.com.
-<!-- 
-We're also hiring full-time engineers to work with us in Stockholm! Check out our current job postings [here](https://www.embark-studios.com/jobs). -->
 
 ## Issues
 
@@ -60,14 +58,14 @@ We follow the coding style guidelines recommended by NestJS and Angular
 
 ## Licensing
 
-Inventio is licensed under the MIT License. By contributing to this project, you agree to license your contributions under the same license.
+Invntio is licensed under the MIT License. By contributing to this project, you agree to license your contributions under the same license.
 
 ## Contributor Terms
 
-Thank you for your interest in Inventio open source project. By providing a contribution (new or modified code, other input, feedback or suggestions etc.) you agree to these Contributor Terms.
+Thank you for your interest in Invntio open source project. By providing a contribution (new or modified code, other input, feedback or suggestions etc.) you agree to these Contributor Terms.
 
 You confirm that each of your contributions has been created by you and that you are the copyright owner. You also confirm that you have the right to provide the contribution to us and that you do it MIT License.
 
-If you want to contribute something that is not your original creation, you may submit it to Inventio separately from any contribution, including details of its source and of any license or other restriction (such as related patents, trademarks, agreements, etc.).
+If you want to contribute something that is not your original creation, you may submit it to Invntio separately from any contribution, including details of its source and of any license or other restriction (such as related patents, trademarks, agreements, etc.).
 
-Please also note that the project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md) to ensure that they are welcoming places for everyone to contribute. By participating in Inventio open source project, you agree to keep to the Contributor Code of Conduct.
+Please also note that the project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md) to ensure that they are welcoming places for everyone to contribute. By participating in Invntio open source project, you agree to keep to the Contributor Code of Conduct.
