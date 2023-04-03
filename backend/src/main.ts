@@ -53,10 +53,10 @@ async function bootstrap() {
 
   // Configure Swagger documentation
   const options = new DocumentBuilder()
-    .setTitle('Inventio')
+    .setTitle('Invntio')
     .setDescription('Open-source Inventory Management System')
     .setVersion('0.1.0')
-    .setLicense('MIT', 'https://github.com/vvelc/inventio/blob/main/LICENSE')
+    .setLicense('MIT', 'https://github.com/invntio/invntio/blob/main/LICENSE')
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('api', app, document);

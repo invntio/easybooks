@@ -14,8 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initial add of the thing  
 
 <!-- next-url -->
-[Unreleased]: https://github.com/vvelc/inventio/compare/0.1.0...HEAD
-[0.1.0]: https://github.com/vvelc/inventio/releases/tag/0.1.0
+[Unreleased]: https://github.com/vvelc/invntio/compare/0.1.0...HEAD
+[0.1.0]: https://github.com/vvelc/invntio/releases/tag/0.1.0
 
 
 
@@ -40,6 +40,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 - Changes/fixes related to security vulnerabilities in a bullet list
 
-[0.1.0]: https://github.com/vvelc/inventio/releases/tag/1.0.0
+[0.1.0]: https://github.com/vvelc/invntio/releases/tag/1.0.0
 
  -->

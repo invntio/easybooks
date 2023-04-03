@@ -9,7 +9,7 @@ assignees: ''
 
 **Thank you in advance for helping us to improve Invetio!** Your attention to detail here is greatly appreciated and will help us respond as quickly as possible. 
 
-By submitting an Issue to this repository, you agree to the terms within the [Inventio Code of Conduct](https://github.com/vvelc/inventio/blob/main/CODE_OF_CONDUCT.md).
+By submitting an Issue to this repository, you agree to the terms within the [Invntio Code of Conduct](https://github.com/vvelc/invntio/blob/main/CODE_OF_CONDUCT.md).
 
 ### Describe the problem you'd like to have solved
 

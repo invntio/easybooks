@@ -11,7 +11,7 @@ assignees: ''
 
 To avoid duplicates, please search existing Issues before submitting one here.
 
-By submitting an Issue to this repository, you agree to the terms within the [Inventio Code of Conduct](https://github.com/vvelc/inventio/blob/main/CODE_OF_CONDUCT.md).
+By submitting an Issue to this repository, you agree to the terms within the [Invntio Code of Conduct](https://github.com/vvelc/invntio/blob/main/CODE_OF_CONDUCT.md).
 
 ### Description
 
@@ -32,7 +32,7 @@ By submitting an Issue to this repository, you agree to the terms within the [In
 
 > Please provide the following:
 
-- **Version of Inventio used:**
+- **Version of Invntio used:**
 - **Version of the platform or framework used, if applicable:**
 - **Other relevant versions (OS, browser):**
 - **Other modules/plugins/libraries that might be involved:**
