@@ -16,6 +16,8 @@ import {
   CATEGORY_FOUND_ONE,
   CATEGORY_UPDATED,
 } from './utils/category-response.constants';
+import { ValidationError, validate } from 'class-validator';
+import { plainToInstance } from 'class-transformer';
 
 describe('CategoriesController', () => {
   let controller: CategoriesController;
@@ -59,6 +61,28 @@ describe('CategoriesController', () => {
     });
 
     it('should create a category', async () => {
+      const mockCategoryId = uuidV4();
+
+      const createCategoryDto: CreateCategoryDto = {
+        name: 'Category Name',
+      };
+      const expected: Category = {
+        id: mockCategoryId,
+        name: 'Category Name',
+        parentId: null,
+        subcategories: [],
+        isActive: true,
+        createdAt: new Date(),
+      };
+      jest.spyOn(service, 'create').mockResolvedValue(expected);
+
+      const result = await controller.create(createCategoryDto);
+
+      expect(result).toEqual(expected);
+      expect(service.create).toHaveBeenCalledWith(createCategoryDto);
+    });
+
+    it('should create a category with parent', async () => {
       const mockCategoryId1 = uuidV4();
       const mockCategoryId2 = uuidV4();
 
@@ -80,6 +104,70 @@ describe('CategoriesController', () => {
 
       expect(result).toEqual(expected);
       expect(service.create).toHaveBeenCalledWith(createCategoryDto);
+    });
+
+    it('should throw an error when passed unexpected props', async () => {
+      const createCategoryDto: CreateCategoryDto | any = {
+        name: 'Category Name',
+        notexpected: 'testnotexpected',
+      };
+
+      const categoryDtoObject = plainToInstance(
+        CreateCategoryDto,
+        createCategoryDto,
+      );
+
+      const errors: ValidationError[] = await validate(categoryDtoObject, {
+        whitelist: true,
+        forbidNonWhitelisted: true,
+      });
+
+      const expectedErrors: ValidationError[] = [
+        {
+          target: {
+            name: 'Category Name',
+            notexpected: 'testnotexpected',
+          },
+          value: 'testnotexpected',
+          property: 'notexpected',
+          children: undefined,
+          constraints: {
+            whitelistValidation: 'property notexpected should not exist',
+          },
+        },
+      ];
+
+      expect(errors).toEqual(expect.arrayContaining(expectedErrors));
+    });
+
+    it('should throw an error when passed invalid type props', async () => {
+      const createCategoryDto: CreateCategoryDto | any = {
+        name: 'Category Name',
+        parentId: true,
+      };
+
+      const categoryDtoObject = plainToInstance(
+        CreateCategoryDto,
+        createCategoryDto,
+      );
+
+      const errors: ValidationError[] = await validate(categoryDtoObject, {
+        whitelist: true,
+        forbidNonWhitelisted: true,
+        forbidUnknownValues: true,
+      });
+
+      const expectedErrors: ValidationError[] = [
+        {
+          target: { name: 'Category Name', parentId: true },
+          value: true,
+          property: 'parentId',
+          children: [],
+          constraints: { isUuid: 'parentId must be a UUID' },
+        },
+      ];
+
+      expect(errors).toEqual(expect.arrayContaining(expectedErrors));
     });
   });
 
@@ -301,7 +389,7 @@ describe('CategoriesController', () => {
       };
       const categoryId = uuidV4();
 
-      jest.spyOn(service, 'update').mockImplementation((): any => {
+      jest.spyOn(service, 'update').mockImplementation(() => {
         return Promise.reject(new Error('Category not found'));
       });
 
