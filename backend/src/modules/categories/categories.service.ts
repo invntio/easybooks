@@ -47,7 +47,7 @@ export class CategoriesService {
     });
   }
 
-  async findOne(id: string) {
+  async findOne(id: string): Promise<Category> {
     const category = await this.categoriesRepository.findOne({
       where: { id: id },
     });
@@ -57,7 +57,7 @@ export class CategoriesService {
     return category;
   }
 
-  async findOneWithSubcategories(id: string) {
+  async findOneWithSubcategories(id: string): Promise<Category> {
     const category = await this.categoriesRepository.findOne({
       relations: { subcategories: true },
       where: { id: id },
@@ -68,7 +68,10 @@ export class CategoriesService {
     return category;
   }
 
-  async update(id: string, updateCategoryDto: UpdateCategoryDto) {
+  async update(
+    id: string,
+    updateCategoryDto: UpdateCategoryDto,
+  ): Promise<void> {
     const category = await this.categoriesRepository.findOne({
       where: { id: id },
     });
@@ -85,7 +88,7 @@ export class CategoriesService {
     await this.categoriesRepository.update(category.id, updateCategoryDto);
   }
 
-  async remove(id: string) {
+  async remove(id: string): Promise<void> {
     const categoryExist: boolean = await this.checkIfExists({
       id: id,
     });

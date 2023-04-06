@@ -59,6 +59,28 @@ describe('CategoriesController', () => {
     });
 
     it('should create a category', async () => {
+      const mockCategoryId = uuidV4();
+
+      const createCategoryDto: CreateCategoryDto = {
+        name: 'Category Name',
+      };
+      const expected: Category = {
+        id: mockCategoryId,
+        name: 'Category Name',
+        parentId: null,
+        subcategories: [],
+        isActive: true,
+        createdAt: new Date(),
+      };
+      jest.spyOn(service, 'create').mockResolvedValue(expected);
+
+      const result = await controller.create(createCategoryDto);
+
+      expect(result).toEqual(expected);
+      expect(service.create).toHaveBeenCalledWith(createCategoryDto);
+    });
+
+    it('should create a category with parent', async () => {
       const mockCategoryId1 = uuidV4();
       const mockCategoryId2 = uuidV4();
 
@@ -301,7 +323,7 @@ describe('CategoriesController', () => {
       };
       const categoryId = uuidV4();
 
-      jest.spyOn(service, 'update').mockImplementation((): any => {
+      jest.spyOn(service, 'update').mockImplementation(() => {
         return Promise.reject(new Error('Category not found'));
       });
 

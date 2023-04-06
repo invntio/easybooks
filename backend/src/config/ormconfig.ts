@@ -1,34 +1,52 @@
-import { OrmConfig } from './orm.config.interface';
+import { OrmConfig } from './ormconfig.interface';
+import { ConfigService } from '@nestjs/config';
 
-// Development postgresql connection
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function devPostgresConnection() {
+type SUPPORTED_DATABASE_TYPES = 'postgres' | 'sqlite';
+
+const ormConfig = (configService: ConfigService): OrmConfig => {
+  const nodeEnv: string = configService.get('NODE_ENV');
+
+  //console.log(nodeEnv);
+
+  if (!['prod', 'dev', 'test'].includes(nodeEnv)) {
+    throw new Error(`Unsupported environment mode: ${nodeEnv}`);
+  }
+
+  const upperCaseNodeEnv = nodeEnv.toUpperCase();
+
+  const nodeDbType = configService.get<string>(
+    `${upperCaseNodeEnv}_DATABASE_TYPE`,
+  );
+
+  //console.log(`${upperCaseNodeEnv}_DATABASE_TYPE: ` + nodeDbType);
+
+  if (!['postgres', 'sqlite'].includes(nodeDbType)) {
+    throw new Error(`Unsupported database type: ${nodeDbType}`);
+  }
+
+  const dbType = nodeDbType as SUPPORTED_DATABASE_TYPES;
+  const host = configService.get<string>(`${upperCaseNodeEnv}_DATABASE_HOST`);
+  const port = configService.get<number>(`${upperCaseNodeEnv}_DATABASE_PORT`);
+  const username = configService.get<string>(
+    `${upperCaseNodeEnv}_DATABASE_USERNAME`,
+  );
+  const password = configService.get<string>(
+    `${upperCaseNodeEnv}_DATABASE_PASSWORD`,
+  );
+  const database = configService.get<string>(
+    `${upperCaseNodeEnv}_DATABASE_NAME`,
+  );
+
   return {
-    database: {
-      type: 'postgres',
-      host: process.env['DATABASE_HOST'] || 'localhost',
-      port: parseInt(process.env['DATABASE_PORT']) || 5432,
-      database: process.env['DATABASE_NAME'] || 'inventiodb',
-      username: process.env['DATABASE_USER'] || 'postgres',
-      password: process.env['DATABASE_PASSWORD'],
-      synchronize: true,
-      //logging: false,
-      autoLoadEntities: true,
-    } as OrmConfig,
-  };
-}
+    type: dbType,
+    host,
+    port,
+    username,
+    password,
+    database,
+    autoLoadEntities: true,
+    synchronize: true,
+  } as OrmConfig;
+};
 
-// Development Sqlite connection
-function devSqliteConnection() {
-  return {
-    database: {
-      type: 'sqlite',
-      host: 'localhost',
-      database: 'inventiodb.sqlite',
-      synchronize: true,
-      autoLoadEntities: true,
-    } as OrmConfig,
-  };
-}
-
-export default devSqliteConnection;
+export default ormConfig;
