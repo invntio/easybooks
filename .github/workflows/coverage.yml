@@ -18,6 +18,10 @@ jobs:
       - name: Run Test Coverage
         working-directory: ./backend
         run: npm run test:cov
+        env:
+          NODE_ENV: test
+          TEST_DATABASE_TYPE: sqlite
+          TEST_DATABASE_NAME: ":memory:"
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
         with:
