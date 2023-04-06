@@ -1,6 +1,6 @@
 export interface FormatedResponse<T> {
   success: boolean;
-  data: T;
+  data?: T;
   message: string;
   statusCode: number;
 }
