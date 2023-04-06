@@ -16,8 +16,6 @@ import {
   CATEGORY_FOUND_ONE,
   CATEGORY_UPDATED,
 } from './utils/category-response.constants';
-import { ValidationError, validate } from 'class-validator';
-import { plainToInstance } from 'class-transformer';
 
 describe('CategoriesController', () => {
   let controller: CategoriesController;
