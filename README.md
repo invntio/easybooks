@@ -40,6 +40,7 @@ This project is currently under early stages of construction.
 It is **not recommended** to use it yet due to possible:
 - bugs
 - malfunctions
+- missing features
 - starting problems
 - security flaws
 
