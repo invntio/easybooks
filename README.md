@@ -53,7 +53,7 @@ It is **not recommended** to use it yet due to possible:
 
 <!-- Invntio is a cloud-based inventory management solution designed to streamline your business operations. With a user-friendly interface and powerful features for tracking inventory, orders, and customers, Invntio empowers you to manage your business with ease.  -->
 
-Invntio is a cloud-based inventory management solution designed to streamline your business operations. With a simple documentation and powerful features for tracking inventory, orders, and customers, Invntio empowers you to manage your business with ease.
+Invntio is an open-source, module-based, inventory management solution designed to streamline your business operations. With its simple understanding and powerful features for tracking inventory, orders, and customers, Invntio empowers you to manage your business with ease.
 
 From small businesses to large enterprises, Invntio scales to meet your needs, improving every day to help you overcome the challenges that your business faces.
 
