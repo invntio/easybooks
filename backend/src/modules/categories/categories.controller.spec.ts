@@ -371,15 +371,15 @@ describe('CategoriesController', () => {
 });
 
 /*
-  REQUISITOS GENERALES DEL CONTROLADOR
+   GENERAL CONTROLLER REQUIREMENTS
 
-  Cada metodo deberia:
-  * Estar definido
-  * Tener un mensaje de respuesta
-  * Devolver el tipo de dato que se espera
-  * Llamar a su servicio correspondiente
+   Each method should:
+   * Be defined
+   * Have a reply message
+   * Return the type of data expected
+   * Call the corresponding service
 
-  Si el metodo necesita parametros/body deberia:
-  * Devolver error si recibe entradas invalidas
-  * Devolver error si no recibe las entradas que necesita
+   If the method needs parameters/body it should:
+   * Return error if it receives invalid inputs
+   * Return error if it doesn't get the inputs it needs
 */

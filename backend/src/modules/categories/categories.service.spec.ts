@@ -300,18 +300,17 @@ describe('CategoriesService', () => {
 });
 
 /*
-  REQUISITOS GENERALES DEL SERVICIO
+   GENERAL SERVICE REQUIREMENTS
 
-  Cada metodo deberia:
-  * Estar definido
-  * Devolver el tipo de dato que se espera
-  * Llamar a su servicio correspondiente
+   Each method should:
+   * Be defined
+   * Return the type of data expected
+   * Do the expected function
 
-  Si el metodo necesita parametros/body deberia:
-  * Devolver error si recibe entradas invalidas
-  * Devolver error si no recibe las entradas que necesita
+   If the method needs parameters/body it should:
+   * Return error if it receives invalid inputs
+   * Return error if you don't get the inputs you need
   
-  Si el metodo realiza una busqueda
-  * Devolver error si no se encuentran coincidencias
-  
+   If the method performs a search
+   * Return error if no matches found
 */
