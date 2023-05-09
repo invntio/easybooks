@@ -18,8 +18,8 @@
 
 [![Invntio](https://img.shields.io/website?url=https%3A%2F%2Finvntio.com)](https://invntio.com)
 [![Docs](https://img.shields.io/badge/docs-open%20source-teal.svg)](https://invntio.mintlify.app)
-[![GitHub issues](https://img.shields.io/github/issues/vvelc/invntio)](https://github.com/invntio/invntio/issues)
-[![Build](https://github.com/vvelc/invntio/actions/workflows/build.yml/badge.svg)](https://github.com/vvelc/invntio/actions/workflows/build.yml)
+[![GitHub issues](https://img.shields.io/github/issues/invntio/invntio)](https://github.com/invntio/invntio/issues)
+[![Build](https://github.com/invntio/invntio/actions/workflows/build.yml/badge.svg)](https://github.com/invntio/invntio/actions/workflows/build.yml)
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=vvelc_inventio&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=vvelc_inventio)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=vvelc_inventio&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=vvelc_inventio)
 [![codecov](https://codecov.io/gh/invntio/invntio/branch/main/graph/badge.svg?token=V6WDKGCSP7)](https://codecov.io/gh/invntio/invntio)
