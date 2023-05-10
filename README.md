@@ -5,7 +5,7 @@
 <!-- markdownlint-disable-file MD033 -->
 
 <div align="center">
-
+testing webhook
 <p align="center">
     <img src="https://user-images.githubusercontent.com/76626605/229325142-54538aa5-1fd8-45a6-b91d-f484ad086be0.png" width="480">
 </p>
@@ -17,9 +17,9 @@
 
 
 [![Invntio](https://img.shields.io/website?url=https%3A%2F%2Finvntio.com)](https://invntio.com)
-[![Docs](https://img.shields.io/badge/docs-open%20source-orange.svg)](https://docs.invntio.com)
-[![GitHub issues](https://img.shields.io/github/issues/vvelc/invntio)](https://github.com/vvelc/invntio/issues)
-[![Build](https://github.com/vvelc/invntio/actions/workflows/build.yml/badge.svg)](https://github.com/vvelc/invntio/actions/workflows/build.yml)
+[![Docs](https://img.shields.io/badge/docs-open%20source-teal.svg)](https://invntio.mintlify.app)
+[![GitHub issues](https://img.shields.io/github/issues/invntio/invntio)](https://github.com/invntio/invntio/issues)
+[![Build](https://github.com/invntio/invntio/actions/workflows/build.yml/badge.svg)](https://github.com/invntio/invntio/actions/workflows/build.yml)
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=vvelc_inventio&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=vvelc_inventio)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=vvelc_inventio&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=vvelc_inventio)
 [![codecov](https://codecov.io/gh/invntio/invntio/branch/main/graph/badge.svg?token=V6WDKGCSP7)](https://codecov.io/gh/invntio/invntio)
@@ -38,22 +38,22 @@
 This project is currently under early stages of construction.
 
 It is **not recommended** to use it yet due to possible:
-- bugs
-- malfunctions
-- missing features
-- starting problems
-- security flaws
+- bugs 🐛
+- malfunctions ⛔
+- missing features 🔍
+- starting problems 😔
+- security flaws 🔓
 
 ### Statuses
-* Backend: early develop stages.
-* Frontend: not started.
+* Backend: early develop stages. ⚠
+* Frontend: not started. ⛔
 
 ---
 ## What is Invntio?
 
 <!-- Invntio is a cloud-based inventory management solution designed to streamline your business operations. With a user-friendly interface and powerful features for tracking inventory, orders, and customers, Invntio empowers you to manage your business with ease.  -->
 
-Invntio is a cloud-based inventory management solution designed to streamline your business operations. With a simple documentation and powerful features for tracking inventory, orders, and customers, Invntio empowers you to manage your business with ease.
+Invntio is an open-source, module-based, inventory management solution designed to streamline your business operations. With its simple understanding and powerful features for tracking inventory, orders, and customers, Invntio empowers you to manage your business with ease.
 
 From small businesses to large enterprises, Invntio scales to meet your needs, improving every day to help you overcome the challenges that your business faces.
 
