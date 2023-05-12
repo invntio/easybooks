@@ -7,7 +7,7 @@
 <div align="center">
     
 <p align="center">
-    <img src="https://user-images.githubusercontent.com/76626605/229325142-54538aa5-1fd8-45a6-b91d-f484ad086be0.png" width="480">
+    <img src="https://user-images.githubusercontent.com/76626605/238081416-ca3c559d-4945-42f8-83e3-e7d3d6fe6c87.png" src-dark="https://user-images.githubusercontent.com/76626605/229325142-54538aa5-1fd8-45a6-b91d-f484ad086be0.png" width="480">
 </p>
 
 **Invntio - An open-source inventory management system.**
