@@ -7,7 +7,11 @@
 <div align="center">
     
 <p align="center">
-    <img src="https://user-images.githubusercontent.com/76626605/229325142-54538aa5-1fd8-45a6-b91d-f484ad086be0.png" width="480">
+    <picture>
+      <source media="(prefers-color-scheme: light)" srcset="https://user-images.githubusercontent.com/76626605/229325142-54538aa5-1fd8-45a6-b91d-f484ad086be0.png" width="480">
+      <source media="(prefers-color-scheme: dark)" srcset="https://user-images.githubusercontent.com/76626605/238081416-ca3c559d-4945-42f8-83e3-e7d3d6fe6c87.png" width="480">
+      <img alt="Logo" src="https://user-images.githubusercontent.com/76626605/238081416-ca3c559d-4945-42f8-83e3-e7d3d6fe6c87.png" width="480">
+    </picture>
 </p>
 
 **Invntio - An open-source inventory management system.**
