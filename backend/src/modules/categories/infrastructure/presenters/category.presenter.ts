@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Category } from '../entities/category.entity';
+import { Category } from '../../domain/entity/category.entity';
 
-export class CategoryDto {
+export class CategoryPresenter {
   @ApiProperty()
   id: string;
 
@@ -12,7 +12,7 @@ export class CategoryDto {
   parentId?: string;
 
   @ApiProperty()
-  subcategories?: CategoryDto[];
+  subcategories?: CategoryPresenter[];
 
   @ApiProperty()
   isActive: boolean;

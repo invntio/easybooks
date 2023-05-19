@@ -2,7 +2,7 @@ import { Reflector } from '@nestjs/core';
 import { FormatResponseInterceptor } from './formatresponse.interceptor';
 import { CallHandler, ExecutionContext } from '@nestjs/common';
 import { lastValueFrom, of } from 'rxjs';
-import { Category } from '@modules/categories/entities/category.entity';
+import { Category } from '@modules/categories/domain/entity/category.entity';
 import { v4 as uuidV4 } from 'uuid';
 import { FormatedResponse } from '@common/interfaces/formatedresponses.interface';
 import { createMock } from '@golevelup/ts-jest';
