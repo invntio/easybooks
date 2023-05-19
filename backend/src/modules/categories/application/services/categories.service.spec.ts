@@ -3,7 +3,7 @@ import { TypeOrmModule, getRepositoryToken } from '@nestjs/typeorm';
 import { CategoriesService } from './categories.service';
 import { Category } from '../../domain/entity/category.entity';
 import { Repository, TypeORMError } from 'typeorm';
-import { CATEGORY_RESPONSES } from '../../common/categories.responses';
+import { CATEGORIES_RESPONSES } from '../../common/categories.responses';
 import { CreateCategoryDto } from '../../infrastructure/dto/create-category.dto';
 import { UpdateCategoryDto } from '../../infrastructure/dto/update-category.dto';
 import { v4 as uuidV4 } from 'uuid';
@@ -65,7 +65,7 @@ describe('CategoriesService', () => {
       const result2 = service.create(createCategoryDto2);
 
       await expect(result2).rejects.toThrow(TypeORMError);
-      await expect(result2).rejects.toThrow(CATEGORY_RESPONSES.ALREADY_EXISTS);
+      await expect(result2).rejects.toThrow(CATEGORIES_RESPONSES.ALREADY_EXISTS);
     });
   });
 
@@ -111,7 +111,7 @@ describe('CategoriesService', () => {
       const result = service.findOne(idToSearch);
 
       expect(result).rejects.toThrow(TypeORMError);
-      expect(result).rejects.toThrow(CATEGORY_RESPONSES.NOT_FOUND_ONE);
+      expect(result).rejects.toThrow(CATEGORIES_RESPONSES.NOT_FOUND_ONE);
     });
   });
 
@@ -146,7 +146,7 @@ describe('CategoriesService', () => {
       const result = service.update(idToSearch, updatedCategory);
 
       expect(result).rejects.toThrow(TypeORMError);
-      expect(result).rejects.toThrow(CATEGORY_RESPONSES.NOT_FOUND_ONE);
+      expect(result).rejects.toThrow(CATEGORIES_RESPONSES.NOT_FOUND_ONE);
     });
   });
 
@@ -177,7 +177,7 @@ describe('CategoriesService', () => {
       const result = service.remove(idToSearch);
 
       await expect(result).rejects.toThrow(TypeORMError);
-      await expect(result).rejects.toThrow(CATEGORY_RESPONSES.NOT_FOUND_ONE);
+      await expect(result).rejects.toThrow(CATEGORIES_RESPONSES.NOT_FOUND_ONE);
     });
   });
 });

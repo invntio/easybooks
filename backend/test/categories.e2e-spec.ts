@@ -1,16 +1,7 @@
-import {
-  FormatedResponse,
-  FormatedErrorResponse,
-} from '@common/interfaces/formatedresponses.interface';
+import { FormatedResponse } from '@common/interfaces/formatedresponses.interface';
 import { CreateCategoryDto } from '@modules/categories/infrastructure/dto/create-category.dto';
 import { Category } from '@modules/categories/domain/entity/category.entity';
-import {
-  CATEGORY_CREATED,
-  CATEGORY_DELETED,
-  CATEGORY_FOUND_MANY,
-  CATEGORY_FOUND_ONE,
-  CATEGORY_UPDATED,
-} from '@modules/categories/common/categories.responses';
+import { CATEGORIES_RESPONSES } from '@modules/categories/common/categories.responses';
 import {
   ClassSerializerInterceptor,
   HttpStatus,
@@ -35,7 +26,6 @@ describe('CategoriesController (e2e)', () => {
     createdAt: new Date(),
     isActive: true,
     name: 'Mock Category',
-    parentId: null,
   };
 
   beforeEach(async () => {
@@ -44,9 +34,6 @@ describe('CategoriesController (e2e)', () => {
     const moduleRef: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
-
-    // const configService = moduleRef.get<ConfigService>(ConfigService);
-    // console.log(configService.get('database'));
 
     categoriesRepository = moduleRef.get<Repository<Category>>(
       getRepositoryToken(Category),
@@ -94,7 +81,7 @@ describe('CategoriesController (e2e)', () => {
       expect.objectContaining<FormatedResponse<Category[]>>({
         success: true,
         data: expect.any(Array),
-        message: CATEGORY_FOUND_MANY,
+        message: CATEGORIES_RESPONSES.FOUND_MANY,
         statusCode: expectedStatusCode,
       }),
     );
@@ -107,7 +94,6 @@ describe('CategoriesController (e2e)', () => {
           createdAt: expect.any(String),
           isActive: expect.any(Boolean),
           name: expect.any(String),
-          parentId: null,
         }),
       ]),
     );
@@ -125,7 +111,7 @@ describe('CategoriesController (e2e)', () => {
       expect.objectContaining<FormatedResponse<Category>>({
         success: true,
         data: expect.any(Object),
-        message: CATEGORY_FOUND_ONE,
+        message: CATEGORIES_RESPONSES.FOUND_ONE,
         statusCode: expectedStatusCode,
       }),
     );
@@ -137,69 +123,6 @@ describe('CategoriesController (e2e)', () => {
         createdAt: expect.any(String),
         isActive: expect.any(Boolean),
         name: expect.any(String),
-        parentId: null,
-      }),
-    );
-  });
-
-  it('GET /categories/subcategories (find all with subcategories)', async () => {
-    const expectedStatusCode = HttpStatus.OK;
-
-    const res = await request(app.getHttpServer())
-      .get('/categories/subcategories')
-      .expect(expectedStatusCode);
-
-    // Validate response format
-    expect(res.body).toEqual(
-      expect.objectContaining<FormatedResponse<Category[]>>({
-        success: true,
-        data: expect.any(Array),
-        message: CATEGORY_FOUND_MANY,
-        statusCode: expectedStatusCode,
-      }),
-    );
-
-    // Validate response data
-    expect(res.body.data).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining<Category>({
-          id: expect.any(String),
-          createdAt: expect.any(String),
-          isActive: expect.any(Boolean),
-          name: expect.any(String),
-          parentId: null,
-          subcategories: expect.any(Array),
-        }),
-      ]),
-    );
-  });
-
-  it('GET /categories/subcategories/:id (find one with subcategories)', async () => {
-    const expectedStatusCode = HttpStatus.OK;
-
-    const res = await request(app.getHttpServer())
-      .get(`/categories/subcategories/${mockCategory.id}`)
-      .expect(expectedStatusCode);
-
-    // Validate response format
-    expect(res.body).toEqual(
-      expect.objectContaining<FormatedResponse<Category>>({
-        success: true,
-        data: expect.any(Object),
-        message: CATEGORY_FOUND_ONE,
-        statusCode: expectedStatusCode,
-      }),
-    );
-
-    // Validate response data
-    expect(res.body.data).toEqual(
-      expect.objectContaining<Category>({
-        id: expect.any(String),
-        createdAt: expect.any(String),
-        isActive: expect.any(Boolean),
-        name: expect.any(String),
-        parentId: null,
-        subcategories: expect.any(Array),
       }),
     );
   });
@@ -210,7 +133,6 @@ describe('CategoriesController (e2e)', () => {
     const newCategory: CreateCategoryDto = {
       name: 'New Category',
       isActive: true,
-      parentId: null,
     };
 
     const res = await request(app.getHttpServer())
@@ -223,7 +145,7 @@ describe('CategoriesController (e2e)', () => {
       expect.objectContaining<FormatedResponse<Category>>({
         success: true,
         data: expect.any(Object),
-        message: CATEGORY_CREATED,
+        message: CATEGORIES_RESPONSES.CREATED,
         statusCode: expectedCreateStatusCode,
       }),
     );
@@ -257,7 +179,7 @@ describe('CategoriesController (e2e)', () => {
     expect(updateResponse.body).toEqual(
       expect.objectContaining<FormatedResponse<null>>({
         success: true,
-        message: CATEGORY_UPDATED,
+        message: CATEGORIES_RESPONSES.UPDATED,
         statusCode: expectedUpdateStatusCode,
       }),
     );
@@ -267,7 +189,7 @@ describe('CategoriesController (e2e)', () => {
       expect.objectContaining<FormatedResponse<Category>>({
         success: true,
         data: expect.any(Object),
-        message: CATEGORY_FOUND_ONE,
+        message: CATEGORIES_RESPONSES.FOUND_ONE,
         statusCode: expectedFindOneStatusCode,
       }),
     );
@@ -292,7 +214,7 @@ describe('CategoriesController (e2e)', () => {
     expect(res.body).toEqual(
       expect.objectContaining<FormatedResponse<null>>({
         success: true,
-        message: CATEGORY_DELETED,
+        message: CATEGORIES_RESPONSES.DELETED,
         statusCode: expectedStatusCode,
       }),
     );
@@ -306,7 +228,6 @@ describe('CategoriesController (e2e)', () => {
       const newCategory: CreateCategoryDto | any = {
         name: 'New Category',
         isActive: true,
-        parentId: null,
         ...JSON.parse(
           `{"${unexpectedPropertyName}": "this property is not expected"}`,
         ),
@@ -332,8 +253,7 @@ describe('CategoriesController (e2e)', () => {
 
       const newCategory: CreateCategoryDto | any = {
         name: 'New Category',
-        isActive: true,
-        parentId: 'this property has not valid type',
+        isActive: 'testing',
       };
 
       const res = await request(app.getHttpServer())
@@ -345,7 +265,7 @@ describe('CategoriesController (e2e)', () => {
       expect(res.body).toEqual(
         expect.objectContaining<FormatedResponse<Category>>({
           success: false,
-          message: `ParentId must be a UUID`,
+          message: `IsActive must be a boolean value`,
           statusCode: expectedStatusCode,
         }),
       );

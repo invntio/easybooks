@@ -9,7 +9,7 @@ import { CreateCategoryDto } from '../dto/create-category.dto';
 import { UpdateCategoryDto } from '../dto/update-category.dto';
 import { Category } from '../../domain/entity/category.entity';
 import { ResponseMessageKey } from '@common/decorators/response.decorator';
-import { CATEGORY_RESPONSES } from '../../common/categories.responses';
+import { CATEGORIES_RESPONSES } from '../../common/categories.responses';
 import { CategoryPresenter } from '../presenters/category.presenter';
 
 describe('CategoriesController', () => {
@@ -50,7 +50,7 @@ describe('CategoriesController', () => {
       );
 
       expect(responseMessage).toBeDefined();
-      expect(responseMessage).toBe(CATEGORY_RESPONSES.CREATED);
+      expect(responseMessage).toBe(CATEGORIES_RESPONSES.CREATED);
     });
 
     it('should create a category', async () => {
@@ -61,27 +61,6 @@ describe('CategoriesController', () => {
       };
       const expected: CategoryPresenter = {
         id: mockCategoryId,
-        name: 'Category Name',
-        isActive: true,
-        createdAt: new Date(),
-      };
-      jest.spyOn(service, 'create').mockResolvedValue(expected);
-
-      const result = await controller.create(createCategoryDto);
-
-      expect(result).toEqual(expected);
-      expect(service.create).toHaveBeenCalledWith(createCategoryDto);
-    });
-
-    it('should create a category with parent', async () => {
-      const mockCategoryId1 = uuidV4();
-      const mockCategoryId2 = uuidV4();
-
-      const createCategoryDto: CreateCategoryDto = {
-        name: 'Category Name',
-      };
-      const expected: CategoryPresenter = {
-        id: mockCategoryId1,
         name: 'Category Name',
         isActive: true,
         createdAt: new Date(),
@@ -107,7 +86,7 @@ describe('CategoriesController', () => {
       );
 
       expect(responseMessage).toBeDefined();
-      expect(responseMessage).toBe(CATEGORY_RESPONSES.FOUND_MANY);
+      expect(responseMessage).toBe(CATEGORIES_RESPONSES.FOUND_MANY);
     });
 
     it('should return an array of categories', async () => {
@@ -142,7 +121,7 @@ describe('CategoriesController', () => {
       );
 
       expect(responseMessage).toBeDefined();
-      expect(responseMessage).toBe(CATEGORY_RESPONSES.FOUND_ONE);
+      expect(responseMessage).toBe(CATEGORIES_RESPONSES.FOUND_ONE);
     });
 
     it('should return a category', async () => {
@@ -175,7 +154,7 @@ describe('CategoriesController', () => {
       );
 
       expect(responseMessage).toBeDefined();
-      expect(responseMessage).toBe(CATEGORY_RESPONSES.UPDATED);
+      expect(responseMessage).toBe(CATEGORIES_RESPONSES.UPDATED);
     });
 
     it('should update a category', async () => {
@@ -228,7 +207,7 @@ describe('CategoriesController', () => {
       );
 
       expect(responseMessage).toBeDefined();
-      expect(responseMessage).toBe(CATEGORY_RESPONSES.DELETED);
+      expect(responseMessage).toBe(CATEGORIES_RESPONSES.DELETED);
     });
 
     it('should delete a category', async () => {

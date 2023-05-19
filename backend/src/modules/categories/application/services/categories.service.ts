@@ -4,7 +4,7 @@ import { UpdateCategoryDto } from '../../infrastructure/dto/update-category.dto'
 import { InjectRepository } from '@nestjs/typeorm';
 import { Category } from '../../domain/entity/category.entity';
 import { IsNull, Repository, TypeORMError } from 'typeorm';
-import { CATEGORY_RESPONSES } from '../../common/categories.responses';
+import { CATEGORIES_RESPONSES } from '../../common/categories.responses';
 import { CategoryPresenter } from '@modules/categories/infrastructure/presenters/category.presenter';
 
 @Injectable()
@@ -22,7 +22,7 @@ export class CategoriesService {
     });
 
     if (categoryExist)
-      throw new TypeORMError(CATEGORY_RESPONSES.ALREADY_EXISTS);
+      throw new TypeORMError(CATEGORIES_RESPONSES.ALREADY_EXISTS);
 
     const newCategory = this.categoriesRepository.create(createCategoryDto);
 
@@ -38,7 +38,7 @@ export class CategoriesService {
       where: { id: id },
     });
 
-    if (!category) throw new TypeORMError(CATEGORY_RESPONSES.NOT_FOUND_ONE);
+    if (!category) throw new TypeORMError(CATEGORIES_RESPONSES.NOT_FOUND_ONE);
 
     return category;
   }
@@ -51,7 +51,7 @@ export class CategoriesService {
       where: { id: id },
     });
 
-    if (!category) throw new TypeORMError(CATEGORY_RESPONSES.NOT_FOUND_ONE);
+    if (!category) throw new TypeORMError(CATEGORIES_RESPONSES.NOT_FOUND_ONE);
 
     await this.categoriesRepository.update(category.id, updateCategoryDto);
   }
@@ -62,7 +62,7 @@ export class CategoriesService {
     });
 
     if (!categoryExist)
-      throw new TypeORMError(CATEGORY_RESPONSES.NOT_FOUND_ONE);
+      throw new TypeORMError(CATEGORIES_RESPONSES.NOT_FOUND_ONE);
 
     await this.categoriesRepository.delete(id);
   }

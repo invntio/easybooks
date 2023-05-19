@@ -1,4 +1,4 @@
-export const CATEGORY_RESPONSES = {
+export const CATEGORIES_RESPONSES = {
   CREATED: 'Category created',
   FOUND_ONE: 'Category found',
   FOUND_MANY: 'Categories found',

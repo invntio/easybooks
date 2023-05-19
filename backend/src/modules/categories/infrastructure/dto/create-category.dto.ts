@@ -6,6 +6,10 @@ import {
   IsOptional,
   IsBoolean,
   IsString,
+  IsBooleanString,
+  IsDefined,
+  ValidationError,
+  IS_BOOLEAN,
 } from 'class-validator';
 
 export class CreateCategoryDto {
@@ -20,10 +24,9 @@ export class CreateCategoryDto {
   @ApiProperty({
     default: true,
     example: true,
-    description: 'Indicates if the category is activated or not',
+    description: 'Indicates if the category is active or not',
   })
   @IsOptional()
   @IsBoolean()
-  @Transform(({ value }) => value === 'true' || value === true)
   isActive?: boolean;
 }

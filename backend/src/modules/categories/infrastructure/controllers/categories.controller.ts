@@ -27,7 +27,7 @@ import {
   FindOneCategoryParams,
   UpdateCategoryParams,
 } from '../params/categories.params';
-import { CATEGORY_RESPONSES } from '../../common/categories.responses';
+import { CATEGORIES_RESPONSES } from '../../common/categories.responses';
 import { CategoryPresenter } from '../presenters/category.presenter';
 
 @ApiTags('categories')
@@ -44,7 +44,7 @@ export class CategoriesController {
     description: 'The request was wrongly made.',
   })
   @ApiBody({ type: CreateCategoryDto })
-  @ResponseMessage(CATEGORY_RESPONSES.CREATED)
+  @ResponseMessage(CATEGORIES_RESPONSES.CREATED)
   @Post()
   create(
     @Body() createCategoryDto: CreateCategoryDto,
@@ -58,7 +58,7 @@ export class CategoriesController {
     type: CategoryPresenter,
     isArray: true,
   })
-  @ResponseMessage(CATEGORY_RESPONSES.FOUND_MANY)
+  @ResponseMessage(CATEGORIES_RESPONSES.FOUND_MANY)
   @Get()
   findAll(): Promise<CategoryPresenter[]> {
     return this.categoriesService.findAll();
@@ -84,7 +84,7 @@ export class CategoriesController {
     format: 'uuid',
     description: 'The ID of the category',
   })
-  @ResponseMessage(CATEGORY_RESPONSES.FOUND_ONE)
+  @ResponseMessage(CATEGORIES_RESPONSES.FOUND_ONE)
   findOne(@Param() params: UpdateCategoryParams): Promise<CategoryPresenter> {
     return this.categoriesService.findOne(params.id);
   }
@@ -106,7 +106,7 @@ export class CategoriesController {
     description: 'The ID of the category',
   })
   @ApiBody({ type: UpdateCategoryDto })
-  @ResponseMessage(CATEGORY_RESPONSES.UPDATED)
+  @ResponseMessage(CATEGORIES_RESPONSES.UPDATED)
   @Patch(':id')
   update(
     @Param() params: UpdateCategoryParams,
@@ -131,7 +131,7 @@ export class CategoriesController {
     format: 'uuid',
     description: 'The ID of the category',
   })
-  @ResponseMessage(CATEGORY_RESPONSES.DELETED)
+  @ResponseMessage(CATEGORIES_RESPONSES.DELETED)
   @Delete(':id')
   remove(@Param() params: DeleteCategoryParams): Promise<void> {
     return this.categoriesService.remove(params.id);
