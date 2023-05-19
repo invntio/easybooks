@@ -9,28 +9,26 @@ import {
   Post,
 } from '@nestjs/common';
 import {
+  ApiBadRequestResponse,
   ApiBody,
+  ApiCreatedResponse,
+  ApiNoContentResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
   ApiOperation,
   ApiParam,
-  ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { CategoriesService } from './categories.service';
-import { CategoryDto } from './dto/category.dto';
-import { CreateCategoryDto } from './dto/create-category.dto';
-import { UpdateCategoryDto } from './dto/update-category.dto';
+import { CategoriesService } from '../../application/services/categories.service';
+import { CreateCategoryDto } from '../dto/create-category.dto';
+import { UpdateCategoryDto } from '../dto/update-category.dto';
 import {
   DeleteCategoryParams,
   FindOneCategoryParams,
   UpdateCategoryParams,
-} from './utils/category-controller.params';
-import {
-  CATEGORY_CREATED,
-  CATEGORY_DELETED,
-  CATEGORY_FOUND_MANY,
-  CATEGORY_FOUND_ONE,
-  CATEGORY_UPDATED,
-} from './utils/category-response.constants';
+} from '../params/categories.params';
+import { CATEGORY_RESPONSES } from '../../common/categories.responses';
+import { CategoryPresenter } from '../presenters/category.presenter';
 
 @ApiTags('categories')
 @Controller('categories')
@@ -38,45 +36,45 @@ export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
   @ApiOperation({ summary: 'Create a new category' })
-  @ApiResponse({
-    status: 201,
+  @ApiCreatedResponse({
     description: 'The category has been successfully created.',
-    type: CategoryDto,
+    type: CategoryPresenter,
   })
-  @ApiResponse({
-    status: 400,
+  @ApiBadRequestResponse({
     description: 'The request was wrongly made.',
   })
   @ApiBody({ type: CreateCategoryDto })
-  @ResponseMessage(CATEGORY_CREATED)
+  @ResponseMessage(CATEGORY_RESPONSES.CREATED)
   @Post()
-  create(@Body() createCategoryDto: CreateCategoryDto) {
+  create(
+    @Body() createCategoryDto: CreateCategoryDto,
+  ): Promise<CategoryPresenter> {
     return this.categoriesService.create(createCategoryDto);
   }
 
   @ApiOperation({ summary: 'Get a list of all categories' })
-  @ApiResponse({
-    status: 200,
+  @ApiOkResponse({
     description: 'Returns a list of all categories.',
-    type: CategoryDto,
+    type: CategoryPresenter,
+    isArray: true,
   })
-  @ResponseMessage(CATEGORY_FOUND_MANY)
+  @ResponseMessage(CATEGORY_RESPONSES.FOUND_MANY)
   @Get()
-  findAll() {
+  findAll(): Promise<CategoryPresenter[]> {
     return this.categoriesService.findAll();
   }
 
   @ApiOperation({
     summary: 'Get a list of categories with their subcategories',
   })
-  @ApiResponse({
-    status: 200,
+  @ApiOkResponse({
     description: 'Returns a list of categories with their subcategories.',
-    type: CategoryDto,
+    type: CategoryPresenter,
+    isArray: true,
   })
-  @ResponseMessage(CATEGORY_FOUND_MANY)
+  @ResponseMessage(CATEGORY_RESPONSES.FOUND_MANY)
   @Get('subcategories')
-  findAllWithSubcategories() {
+  findAllWithSubcategories(): Promise<CategoryPresenter[]> {
     return this.categoriesService.findAllWithSubcategories();
   }
 
@@ -84,17 +82,14 @@ export class CategoriesController {
   @ApiOperation({
     summary: 'Get a category by ID',
   })
-  @ApiResponse({
-    status: 200,
+  @ApiOkResponse({
     description: 'Returns the category with the specified ID.',
-    type: CategoryDto,
+    type: CategoryPresenter,
   })
-  @ApiResponse({
-    status: 400,
+  @ApiBadRequestResponse({
     description: 'The category ID was invalid.',
   })
-  @ApiResponse({
-    status: 404,
+  @ApiNotFoundResponse({
     description: 'The category with the specified ID was not found.',
   })
   @ApiParam({
@@ -103,24 +98,21 @@ export class CategoriesController {
     format: 'uuid',
     description: 'The ID of the category',
   })
-  @ResponseMessage(CATEGORY_FOUND_ONE)
-  findOne(@Param() params: UpdateCategoryParams) {
+  @ResponseMessage(CATEGORY_RESPONSES.FOUND_ONE)
+  findOne(@Param() params: UpdateCategoryParams): Promise<CategoryPresenter> {
     return this.categoriesService.findOne(params.id);
   }
 
   @ApiOperation({ summary: 'Get a category by ID with its subcategories' })
-  @ApiResponse({
-    status: 200,
+  @ApiOkResponse({
     description:
       'Returns the category with the specified ID with its subcategories.',
-    type: CategoryDto,
+    type: CategoryPresenter,
   })
-  @ApiResponse({
-    status: 400,
+  @ApiBadRequestResponse({
     description: 'The category ID was invalid.',
   })
-  @ApiResponse({
-    status: 404,
+  @ApiNotFoundResponse({
     description: 'The category with the specified ID was not found.',
   })
   @ApiParam({
@@ -129,24 +121,22 @@ export class CategoriesController {
     format: 'uuid',
     description: 'The ID of the category',
   })
-  @ResponseMessage(CATEGORY_FOUND_ONE)
+  @ResponseMessage(CATEGORY_RESPONSES.FOUND_ONE)
   @Get('subcategories/:id')
-  findOneWithSubcategories(@Param() params: FindOneCategoryParams) {
+  findOneWithSubcategories(
+    @Param() params: FindOneCategoryParams,
+  ): Promise<CategoryPresenter> {
     return this.categoriesService.findOneWithSubcategories(params.id);
   }
 
   @ApiOperation({ summary: 'Update a category' })
-  @ApiResponse({
-    status: 200,
+  @ApiNoContentResponse({
     description: 'The category has been successfully updated.',
-    type: CategoryDto,
   })
-  @ApiResponse({
-    status: 400,
+  @ApiBadRequestResponse({
     description: 'The request was wrongly made.',
   })
-  @ApiResponse({
-    status: 404,
+  @ApiNotFoundResponse({
     description: 'The category with the specified ID was not found.',
   })
   @ApiParam({
@@ -156,26 +146,23 @@ export class CategoriesController {
     description: 'The ID of the category',
   })
   @ApiBody({ type: UpdateCategoryDto })
-  @ResponseMessage(CATEGORY_UPDATED)
+  @ResponseMessage(CATEGORY_RESPONSES.UPDATED)
   @Patch(':id')
   update(
     @Param() params: UpdateCategoryParams,
     @Body() updateCategoryDto: UpdateCategoryDto,
-  ) {
+  ): Promise<void> {
     return this.categoriesService.update(params.id, updateCategoryDto);
   }
 
   @ApiOperation({ summary: 'Delete a category' })
-  @ApiResponse({
-    status: 200,
+  @ApiNoContentResponse({
     description: 'The category has been successfully deleted.',
   })
-  @ApiResponse({
-    status: 400,
+  @ApiBadRequestResponse({
     description: 'The category ID was invalid.',
   })
-  @ApiResponse({
-    status: 404,
+  @ApiNotFoundResponse({
     description: 'The category with the specified ID was not found.',
   })
   @ApiParam({
@@ -184,9 +171,9 @@ export class CategoriesController {
     format: 'uuid',
     description: 'The ID of the category',
   })
-  @ResponseMessage(CATEGORY_DELETED)
+  @ResponseMessage(CATEGORY_RESPONSES.DELETED)
   @Delete(':id')
-  remove(@Param() params: DeleteCategoryParams) {
+  remove(@Param() params: DeleteCategoryParams): Promise<void> {
     return this.categoriesService.remove(params.id);
   }
 }

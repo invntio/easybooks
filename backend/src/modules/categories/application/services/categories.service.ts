@@ -1,14 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { CreateCategoryDto } from './dto/create-category.dto';
-import { UpdateCategoryDto } from './dto/update-category.dto';
+import { CreateCategoryDto } from '../../infrastructure/dto/create-category.dto';
+import { UpdateCategoryDto } from '../../infrastructure/dto/update-category.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Category } from './entities/category.entity';
+import { Category } from '../../domain/entity/category.entity';
 import { IsNull, Repository, TypeORMError } from 'typeorm';
-import {
-  CATEGORY_ALREADY_EXISTS,
-  CATEGORY_NOT_FOUND_ONE,
-  CATEGORY_PARENT_NOT_EXIST,
-} from './utils/category-response.constants';
+import { CATEGORY_RESPONSES } from '../../common/categories.responses';
+import { CategoryPresenter } from '@modules/categories/infrastructure/presenters/category.presenter';
 
 @Injectable()
 export class CategoriesService {
@@ -17,7 +14,9 @@ export class CategoriesService {
     private categoriesRepository: Repository<Category>,
   ) {}
 
-  async create(createCategoryDto: CreateCategoryDto) {
+  async create(
+    createCategoryDto: CreateCategoryDto,
+  ): Promise<CategoryPresenter> {
     const categoryExist = await this.checkIfExists({
       name: createCategoryDto.name,
     });
@@ -26,44 +25,45 @@ export class CategoriesService {
       id: createCategoryDto.parentId,
     });
 
-    if (categoryExist) throw new TypeORMError(CATEGORY_ALREADY_EXISTS);
+    if (categoryExist)
+      throw new TypeORMError(CATEGORY_RESPONSES.ALREADY_EXISTS);
 
     if (createCategoryDto.parentId && !parentExist)
-      throw new TypeORMError(CATEGORY_PARENT_NOT_EXIST);
+      throw new TypeORMError(CATEGORY_RESPONSES.PARENT_NOT_EXIST);
 
     const newCategory = this.categoriesRepository.create(createCategoryDto);
 
     return this.categoriesRepository.save(newCategory);
   }
 
-  findAll(): Promise<Category[]> {
+  findAll(): Promise<CategoryPresenter[]> {
     return this.categoriesRepository.find();
   }
 
-  findAllWithSubcategories(): Promise<Category[]> {
+  findAllWithSubcategories(): Promise<CategoryPresenter[]> {
     return this.categoriesRepository.find({
       relations: { subcategories: true },
       where: [{ parent: IsNull() }],
     });
   }
 
-  async findOne(id: string): Promise<Category> {
+  async findOne(id: string): Promise<CategoryPresenter> {
     const category = await this.categoriesRepository.findOne({
       where: { id: id },
     });
 
-    if (!category) throw new TypeORMError(CATEGORY_NOT_FOUND_ONE);
+    if (!category) throw new TypeORMError(CATEGORY_RESPONSES.NOT_FOUND_ONE);
 
     return category;
   }
 
-  async findOneWithSubcategories(id: string): Promise<Category> {
+  async findOneWithSubcategories(id: string): Promise<CategoryPresenter> {
     const category = await this.categoriesRepository.findOne({
       relations: { subcategories: true },
       where: { id: id },
     });
 
-    if (!category) throw new TypeORMError(CATEGORY_NOT_FOUND_ONE);
+    if (!category) throw new TypeORMError(CATEGORY_RESPONSES.NOT_FOUND_ONE);
 
     return category;
   }
@@ -80,10 +80,10 @@ export class CategoriesService {
       id: updateCategoryDto.parentId,
     });
 
-    if (!category) throw new TypeORMError(CATEGORY_NOT_FOUND_ONE);
+    if (!category) throw new TypeORMError(CATEGORY_RESPONSES.NOT_FOUND_ONE);
 
     if (updateCategoryDto.parentId && !parentExist)
-      throw new TypeORMError(CATEGORY_PARENT_NOT_EXIST);
+      throw new TypeORMError(CATEGORY_RESPONSES.PARENT_NOT_EXIST);
 
     await this.categoriesRepository.update(category.id, updateCategoryDto);
   }
@@ -93,7 +93,8 @@ export class CategoriesService {
       id: id,
     });
 
-    if (!categoryExist) throw new TypeORMError(CATEGORY_NOT_FOUND_ONE);
+    if (!categoryExist)
+      throw new TypeORMError(CATEGORY_RESPONSES.NOT_FOUND_ONE);
 
     await this.categoriesRepository.delete(id);
   }

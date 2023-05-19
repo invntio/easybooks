@@ -2,15 +2,15 @@ import {
   FormatedResponse,
   FormatedErrorResponse,
 } from '@common/interfaces/formatedresponses.interface';
-import { CreateCategoryDto } from '@modules/categories/dto/create-category.dto';
-import { Category } from '@modules/categories/entities/category.entity';
+import { CreateCategoryDto } from '@modules/categories/infrastructure/dto/create-category.dto';
+import { Category } from '@modules/categories/domain/entity/category.entity';
 import {
   CATEGORY_CREATED,
   CATEGORY_DELETED,
   CATEGORY_FOUND_MANY,
   CATEGORY_FOUND_ONE,
   CATEGORY_UPDATED,
-} from '@modules/categories/utils/category-response.constants';
+} from '@modules/categories/common/categories.responses';
 import {
   ClassSerializerInterceptor,
   HttpStatus,

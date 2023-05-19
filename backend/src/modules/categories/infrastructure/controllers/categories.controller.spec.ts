@@ -4,18 +4,13 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { v4 as uuidV4 } from 'uuid';
 import { CategoriesController } from './categories.controller';
-import { CategoriesService } from './categories.service';
-import { CreateCategoryDto } from './dto/create-category.dto';
-import { UpdateCategoryDto } from './dto/update-category.dto';
-import { Category } from './entities/category.entity';
+import { CategoriesService } from '../../application/services/categories.service';
+import { CreateCategoryDto } from '../dto/create-category.dto';
+import { UpdateCategoryDto } from '../dto/update-category.dto';
+import { Category } from '../../domain/entity/category.entity';
 import { ResponseMessageKey } from '@common/decorators/response.decorator';
-import {
-  CATEGORY_CREATED,
-  CATEGORY_DELETED,
-  CATEGORY_FOUND_MANY,
-  CATEGORY_FOUND_ONE,
-  CATEGORY_UPDATED,
-} from './utils/category-response.constants';
+import { CATEGORY_RESPONSES } from '../../common/categories.responses';
+import { CategoryPresenter } from '../presenters/category.presenter';
 
 describe('CategoriesController', () => {
   let controller: CategoriesController;
@@ -55,7 +50,7 @@ describe('CategoriesController', () => {
       );
 
       expect(responseMessage).toBeDefined();
-      expect(responseMessage).toBe(CATEGORY_CREATED);
+      expect(responseMessage).toBe(CATEGORY_RESPONSES.CREATED);
     });
 
     it('should create a category', async () => {
@@ -64,7 +59,7 @@ describe('CategoriesController', () => {
       const createCategoryDto: CreateCategoryDto = {
         name: 'Category Name',
       };
-      const expected: Category = {
+      const expected: CategoryPresenter = {
         id: mockCategoryId,
         name: 'Category Name',
         parentId: null,
@@ -88,7 +83,7 @@ describe('CategoriesController', () => {
         name: 'Category Name',
         parentId: mockCategoryId2,
       };
-      const expected: Category = {
+      const expected: CategoryPresenter = {
         id: mockCategoryId1,
         name: 'Category Name',
         parentId: mockCategoryId2,
@@ -117,13 +112,13 @@ describe('CategoriesController', () => {
       );
 
       expect(responseMessage).toBeDefined();
-      expect(responseMessage).toBe(CATEGORY_FOUND_MANY);
+      expect(responseMessage).toBe(CATEGORY_RESPONSES.FOUND_MANY);
     });
 
     it('should return an array of categories', async () => {
       const mockCategoryId = uuidV4();
 
-      const expected: Category[] = [
+      const expected: CategoryPresenter[] = [
         {
           id: mockCategoryId,
           name: 'Category Name',
@@ -154,14 +149,14 @@ describe('CategoriesController', () => {
       );
 
       expect(responseMessage).toBeDefined();
-      expect(responseMessage).toBe(CATEGORY_FOUND_MANY);
+      expect(responseMessage).toBe(CATEGORY_RESPONSES.FOUND_MANY);
     });
 
     it('should return an array of categories with subcategories', async () => {
       const mockCategoryId1 = uuidV4();
       const mockCategoryId2 = uuidV4();
 
-      const expected: Category[] = [
+      const expected: CategoryPresenter[] = [
         {
           id: mockCategoryId1,
           name: 'Category Name',
@@ -203,14 +198,14 @@ describe('CategoriesController', () => {
       );
 
       expect(responseMessage).toBeDefined();
-      expect(responseMessage).toBe(CATEGORY_FOUND_ONE);
+      expect(responseMessage).toBe(CATEGORY_RESPONSES.FOUND_ONE);
     });
 
     it('should return a category', async () => {
       const mockCategoryId1 = uuidV4();
       const mockCategoryId2 = uuidV4();
 
-      const expected: Category = {
+      const expected: CategoryPresenter = {
         id: mockCategoryId1,
         name: 'Category Name',
         parentId: mockCategoryId2,
@@ -239,14 +234,14 @@ describe('CategoriesController', () => {
       );
 
       expect(responseMessage).toBeDefined();
-      expect(responseMessage).toBe(CATEGORY_FOUND_ONE);
+      expect(responseMessage).toBe(CATEGORY_RESPONSES.FOUND_ONE);
     });
 
     it('should return a category with subcategories', async () => {
       const mockCategoryId1 = uuidV4();
       const mockCategoryId2 = uuidV4();
 
-      const expected: Category = {
+      const expected: CategoryPresenter = {
         id: mockCategoryId1,
         name: 'Category Name',
         parentId: 'parent-id',
@@ -291,7 +286,7 @@ describe('CategoriesController', () => {
       );
 
       expect(responseMessage).toBeDefined();
-      expect(responseMessage).toBe(CATEGORY_UPDATED);
+      expect(responseMessage).toBe(CATEGORY_RESPONSES.UPDATED);
     });
 
     it('should update a category', async () => {
@@ -345,7 +340,7 @@ describe('CategoriesController', () => {
       );
 
       expect(responseMessage).toBeDefined();
-      expect(responseMessage).toBe(CATEGORY_DELETED);
+      expect(responseMessage).toBe(CATEGORY_RESPONSES.DELETED);
     });
 
     it('should delete a category', async () => {

@@ -1,15 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule, getRepositoryToken } from '@nestjs/typeorm';
 import { CategoriesService } from './categories.service';
-import { Category } from './entities/category.entity';
+import { Category } from '../../domain/entity/category.entity';
 import { Repository, TypeORMError } from 'typeorm';
-import {
-  CATEGORY_ALREADY_EXISTS,
-  CATEGORY_NOT_FOUND_ONE,
-  CATEGORY_PARENT_NOT_EXIST,
-} from './utils/category-response.constants';
-import { CreateCategoryDto } from './dto/create-category.dto';
-import { UpdateCategoryDto } from './dto/update-category.dto';
+import { CATEGORY_RESPONSES } from '../../common/categories.responses';
+import { CreateCategoryDto } from '../../infrastructure/dto/create-category.dto';
+import { UpdateCategoryDto } from '../../infrastructure/dto/update-category.dto';
 import { v4 as uuidV4 } from 'uuid';
 
 describe('CategoriesService', () => {
@@ -90,7 +86,7 @@ describe('CategoriesService', () => {
       const result2 = service.create(createCategoryDto2);
 
       await expect(result2).rejects.toThrow(TypeORMError);
-      await expect(result2).rejects.toThrow(CATEGORY_ALREADY_EXISTS);
+      await expect(result2).rejects.toThrow(CATEGORY_RESPONSES.ALREADY_EXISTS);
     });
 
     it('should throw a TypeORMError if the parent does not exist', async () => {
@@ -102,7 +98,7 @@ describe('CategoriesService', () => {
       const result = service.create(createCategoryDto);
 
       await expect(result).rejects.toThrow(TypeORMError);
-      await expect(result).rejects.toThrow(CATEGORY_PARENT_NOT_EXIST);
+      await expect(result).rejects.toThrow(CATEGORY_RESPONSES.PARENT_NOT_EXIST);
     });
   });
 
@@ -174,7 +170,7 @@ describe('CategoriesService', () => {
       const result = service.findOne(idToSearch);
 
       expect(result).rejects.toThrow(TypeORMError);
-      expect(result).rejects.toThrow(CATEGORY_NOT_FOUND_ONE);
+      expect(result).rejects.toThrow(CATEGORY_RESPONSES.NOT_FOUND_ONE);
     });
   });
 
@@ -212,7 +208,7 @@ describe('CategoriesService', () => {
       const result = service.findOneWithSubcategories(idToSearch);
 
       await expect(result).rejects.toThrow(TypeORMError);
-      await expect(result).rejects.toThrow(CATEGORY_NOT_FOUND_ONE);
+      await expect(result).rejects.toThrow(CATEGORY_RESPONSES.NOT_FOUND_ONE);
     });
   });
 
@@ -247,7 +243,7 @@ describe('CategoriesService', () => {
       const result = service.update(idToSearch, updatedCategory);
 
       expect(result).rejects.toThrow(TypeORMError);
-      expect(result).rejects.toThrow(CATEGORY_NOT_FOUND_ONE);
+      expect(result).rejects.toThrow(CATEGORY_RESPONSES.NOT_FOUND_ONE);
     });
 
     it('should throw a TypeORMError if parent does not exist', async () => {
@@ -263,7 +259,7 @@ describe('CategoriesService', () => {
       const result = service.update(createdCategory.id, newCategory);
 
       await expect(result).rejects.toThrow(TypeORMError);
-      await expect(result).rejects.toThrow(CATEGORY_PARENT_NOT_EXIST);
+      await expect(result).rejects.toThrow(CATEGORY_RESPONSES.PARENT_NOT_EXIST);
     });
   });
 
@@ -294,7 +290,7 @@ describe('CategoriesService', () => {
       const result = service.remove(idToSearch);
 
       await expect(result).rejects.toThrow(TypeORMError);
-      await expect(result).rejects.toThrow(CATEGORY_NOT_FOUND_ONE);
+      await expect(result).rejects.toThrow(CATEGORY_RESPONSES.NOT_FOUND_ONE);
     });
   });
 });
