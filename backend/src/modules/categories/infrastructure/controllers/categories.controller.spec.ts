@@ -62,8 +62,6 @@ describe('CategoriesController', () => {
       const expected: CategoryPresenter = {
         id: mockCategoryId,
         name: 'Category Name',
-        parentId: null,
-        subcategories: [],
         isActive: true,
         createdAt: new Date(),
       };
@@ -81,13 +79,10 @@ describe('CategoriesController', () => {
 
       const createCategoryDto: CreateCategoryDto = {
         name: 'Category Name',
-        parentId: mockCategoryId2,
       };
       const expected: CategoryPresenter = {
         id: mockCategoryId1,
         name: 'Category Name',
-        parentId: mockCategoryId2,
-        subcategories: [],
         isActive: true,
         createdAt: new Date(),
       };
@@ -122,8 +117,6 @@ describe('CategoriesController', () => {
         {
           id: mockCategoryId,
           name: 'Category Name',
-          parentId: 'parent-id',
-          subcategories: [],
           isActive: true,
           createdAt: new Date(),
         },
@@ -134,55 +127,6 @@ describe('CategoriesController', () => {
 
       expect(result).toEqual(expected);
       expect(service.findAll).toHaveBeenCalled();
-    });
-  });
-
-  describe('findAllWithSubcategories', () => {
-    it('should be defined', () => {
-      expect(controller.findAllWithSubcategories).toBeDefined();
-    });
-
-    it('should have the corresponding response message', () => {
-      const responseMessage = reflector.get<string>(
-        ResponseMessageKey,
-        controller.findAllWithSubcategories,
-      );
-
-      expect(responseMessage).toBeDefined();
-      expect(responseMessage).toBe(CATEGORY_RESPONSES.FOUND_MANY);
-    });
-
-    it('should return an array of categories with subcategories', async () => {
-      const mockCategoryId1 = uuidV4();
-      const mockCategoryId2 = uuidV4();
-
-      const expected: CategoryPresenter[] = [
-        {
-          id: mockCategoryId1,
-          name: 'Category Name',
-          parentId: null,
-          subcategories: [
-            {
-              id: mockCategoryId2,
-              name: 'Subcategory Name',
-              parentId: mockCategoryId1,
-              subcategories: [],
-              isActive: true,
-              createdAt: new Date(),
-            },
-          ],
-          isActive: true,
-          createdAt: new Date(),
-        },
-      ];
-      jest
-        .spyOn(service, 'findAllWithSubcategories')
-        .mockResolvedValue(expected);
-
-      const result = await controller.findAllWithSubcategories();
-
-      expect(result).toEqual(expected);
-      expect(service.findAllWithSubcategories).toHaveBeenCalled();
     });
   });
 
@@ -203,13 +147,10 @@ describe('CategoriesController', () => {
 
     it('should return a category', async () => {
       const mockCategoryId1 = uuidV4();
-      const mockCategoryId2 = uuidV4();
 
       const expected: CategoryPresenter = {
         id: mockCategoryId1,
         name: 'Category Name',
-        parentId: mockCategoryId2,
-        subcategories: [],
         isActive: true,
         createdAt: new Date(),
       };
@@ -219,58 +160,6 @@ describe('CategoriesController', () => {
 
       expect(result).toEqual(expected);
       expect(service.findOne).toHaveBeenCalledWith('1');
-    });
-  });
-
-  describe('findOneWithSubcategories', () => {
-    it('should be defined', () => {
-      expect(controller.findOneWithSubcategories).toBeDefined();
-    });
-
-    it('should have the corresponding response message', () => {
-      const responseMessage = reflector.get<string>(
-        ResponseMessageKey,
-        controller.findOneWithSubcategories,
-      );
-
-      expect(responseMessage).toBeDefined();
-      expect(responseMessage).toBe(CATEGORY_RESPONSES.FOUND_ONE);
-    });
-
-    it('should return a category with subcategories', async () => {
-      const mockCategoryId1 = uuidV4();
-      const mockCategoryId2 = uuidV4();
-
-      const expected: CategoryPresenter = {
-        id: mockCategoryId1,
-        name: 'Category Name',
-        parentId: 'parent-id',
-        subcategories: [
-          {
-            id: mockCategoryId2,
-            name: 'Subcategory Name',
-            parentId: mockCategoryId1,
-            subcategories: [],
-            isActive: true,
-            createdAt: new Date(),
-          },
-        ],
-        isActive: true,
-        createdAt: new Date(),
-      };
-
-      jest
-        .spyOn(service, 'findOneWithSubcategories')
-        .mockResolvedValue(expected);
-
-      const result = await controller.findOneWithSubcategories({
-        id: expected.id,
-      });
-
-      expect(result).toEqual(expected);
-      expect(service.findOneWithSubcategories).toHaveBeenCalledWith(
-        expected.id,
-      );
     });
   });
 
@@ -292,7 +181,6 @@ describe('CategoriesController', () => {
     it('should update a category', async () => {
       const updateCategoryDto: UpdateCategoryDto = {
         name: 'Category Name',
-        parentId: uuidV4(),
         isActive: true,
       };
       const categoryId = uuidV4();

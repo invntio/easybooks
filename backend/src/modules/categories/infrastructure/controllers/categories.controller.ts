@@ -64,20 +64,6 @@ export class CategoriesController {
     return this.categoriesService.findAll();
   }
 
-  @ApiOperation({
-    summary: 'Get a list of categories with their subcategories',
-  })
-  @ApiOkResponse({
-    description: 'Returns a list of categories with their subcategories.',
-    type: CategoryPresenter,
-    isArray: true,
-  })
-  @ResponseMessage(CATEGORY_RESPONSES.FOUND_MANY)
-  @Get('subcategories')
-  findAllWithSubcategories(): Promise<CategoryPresenter[]> {
-    return this.categoriesService.findAllWithSubcategories();
-  }
-
   @Get(':id')
   @ApiOperation({
     summary: 'Get a category by ID',
@@ -101,32 +87,6 @@ export class CategoriesController {
   @ResponseMessage(CATEGORY_RESPONSES.FOUND_ONE)
   findOne(@Param() params: UpdateCategoryParams): Promise<CategoryPresenter> {
     return this.categoriesService.findOne(params.id);
-  }
-
-  @ApiOperation({ summary: 'Get a category by ID with its subcategories' })
-  @ApiOkResponse({
-    description:
-      'Returns the category with the specified ID with its subcategories.',
-    type: CategoryPresenter,
-  })
-  @ApiBadRequestResponse({
-    description: 'The category ID was invalid.',
-  })
-  @ApiNotFoundResponse({
-    description: 'The category with the specified ID was not found.',
-  })
-  @ApiParam({
-    name: 'id',
-    type: 'string',
-    format: 'uuid',
-    description: 'The ID of the category',
-  })
-  @ResponseMessage(CATEGORY_RESPONSES.FOUND_ONE)
-  @Get('subcategories/:id')
-  findOneWithSubcategories(
-    @Param() params: FindOneCategoryParams,
-  ): Promise<CategoryPresenter> {
-    return this.categoriesService.findOneWithSubcategories(params.id);
   }
 
   @ApiOperation({ summary: 'Update a category' })

@@ -44,33 +44,12 @@ describe('CategoriesService', () => {
     it('should create a new category', async () => {
       const createCategoryDto: CreateCategoryDto = {
         name: 'Category 1',
-        parentId: null,
       };
 
       const category = await service.create(createCategoryDto);
 
       expect(category).toBeDefined();
       expect(category.name).toEqual(createCategoryDto.name);
-      expect(category.parentId).toEqual(createCategoryDto.parentId);
-    });
-
-    it('should create a new category with parent', async () => {
-      const createCategoryDto1: CreateCategoryDto = {
-        name: 'Category 1',
-      };
-
-      const category1 = await service.create(createCategoryDto1);
-
-      const createCategoryDto2: CreateCategoryDto = {
-        name: 'Category 2',
-        parentId: category1.id,
-      };
-
-      const category2 = await service.create(createCategoryDto2);
-
-      expect(category2).toBeDefined();
-      expect(category2.name).toEqual(category2.name);
-      expect(category2.parentId).toEqual(category2.parentId);
     });
 
     it('should throw a TypeORMError if a category with the same name already exists', async () => {
@@ -87,18 +66,6 @@ describe('CategoriesService', () => {
 
       await expect(result2).rejects.toThrow(TypeORMError);
       await expect(result2).rejects.toThrow(CATEGORY_RESPONSES.ALREADY_EXISTS);
-    });
-
-    it('should throw a TypeORMError if the parent does not exist', async () => {
-      const createCategoryDto: CreateCategoryDto = {
-        name: 'Category 1',
-        parentId: 'e60ce7e7-cd70-4cf9-a2f9-7e078d546b94',
-      };
-
-      const result = service.create(createCategoryDto);
-
-      await expect(result).rejects.toThrow(TypeORMError);
-      await expect(result).rejects.toThrow(CATEGORY_RESPONSES.PARENT_NOT_EXIST);
     });
   });
 
@@ -124,32 +91,6 @@ describe('CategoriesService', () => {
     });
   });
 
-  describe('findAllWithSubcategories', () => {
-    it('should be defined', () => {
-      expect(service.findAllWithSubcategories).toBeDefined();
-    });
-
-    it('should return an array of categories with subcategories', async () => {
-      const category1: CreateCategoryDto = {
-        name: 'Test Category 1',
-      };
-
-      const createdCategory1 = await service.create(category1);
-
-      const category2: CreateCategoryDto = {
-        name: 'Test Category 2',
-        parentId: createdCategory1.id,
-      };
-
-      await service.create(category2);
-
-      const result = await service.findAllWithSubcategories();
-
-      expect(result.length).toBeGreaterThanOrEqual(1);
-      expect(result[0].subcategories).toBeDefined();
-    });
-  });
-
   describe('findOne', () => {
     it('should be defined', () => {
       expect(service.findOne).toBeDefined();
@@ -171,44 +112,6 @@ describe('CategoriesService', () => {
 
       expect(result).rejects.toThrow(TypeORMError);
       expect(result).rejects.toThrow(CATEGORY_RESPONSES.NOT_FOUND_ONE);
-    });
-  });
-
-  describe('findOneWithSubcategories', () => {
-    it('should be defined', () => {
-      expect(service.findOneWithSubcategories).toBeDefined();
-    });
-
-    it('should return a category with subcategories', async () => {
-      const category1: CreateCategoryDto = {
-        name: 'Test Category 1',
-      };
-
-      const createdCategory1 = await service.create(category1);
-
-      const category2: CreateCategoryDto = {
-        name: 'Test Category 2',
-        parentId: createdCategory1.id,
-      };
-
-      const createdCategory2 = await service.create(category2);
-
-      const result = await service.findOneWithSubcategories(
-        createdCategory1.id,
-      );
-
-      expect(result.name).toEqual(category1.name);
-      expect(result.subcategories).toBeDefined();
-      expect(result.subcategories).toContainEqual(createdCategory2);
-    });
-
-    it('should return an TypeORMError if category not found', async () => {
-      const idToSearch = uuidV4();
-
-      const result = service.findOneWithSubcategories(idToSearch);
-
-      await expect(result).rejects.toThrow(TypeORMError);
-      await expect(result).rejects.toThrow(CATEGORY_RESPONSES.NOT_FOUND_ONE);
     });
   });
 
@@ -244,22 +147,6 @@ describe('CategoriesService', () => {
 
       expect(result).rejects.toThrow(TypeORMError);
       expect(result).rejects.toThrow(CATEGORY_RESPONSES.NOT_FOUND_ONE);
-    });
-
-    it('should throw a TypeORMError if parent does not exist', async () => {
-      const createCategoryDto: CreateCategoryDto = {
-        name: 'Test Category',
-      };
-      const createdCategory = await service.create(createCategoryDto);
-
-      const newCategory: UpdateCategoryDto = {
-        name: 'Updated Category',
-        parentId: 'e60ce7e7-cd70-4cf9-a2f9-7e078d546b94',
-      };
-      const result = service.update(createdCategory.id, newCategory);
-
-      await expect(result).rejects.toThrow(TypeORMError);
-      await expect(result).rejects.toThrow(CATEGORY_RESPONSES.PARENT_NOT_EXIST);
     });
   });
 

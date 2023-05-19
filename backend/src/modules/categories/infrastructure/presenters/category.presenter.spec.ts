@@ -8,7 +8,6 @@ describe('CategoryPresenter', () => {
       const category: Category = {
         id: uuidV4(),
         name: 'Category 1',
-        parentId: uuidV4(),
         isActive: true,
         createdAt: new Date(),
       };
@@ -17,7 +16,6 @@ describe('CategoryPresenter', () => {
 
       expect(presenter.id).toBe(category.id);
       expect(presenter.name).toBe(category.name);
-      expect(presenter.parentId).toBe(category.parentId);
       expect(presenter.isActive).toBe(category.isActive);
       expect(presenter.createdAt).toBe(category.createdAt);
     });

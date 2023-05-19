@@ -21,15 +21,8 @@ export class CategoriesService {
       name: createCategoryDto.name,
     });
 
-    const parentExist = await this.checkIfExists({
-      id: createCategoryDto.parentId,
-    });
-
     if (categoryExist)
       throw new TypeORMError(CATEGORY_RESPONSES.ALREADY_EXISTS);
-
-    if (createCategoryDto.parentId && !parentExist)
-      throw new TypeORMError(CATEGORY_RESPONSES.PARENT_NOT_EXIST);
 
     const newCategory = this.categoriesRepository.create(createCategoryDto);
 
@@ -40,26 +33,8 @@ export class CategoriesService {
     return this.categoriesRepository.find();
   }
 
-  findAllWithSubcategories(): Promise<CategoryPresenter[]> {
-    return this.categoriesRepository.find({
-      relations: { subcategories: true },
-      where: [{ parent: IsNull() }],
-    });
-  }
-
   async findOne(id: string): Promise<CategoryPresenter> {
     const category = await this.categoriesRepository.findOne({
-      where: { id: id },
-    });
-
-    if (!category) throw new TypeORMError(CATEGORY_RESPONSES.NOT_FOUND_ONE);
-
-    return category;
-  }
-
-  async findOneWithSubcategories(id: string): Promise<CategoryPresenter> {
-    const category = await this.categoriesRepository.findOne({
-      relations: { subcategories: true },
       where: { id: id },
     });
 
@@ -76,14 +51,7 @@ export class CategoriesService {
       where: { id: id },
     });
 
-    const parentExist = await this.checkIfExists({
-      id: updateCategoryDto.parentId,
-    });
-
     if (!category) throw new TypeORMError(CATEGORY_RESPONSES.NOT_FOUND_ONE);
-
-    if (updateCategoryDto.parentId && !parentExist)
-      throw new TypeORMError(CATEGORY_RESPONSES.PARENT_NOT_EXIST);
 
     await this.categoriesRepository.update(category.id, updateCategoryDto);
   }

@@ -17,14 +17,6 @@ export class CreateCategoryDto {
   @IsString()
   name: string;
 
-  @ApiPropertyOptional({
-    example: '391180de-1f08-45ff-91a0-bd1965cbd1b9',
-    description: "The id of the category's parent",
-  })
-  @IsOptional()
-  @IsUUID()
-  parentId?: string;
-
   @ApiProperty({
     default: true,
     example: true,
