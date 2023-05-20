@@ -1,10 +1,11 @@
-import { Module } from '@nestjs/common';
+import { Module, RequestMethod } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { envConfig, ormConfig } from '@config/index';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CategoriesModule } from './modules/categories/categories.module';
+import { LoggerModule } from 'nestjs-pino';
 
 @Module({
   imports: [
@@ -17,6 +18,21 @@ import { CategoriesModule } from './modules/categories/categories.module';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: ormConfig,
+    }),
+    LoggerModule.forRoot({
+      pinoHttp: [
+        {
+          level: process.env.NODE_ENV === 'dev' ? 'debug' : 'info',
+          transport:
+            process.env.NODE_ENV === 'dev'
+              ? { target: 'pino-pretty', options: { messageKey: 'message' } }
+              : undefined,
+          messageKey: 'message',
+        },
+        {
+          write: (msg) => `massimus ${msg}`,
+        },
+      ],
     }),
     CategoriesModule,
   ],

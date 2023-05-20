@@ -1,9 +1,5 @@
 import { XSSInterceptor } from '@common/interceptors/xss.interceptor';
-import {
-  ClassSerializerInterceptor,
-  Logger,
-  ValidationPipe,
-} from '@nestjs/common';
+import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory, Reflector } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -11,9 +7,12 @@ import helmet from 'helmet';
 import { AppModule } from './app.module';
 import { FormatResponseInterceptor } from '@common/interceptors/formatresponse.interceptor';
 import { TransformResponseFilter } from '@common/filters/transformresponse.filter';
+import { Logger } from 'nestjs-pino';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    bufferLogs: true,
+  });
 
   // Load environment variables
   const configService = app.get(ConfigService);
@@ -61,9 +60,8 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('api', app, document);
 
-  // Set up logging with Winston
-  const logger = new Logger();
-  app.useLogger(logger);
+  // Set up logging with Pino
+  app.useLogger(app.get(Logger));
 
   // Get port from config service
   const port = configService.get('port');
