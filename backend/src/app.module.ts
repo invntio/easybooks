@@ -1,4 +1,4 @@
-import { Module, RequestMethod } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -30,7 +30,7 @@ import { LoggerModule } from 'nestjs-pino';
           messageKey: 'message',
         },
         {
-          write: (msg) => `massimus ${msg}`,
+          write: (msg) => msg,
         },
       ],
     }),
