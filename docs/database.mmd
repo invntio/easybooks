@@ -1,0 +1,248 @@
+erDiagram
+     Product {
+        uuid ProductID PK
+        string Name
+        string Description
+        Price Price
+        uuid CategoryID FK
+    }
+
+    Category {
+        uuid CategoryID PK
+        string Name
+    }
+
+    Warehouse {
+        uuid WarehouseID PK
+        string Name
+        string Address
+    }
+
+    Stock {
+        uuid StockID PK
+        uuid ProductID FK
+        uuid WarehouseID FK
+        number Quantity
+    }
+
+    Supplier {
+        uuid SupplierID PK
+        string Name
+        string Email
+        string PhoneNumber
+        string Address
+    }
+
+    PurchaseOrder {
+        uuid PurchaseOrderID PK
+        date OrderDate
+        uuid SupplierID FK
+    }
+
+    PurchaseOrderDetail {
+        uuid PurchaseOrderDetailID PK
+        uuid PurchaseOrderID FK
+        uuid ProductID FK
+        number Quantity
+        Price UnitPrice
+    }
+
+    SaleOrder {
+        uuid SaleOrderID PK
+        date OrderDate
+        uuid CustomerID FK
+    }
+
+    SaleOrderDetail {
+        uuid SaleOrderDetailID PK
+        uuid SaleOrderID FK
+        uuid ProductID FK
+        number Quantity
+        Price UnitPrice
+    }
+	
+    Customer {
+        uuid CustomerID PK
+        string Name
+        string Phone
+        string Email
+        string Address
+    }
+
+    Payment {
+        uuid PaymentID PK
+        uuid CustomerID FK
+        Price Amount
+        string PaymentDate
+        enum PaymentStatus
+    }
+
+    Bill {
+        uuid BillID PK
+        uuid CustomerID FK
+        Price Amount
+        string DueDate
+        enum BillStatus
+    }
+
+    Invoice {
+        uuid InvoiceID PK
+        uuid CustomerID FK
+        Price Amount
+        string IssueDate
+        enum InvoiceStatus
+    }
+
+    Receipt {
+        uuid ReceiptID PK
+        uuid CustomerID FK
+        uuid PaymentID FK
+        uuid InvoiceID FK
+        Price Amount
+        string ReceiptDate
+    }
+
+    Return {
+        uuid ReturnID PK
+        uuid CustomerID FK
+        uuid ProductID FK
+        string ReturnDate
+        string ReturnReason
+        enum ReturnStatus
+    }
+
+    Refund {
+        uuid RefundID PK
+        uuid CustomerID FK
+        uuid PaymentID FK
+        uuid ProductID FK
+        Price Amount
+        string RefundDate
+        string RefundReason
+        enum RefundStatus
+    }
+
+    Transaction {
+        uuid TransactionID PK
+        uuid ProductID FK
+        number Quantity
+        enum TransactionType
+    }
+
+    StockTransaction {
+        uuid StockTransactionID PK
+        uuid TransactionID FK
+        uuid SourceWarehouseID FK
+        uuid DestinationWarehouseID FK
+    }
+
+    PurchaseTransaction {
+        uuid PurchaseTransactionID PK
+        uuid TransactionID FK
+        uuid PurchaseOrderID FK
+        uuid DestinationWarehouseID FK
+    }
+
+    SaleTransaction {
+        uuid SaleTransactionID PK
+        uuid TransactionID FK
+        uuid SaleOrderID FK
+        uuid SourceWarehouseID FK
+    }
+
+    ReturnTransaction {
+        uuid ReturnTransactionID PK
+        uuid TransactionID FK
+        uuid ReturnID FK
+        uuid DestinationWarehouseID FK
+    }
+
+     ReturnRefundTransaction {
+        uuid ReturnRefundTransactionID PK
+        uuid TransactionID FK
+        uuid RefundID FK
+        uuid DestinationWarehouseID FK
+    }
+
+    TransactionType {
+        string Purchase
+        string Sale
+        string Return
+        string ReturnRefund
+        string StockMovement
+    }
+
+    PaymentStatus {
+        string Pending
+        string Completed
+        string Cancelled
+        string Refunded
+    }
+
+    BillStatus {
+        string Draft
+        string Pending
+        string Paid
+        string Overdue
+        string Void
+    }
+
+    InvoiceStatus {
+        string Draft
+        string Issued
+        string Paid
+        string Overdue
+        string Void
+    }
+
+    RefundStatus {
+        string Pending
+        string Approved
+        string Rejected
+        string Completed
+    }
+
+    ReturnStatus {
+        string Pending
+        string Approved
+        string Rejected
+        string Completed
+    }
+
+    Stock }o--|| Warehouse: "belongs to"
+
+    Product }o--o| Category: has
+    Supplier ||--o{ PurchaseOrder: supplies
+    Customer ||--o{ SaleOrder: places
+    Customer ||--o{ Payment: makes
+    Customer ||--o{ Bill: receives
+    Customer ||--o{ Invoice: receives
+    Customer ||--o{ Receipt: receives
+    Customer ||--o{ Return: initiates
+    Customer ||--o{ Refund: requests
+
+    Receipt }|--|| Invoice: "relates to"
+
+    PurchaseOrder ||--|{ PurchaseOrderDetail: has
+    SaleOrder ||--|{ SaleOrderDetail: has
+
+    Return ||--|| ReturnTransaction: creates
+    Refund ||--|| ReturnRefundTransaction: creates
+
+    Transaction }o--|| Product: has
+    Transaction ||--|| TransactionType: has
+    Transaction ||--|| StockTransaction: "can be"
+    Transaction ||--|| PurchaseTransaction: "can be"
+    Transaction ||--|| SaleTransaction:" can be"
+    Transaction ||--|| ReturnTransaction: "can be"
+    Transaction ||--|| ReturnRefundTransaction: "can be"
+
+    ReturnTransaction }o--|| Warehouse: "has destination"
+    
+    ReturnRefundTransaction }o--|| Warehouse: "has destination"
+
+    PurchaseTransaction }o--|| PurchaseOrder: "belongs to"
+    PurchaseTransaction }o--|| Warehouse: "has destination"
+
+    SaleTransaction }o--|| SaleOrder:" belongs to"
+    SaleTransaction }o--|| Warehouse: "has source"
