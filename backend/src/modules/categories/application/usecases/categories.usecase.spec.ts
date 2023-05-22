@@ -114,12 +114,10 @@ describe('CategoriesUseCase', () => {
         isActive: true,
         createdAt: new Date(),
       };
-      const updatedCategory: Category = {
-        id: '1',
+      const updatedCategory: Category = Object.assign(existingCategory, {
         name: 'Updated Category',
-        isActive: true,
-        createdAt: new Date(),
-      };
+      });
+
       jest
         .spyOn(categoryRepository, 'findOne')
         .mockResolvedValue(existingCategory);
