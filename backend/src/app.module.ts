@@ -48,6 +48,7 @@ import { Request } from 'express';
         },
         messageKey: 'message',
         // TODO: Add abstraction layer
+        // This comment is for testing CICD. ignore it
       },
     }),
     CategoriesModule,
