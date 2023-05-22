@@ -6,7 +6,9 @@ type SUPPORTED_DATABASE_TYPES = 'postgres' | 'sqlite';
 const ormConfig = (configService: ConfigService): OrmConfig => {
   const nodeEnv: string = configService.get('NODE_ENV');
 
-  //console.log(nodeEnv);
+  if (!nodeEnv) {
+    throw new Error(`Environment mode not provided`);
+  }
 
   if (!['prod', 'dev', 'test'].includes(nodeEnv)) {
     throw new Error(`Unsupported environment mode: ${nodeEnv}`);
@@ -17,8 +19,6 @@ const ormConfig = (configService: ConfigService): OrmConfig => {
   const nodeDbType = configService.get<string>(
     `${upperCaseNodeEnv}_DATABASE_TYPE`,
   );
-
-  //console.log(`${upperCaseNodeEnv}_DATABASE_TYPE: ` + nodeDbType);
 
   if (!['postgres', 'sqlite'].includes(nodeDbType)) {
     throw new Error(`Unsupported database type: ${nodeDbType}`);
