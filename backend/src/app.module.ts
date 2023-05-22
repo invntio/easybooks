@@ -6,11 +6,8 @@ import { envConfig, ormConfig } from '@config/index';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { LoggerModule } from 'nestjs-pino';
-import {
-  CORRELATION_ID_HEADER,
-  CorrelationIdMiddleware,
-} from '@common/middlewares/correlation-id/correlation-id.middleware';
-import { Request } from 'express';
+import { CorrelationIdMiddleware } from '@common/middlewares/correlation-id/correlation-id.middleware';
+import pinoConsoleFileLogger from '@common/loggers/pino-logger';
 
 @Module({
   imports: [
@@ -24,32 +21,10 @@ import { Request } from 'express';
       inject: [ConfigService],
       useFactory: ormConfig,
     }),
-    LoggerModule.forRoot({
-      pinoHttp: {
-        level: process.env.NODE_ENV === 'dev' ? 'debug' : 'info',
-        transport: {
-          targets: [
-            {
-              level: 'info',
-              target: 'pino-pretty',
-              options: { messageKey: 'message' },
-            },
-            {
-              level: 'trace',
-              target: 'pino/file',
-              options: { destination: './pino.log' },
-            },
-          ],
-        },
-        customProps: (req: Request) => {
-          return {
-            correlationId: req[CORRELATION_ID_HEADER],
-          };
-        },
-        messageKey: 'message',
-        // TODO: Add abstraction layer
-        // This comment is for testing CICD. ignore it
-      },
+    LoggerModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: pinoConsoleFileLogger,
     }),
     CategoriesModule,
   ],
