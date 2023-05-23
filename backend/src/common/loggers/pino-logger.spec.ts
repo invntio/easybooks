@@ -1,6 +1,5 @@
 import { ConfigService } from '@nestjs/config';
 import { Request, Response } from 'express';
-import { Params } from 'nestjs-pino';
 import { Options } from 'pino-http';
 import pinoConsoleFileLogger from './pino-logger';
 import { TransportMultiOptions } from 'pino';
