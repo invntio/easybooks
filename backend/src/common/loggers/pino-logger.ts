@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
 import { Params } from 'nestjs-pino';
 
-const pinoConsolefileLogger = (configService: ConfigService): Params => {
+const pinoConsoleFileLogger = (configService: ConfigService): Params => {
   return {
     pinoHttp: {
       level: configService.get('NODE_ENV') === 'dev' ? 'debug' : 'info',
@@ -31,4 +31,4 @@ const pinoConsolefileLogger = (configService: ConfigService): Params => {
   };
 };
 
-export default pinoConsolefileLogger;
+export default pinoConsoleFileLogger;
