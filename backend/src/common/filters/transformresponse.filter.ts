@@ -9,18 +9,11 @@ import {
 } from '@nestjs/common';
 import { isArray } from 'class-validator';
 import { Response } from 'express';
-import { Logger } from '@nestjs/common';
-import { EntityNotFoundError } from 'typeorm';
-
-const ENTITY_NOT_FOUND_ERROR = 'Not Found';
 
 @Catch()
 export class TransformResponseFilter implements ExceptionFilter {
   catch(exception: Error | any, host: ArgumentsHost) {
     const response: Response = host.getArgs()[1];
-    const logger = new Logger();
-
-    logger.debug(exception);
 
     let message = 'Internal Server Error';
     let statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
@@ -28,11 +21,6 @@ export class TransformResponseFilter implements ExceptionFilter {
     if (exception instanceof Error) {
       message = exception.message;
       statusCode = HttpStatus.BAD_REQUEST;
-    }
-
-    if (exception instanceof EntityNotFoundError) {
-      message = ENTITY_NOT_FOUND_ERROR;
-      statusCode = HttpStatus.NOT_FOUND;
     }
 
     if (exception instanceof BadRequestException) {
