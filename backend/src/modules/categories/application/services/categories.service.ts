@@ -3,7 +3,7 @@ import { CreateCategoryDto } from '../../infrastructure/dto/create-category.dto'
 import { UpdateCategoryDto } from '../../infrastructure/dto/update-category.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Category } from '../../domain/entity/category.entity';
-import { IsNull, Repository, TypeORMError } from 'typeorm';
+import { Repository, TypeORMError } from 'typeorm';
 import { CATEGORIES_RESPONSES } from '../../common/categories.responses';
 import { CategoryPresenter } from '@modules/categories/infrastructure/presenters/category.presenter';
 

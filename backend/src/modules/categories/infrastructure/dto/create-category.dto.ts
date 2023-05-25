@@ -1,16 +1,5 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Transform, Type } from 'class-transformer';
-import {
-  IsUUID,
-  IsNotEmpty,
-  IsOptional,
-  IsBoolean,
-  IsString,
-  IsBooleanString,
-  IsDefined,
-  ValidationError,
-  IS_BOOLEAN,
-} from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty, IsOptional, IsBoolean, IsString } from 'class-validator';
 
 export class CreateCategoryDto {
   @ApiProperty({
