@@ -9,12 +9,6 @@ export class CategoryPresenter {
   name: string;
 
   @ApiProperty()
-  parentId?: string;
-
-  @ApiProperty()
-  subcategories?: CategoryPresenter[];
-
-  @ApiProperty()
   isActive: boolean;
 
   @ApiProperty()

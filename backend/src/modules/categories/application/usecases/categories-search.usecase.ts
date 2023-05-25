@@ -1,8 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindManyOptions, Like, Repository } from 'typeorm';
+import { FindManyOptions, FindOptionsWhere, Like, Repository } from 'typeorm';
 
 import { Category } from '../../domain/entity/category.entity';
+
+export class CategoryFilterCriteria {
+  name?: string;
+  isActive?: boolean;
+}
 
 @Injectable()
 export class CategorySearchUseCase {
@@ -12,9 +17,9 @@ export class CategorySearchUseCase {
   ) {}
 
   async searchCategoriesByKeyword(keyword: string): Promise<Category[]> {
-    const searchOptions = {
+    const searchOptions: FindManyOptions = {
       where: {
-        name: Like(`%${keyword}%`),
+        name: keyword && Like(`%${keyword}%`),
       },
     };
 
@@ -23,9 +28,14 @@ export class CategorySearchUseCase {
   }
 
   async filterCategoriesByCriteria(
-    criteria: FindManyOptions,
+    criteria: CategoryFilterCriteria,
   ): Promise<Category[]> {
-    const categories = await this.categoryRepository.find(criteria);
+    const filterOptions: FindOptionsWhere<Category> = {
+      name: criteria.name && Like(`%${criteria.name}%`),
+      isActive: criteria.isActive,
+    };
+
+    const categories = await this.categoryRepository.findBy(filterOptions);
     return categories;
   }
 }

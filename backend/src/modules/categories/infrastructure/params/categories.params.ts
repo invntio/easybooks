@@ -1,8 +1,28 @@
-import { IsUUID } from 'class-validator';
+import { CategoryFilterCriteria } from '@modules/categories/application/usecases/categories-search.usecase';
+import { Transform } from 'class-transformer';
+import { IsBoolean, IsOptional, IsString, IsUUID } from 'class-validator';
 
 export class FindOneCategoryParams {
   @IsUUID('4')
   id: string;
+}
+
+export class SearchByKeywordParams {
+  @IsString()
+  keyword: string;
+}
+
+export class FilterCategoryByCriteriaParams implements CategoryFilterCriteria {
+  @IsOptional()
+  @IsString()
+  name?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  @Transform(({ value }) => {
+    return value.toLowerCase() === 'true';
+  })
+  isActive?: boolean;
 }
 
 export class UpdateCategoryParams extends FindOneCategoryParams {}

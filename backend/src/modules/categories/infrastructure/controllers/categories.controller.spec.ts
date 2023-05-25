@@ -11,10 +11,17 @@ import { Category } from '../../domain/entity/category.entity';
 import { ResponseMessageKey } from '@common/decorators/response.decorator';
 import { CATEGORIES_RESPONSES } from '../../common/categories.responses';
 import { CategoryPresenter } from '../presenters/category.presenter';
+import { CategoriesUseCase } from '@modules/categories/application/usecases/categories.usecase';
+import { CategorySearchUseCase } from '@modules/categories/application/usecases/categories-search.usecase';
+import {
+  FilterCategoryByCriteriaParams,
+  SearchByKeywordParams,
+} from '../params/categories.params';
 
 describe('CategoriesController', () => {
   let controller: CategoriesController;
   let service: CategoriesService;
+  let searchUseCase: CategorySearchUseCase;
   let reflector: Reflector;
 
   beforeEach(async () => {
@@ -22,6 +29,8 @@ describe('CategoriesController', () => {
       controllers: [CategoriesController],
       providers: [
         CategoriesService,
+        CategoriesUseCase,
+        CategorySearchUseCase,
         {
           provide: getRepositoryToken(Category),
           useClass: Repository,
@@ -31,6 +40,7 @@ describe('CategoriesController', () => {
 
     controller = module.get<CategoriesController>(CategoriesController);
     service = module.get<CategoriesService>(CategoriesService);
+    searchUseCase = module.get<CategorySearchUseCase>(CategorySearchUseCase);
     reflector = module.get<Reflector>(Reflector);
   });
 
@@ -189,9 +199,9 @@ describe('CategoriesController', () => {
         return Promise.reject(new Error('Category not found'));
       });
 
-      expect(
-        controller.update({ id: categoryId }, updateCategoryDto),
-      ).rejects.toThrow();
+      const result = controller.update({ id: categoryId }, updateCategoryDto);
+
+      await expect(result).rejects.toThrow();
     });
   });
 
@@ -221,13 +231,149 @@ describe('CategoriesController', () => {
     });
 
     it('should throw an error when the category does not exist', async () => {
-      const categoryId = 'non-existent-category';
+      const categoryId = 'Non-existent-category';
 
       jest.spyOn(service, 'remove').mockImplementation((): any => {
         return Promise.reject(new Error('Category not found'));
       });
 
-      expect(controller.remove({ id: categoryId })).rejects.toThrow();
+      const result = controller.remove({ id: categoryId });
+
+      await expect(result).rejects.toThrow();
+    });
+  });
+
+  describe('filter', () => {
+    it('should be defined', () => {
+      expect(controller.filter).toBeDefined();
+    });
+
+    it('should have the corresponding response message', () => {
+      const responseMessage = reflector.get<string>(
+        ResponseMessageKey,
+        controller.filter,
+      );
+
+      expect(responseMessage).toBeDefined();
+      expect(responseMessage).toBe(CATEGORIES_RESPONSES.FOUND_MANY);
+    });
+
+    it('should return an array of categories', async () => {
+      const mockCriteria: FilterCategoryByCriteriaParams = {
+        name: 'Category',
+        isActive: true,
+      };
+
+      const mockFilteredCategories: Category[] = [
+        {
+          id: '1',
+          name: 'Category 1',
+          isActive: true,
+          createdAt: new Date(),
+        },
+        {
+          id: '2',
+          name: 'Category 2',
+          isActive: true,
+          createdAt: new Date(),
+        },
+      ];
+
+      jest
+        .spyOn(searchUseCase, 'filterCategoriesByCriteria')
+        .mockResolvedValue(mockFilteredCategories);
+
+      const result = await controller.filter(mockCriteria);
+
+      expect(result).toEqual(mockFilteredCategories);
+      expect(searchUseCase.filterCategoriesByCriteria).toHaveBeenCalledWith({
+        name: mockCriteria.name,
+        isActive: mockCriteria.isActive,
+      });
+    });
+
+    it('should return an empty array if no match is found', async () => {
+      const mockCriteria: FilterCategoryByCriteriaParams = {
+        name: 'Non-existing Category',
+        isActive: true,
+      };
+
+      jest
+        .spyOn(searchUseCase, 'filterCategoriesByCriteria')
+        .mockResolvedValue([]);
+
+      const result = await controller.filter(mockCriteria);
+
+      expect(result).toEqual([]);
+      expect(searchUseCase.filterCategoriesByCriteria).toHaveBeenCalledWith({
+        name: mockCriteria.name,
+        isActive: mockCriteria.isActive,
+      });
+    });
+  });
+
+  describe('search', () => {
+    it('should be defined', () => {
+      expect(controller.search).toBeDefined();
+    });
+
+    it('should have the corresponding response message', () => {
+      const responseMessage = reflector.get<string>(
+        ResponseMessageKey,
+        controller.search,
+      );
+
+      expect(responseMessage).toBeDefined();
+      expect(responseMessage).toBe(CATEGORIES_RESPONSES.FOUND_MANY);
+    });
+
+    it('should return an array of categories', async () => {
+      const mockKeyword: SearchByKeywordParams = {
+        keyword: 'Category',
+      };
+
+      const mockSearchResult: Category[] = [
+        {
+          id: '1',
+          name: 'Category 1',
+          isActive: true,
+          createdAt: new Date(),
+        },
+        {
+          id: '2',
+          name: 'Category 2',
+          isActive: true,
+          createdAt: new Date(),
+        },
+      ];
+
+      jest
+        .spyOn(searchUseCase, 'searchCategoriesByKeyword')
+        .mockResolvedValue(mockSearchResult);
+
+      const result = await controller.search(mockKeyword);
+
+      expect(result).toEqual(mockSearchResult);
+      expect(searchUseCase.searchCategoriesByKeyword).toHaveBeenCalledWith(
+        mockKeyword.keyword,
+      );
+    });
+
+    it('should return an empty array if no match is found', async () => {
+      const mockKeyword: SearchByKeywordParams = {
+        keyword: 'Not matching category',
+      };
+
+      jest
+        .spyOn(searchUseCase, 'searchCategoriesByKeyword')
+        .mockResolvedValue([]);
+
+      const result = await controller.search(mockKeyword);
+
+      expect(result).toEqual([]);
+      expect(searchUseCase.searchCategoriesByKeyword).toHaveBeenCalledWith(
+        mockKeyword.keyword,
+      );
     });
   });
 });
