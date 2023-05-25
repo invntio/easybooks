@@ -21,6 +21,7 @@ const pinoConsoleFileLogger = (configService: ConfigService): Params => {
           },
         ],
       },
+      autoLogging: true,
       customProps: (req: Request) => {
         return {
           correlationId: req[CORRELATION_ID_HEADER],
