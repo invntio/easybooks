@@ -7,6 +7,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -17,6 +18,7 @@ import {
   ApiOkResponse,
   ApiOperation,
   ApiParam,
+  ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
 import { CategoriesService } from '../../application/services/categories.service';
@@ -24,16 +26,22 @@ import { CreateCategoryDto } from '../dto/create-category.dto';
 import { UpdateCategoryDto } from '../dto/update-category.dto';
 import {
   DeleteCategoryParams,
+  FilterCategoryByCriteriaParams,
   FindOneCategoryParams,
+  SearchByKeywordParams,
   UpdateCategoryParams,
 } from '../params/categories.params';
 import { CATEGORIES_RESPONSES } from '../../common/categories.responses';
 import { CategoryPresenter } from '../presenters/category.presenter';
+import { CategorySearchUseCase } from '@modules/categories/application/usecases/categories-search.usecase';
 
 @ApiTags('categories')
 @Controller('categories')
 export class CategoriesController {
-  constructor(private readonly categoriesService: CategoriesService) {}
+  constructor(
+    private readonly categoriesService: CategoriesService,
+    private readonly categoriesSearchUseCase: CategorySearchUseCase,
+  ) {}
 
   @ApiOperation({ summary: 'Create a new category' })
   @ApiCreatedResponse({
@@ -52,16 +60,69 @@ export class CategoriesController {
     return this.categoriesService.create(createCategoryDto);
   }
 
-  @ApiOperation({ summary: 'Get a list of all categories' })
+  @Get('search')
+  @ApiOperation({
+    summary: 'Get a list of categories by keyword',
+  })
   @ApiOkResponse({
-    description: 'Returns a list of all categories.',
+    description:
+      'Returns a list of categories that contains the keyword provided ',
     type: CategoryPresenter,
     isArray: true,
   })
+  @ApiBadRequestResponse({
+    description: 'The keyword provided was invalid',
+  })
+  @ApiNotFoundResponse({
+    description: 'No categories were found containing the keyword provided',
+  })
+  @ApiQuery({
+    name: 'keyword',
+    type: 'string',
+    required: false,
+    description: 'The keyword to search in the categories',
+  })
   @ResponseMessage(CATEGORIES_RESPONSES.FOUND_MANY)
-  @Get()
-  findAll(): Promise<CategoryPresenter[]> {
-    return this.categoriesService.findAll();
+  search(@Query() params: SearchByKeywordParams): Promise<CategoryPresenter[]> {
+    return this.categoriesSearchUseCase.searchCategoriesByKeyword(
+      params.keyword,
+    );
+  }
+
+  @Get('filter')
+  @ApiOperation({
+    summary: 'Get a list of categories by criteria',
+  })
+  @ApiOkResponse({
+    description:
+      'Returns a list of categories that meets the criteria provided ',
+    type: CategoryPresenter,
+    isArray: true,
+  })
+  @ApiBadRequestResponse({
+    description: 'The criteria provided was invalid',
+  })
+  @ApiNotFoundResponse({
+    description: 'No categories were found with the criteria provided',
+  })
+  @ApiQuery({
+    name: 'name',
+    type: 'string',
+    required: false,
+    description: 'The name of the category',
+  })
+  @ApiQuery({
+    name: 'isActive',
+    type: 'boolean',
+    required: false,
+    description: 'The active status of the category',
+  })
+  @ResponseMessage(CATEGORIES_RESPONSES.FOUND_MANY)
+  filter(@Query() criteria: FilterCategoryByCriteriaParams): Promise<any[]> {
+    return this.categoriesSearchUseCase.filterCategoriesByCriteria({
+      name: criteria.name,
+      isActive: criteria.isActive,
+    });
   }
 
   @Get(':id')
@@ -85,10 +146,23 @@ export class CategoriesController {
     description: 'The ID of the category',
   })
   @ResponseMessage(CATEGORIES_RESPONSES.FOUND_ONE)
-  findOne(@Param() params: UpdateCategoryParams): Promise<CategoryPresenter> {
+  findOne(@Param() params: FindOneCategoryParams): Promise<CategoryPresenter> {
     return this.categoriesService.findOne(params.id);
   }
 
+  @Get()
+  @ApiOperation({ summary: 'Get a list of all categories' })
+  @ApiOkResponse({
+    description: 'Returns a list of all categories.',
+    type: CategoryPresenter,
+    isArray: true,
+  })
+  @ResponseMessage(CATEGORIES_RESPONSES.FOUND_MANY)
+  findAll(): Promise<CategoryPresenter[]> {
+    return this.categoriesService.findAll();
+  }
+
+  @Patch(':id')
   @ApiOperation({ summary: 'Update a category' })
   @ApiNoContentResponse({
     description: 'The category has been successfully updated.',
@@ -107,7 +181,6 @@ export class CategoriesController {
   })
   @ApiBody({ type: UpdateCategoryDto })
   @ResponseMessage(CATEGORIES_RESPONSES.UPDATED)
-  @Patch(':id')
   update(
     @Param() params: UpdateCategoryParams,
     @Body() updateCategoryDto: UpdateCategoryDto,
@@ -115,6 +188,7 @@ export class CategoriesController {
     return this.categoriesService.update(params.id, updateCategoryDto);
   }
 
+  @Delete(':id')
   @ApiOperation({ summary: 'Delete a category' })
   @ApiNoContentResponse({
     description: 'The category has been successfully deleted.',
@@ -132,7 +206,6 @@ export class CategoriesController {
     description: 'The ID of the category',
   })
   @ResponseMessage(CATEGORIES_RESPONSES.DELETED)
-  @Delete(':id')
   remove(@Param() params: DeleteCategoryParams): Promise<void> {
     return this.categoriesService.remove(params.id);
   }
