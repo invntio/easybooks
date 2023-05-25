@@ -137,6 +137,7 @@ NODE_ENV=dev # This can be prod, dev or test
 <p class="codeblock-label">.env.prod</p>
 
 ``` dosini
+PROD_DATABASE_TYPE=your_prod_database_type // This can be postgres or sqlite, for now
 PROD_DATABASE_HOST=your_prod_database_host
 PROD_DATABASE_PORT=your_prod_database_port
 PROD_DATABASE_NAME=your_prod_database_name
@@ -147,6 +148,7 @@ PROD_DATABASE_PASSWORD=your_prod_database_password
 <p class="codeblock-label">.env.dev</p>
 
 ``` dosini
+DEV_DATABASE_TYPE=your_dev_database_type // This can be postgres or sqlite, for now
 DEV_DATABASE_HOST=your_dev_database_host
 DEV_DATABASE_PORT=your_dev_database_port
 DEV_DATABASE_NAME=your_dev_database_name
@@ -157,6 +159,7 @@ DEV_DATABASE_PASSWORD=your_dev_database_password
 <p class="codeblock-label">.env.test</p>
 
 ``` dosini
+TEST_DATABASE_TYPE=your_test_database_type // This can be postgres or sqlite, for now
 TEST_DATABASE_HOST=your_test_database_host
 TEST_DATABASE_PORT=your_test_database_port
 TEST_DATABASE_NAME=your_test_database_name
