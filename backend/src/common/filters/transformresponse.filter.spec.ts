@@ -1,7 +1,10 @@
 import { createMock } from '@golevelup/ts-jest';
-import { ArgumentsHost, BadRequestException } from '@nestjs/common';
+import {
+  ArgumentsHost,
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common';
 import { Response as Res } from 'express';
-import { EntityNotFoundError } from 'typeorm';
 import { TransformResponseFilter } from './transformresponse.filter';
 
 describe('TransformResponseFilter_class', () => {
@@ -19,15 +22,15 @@ describe('TransformResponseFilter_class', () => {
     });
     host.getArgs.mockReturnValueOnce([null, response, null, null]);
 
-    const exception = new EntityNotFoundError('', []);
+    const exception = new BadRequestException();
     filter.catch(exception, host);
 
-    expect(response.status).toHaveBeenCalledWith(404);
+    expect(response.status).toHaveBeenCalledWith(400);
     expect(response.json).toHaveBeenCalledWith(
       expect.objectContaining({
         success: false,
-        message: 'Not Found',
-        statusCode: 404,
+        message: 'Bad Request',
+        statusCode: 400,
       }),
     );
   });
@@ -42,7 +45,7 @@ describe('TransformResponseFilter_class', () => {
     host.getArgs.mockReturnValueOnce([null, response, null, null]);
     host.getArgs.mockReturnValueOnce([null, response, null, null]);
 
-    const notFoundException = new EntityNotFoundError('', []);
+    const notFoundException = new NotFoundException();
     const badRequestSingleException = new BadRequestException('Bad Request');
     const badRequestArrayException = new BadRequestException([
       'Bad Request Array',
@@ -53,7 +56,7 @@ describe('TransformResponseFilter_class', () => {
     filter.catch(badRequestSingleException, host);
     filter.catch(badRequestArrayException, host);
 
-    expect(response.status).toHaveBeenCalledWith(404);
+    expect(response.status).toHaveBeenCalledWith(400);
     expect(response.status).toHaveBeenCalledWith(400);
     expect(response.json).toHaveBeenCalledWith(
       expect.objectContaining({

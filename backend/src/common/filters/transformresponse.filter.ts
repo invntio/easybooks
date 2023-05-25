@@ -2,7 +2,7 @@ import { FormatedErrorResponse } from '@common/interfaces/formatedresponses.inte
 import { capitalizeString } from '@common/utils/capitalize.util';
 import {
   ArgumentsHost,
-  BadRequestException,
+  HttpException,
   Catch,
   ExceptionFilter,
   HttpStatus,
@@ -23,11 +23,11 @@ export class TransformResponseFilter implements ExceptionFilter {
       statusCode = HttpStatus.BAD_REQUEST;
     }
 
-    if (exception instanceof BadRequestException) {
+    if (exception instanceof HttpException) {
       const errorMeesage: string | string[] =
         exception.getResponse()['message'];
       message = isArray(errorMeesage) ? errorMeesage[0] : errorMeesage;
-      statusCode = HttpStatus.BAD_REQUEST;
+      statusCode = exception.getStatus();
     }
 
     const transformedResponse: FormatedErrorResponse = {
