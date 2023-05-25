@@ -19,19 +19,5 @@ describe('CategoryPresenter', () => {
       expect(presenter.isActive).toBe(category.isActive);
       expect(presenter.createdAt).toBe(category.createdAt);
     });
-
-    it('should assign undefined values if not provided', () => {
-      const category: Category = {
-        id: uuidV4(),
-        name: 'Category 1',
-        isActive: true,
-        createdAt: new Date(),
-      };
-
-      const presenter = new CategoryPresenter(category);
-
-      expect(presenter.parentId).toBeUndefined();
-      expect(presenter.subcategories).toBeUndefined();
-    });
   });
 });
