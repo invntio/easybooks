@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CategorySearchUseCase } from './categories-search.usecase';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Like, Repository } from 'typeorm';
+import { FindOptionsWhere, Like, Repository } from 'typeorm';
 import { Category } from '../../domain/entity/category.entity';
 import { v4 as uuidV4 } from 'uuid';
 
@@ -58,7 +58,7 @@ describe('CategorySearchUseCase', () => {
       // Assert
       expect(categoryRepository.find).toHaveBeenCalledWith({
         where: {
-          name: Like(`%${keyword}%`),
+          name: keyword && Like(`%${keyword}%`),
         },
       });
       expect(result).toEqual(expectedCategories);
@@ -78,7 +78,7 @@ describe('CategorySearchUseCase', () => {
       // Assert
       expect(categoryRepository.find).toHaveBeenCalledWith({
         where: {
-          name: Like(`%${keyword}%`),
+          name: keyword && Like(`%${keyword}%`),
         },
       });
       expect(result).toEqual(expectedCategories);
@@ -88,10 +88,13 @@ describe('CategorySearchUseCase', () => {
   describe('filterCategoriesByCriteria', () => {
     it('should return categories based on the provided criteria', async () => {
       // Arrange
-      const criteria = {
-        where: {
-          isActive: true,
-        },
+      const criteria: Partial<Category> = {
+        name: 'Category',
+        isActive: true,
+      };
+      const filterOptions: FindOptionsWhere<Category> = {
+        name: criteria.name && Like(`%${criteria.name}%`),
+        isActive: criteria.isActive,
       };
       const expectedCategories: Category[] = [
         {
@@ -108,7 +111,7 @@ describe('CategorySearchUseCase', () => {
         },
       ];
       jest
-        .spyOn(categoryRepository, 'find')
+        .spyOn(categoryRepository, 'findBy')
         .mockResolvedValue(expectedCategories);
 
       // Act
@@ -117,19 +120,24 @@ describe('CategorySearchUseCase', () => {
       );
 
       // Assert
-      expect(categoryRepository.find).toHaveBeenCalledWith(criteria);
+      expect(categoryRepository.findBy).toHaveBeenCalledWith(filterOptions);
       expect(result).toEqual(expectedCategories);
     });
 
     it('should return an empty array if no categories meet the criteria', async () => {
       // Arrange
-      const criteria = {
-        where: {
-          isActive: true,
-        },
+      const criteria: Partial<Category> = {
+        name: 'Category ABC',
+        isActive: true,
       };
+
+      const filterOptions: FindOptionsWhere<Category> = {
+        name: criteria.name && Like(`%${criteria.name}%`),
+        isActive: criteria.isActive,
+      };
+
       const expectedCategories: Category[] = [];
-      jest.spyOn(categoryRepository, 'find').mockResolvedValue([]);
+      jest.spyOn(categoryRepository, 'findBy').mockResolvedValue([]);
 
       // Act
       const result = await categorySearchUseCase.filterCategoriesByCriteria(
@@ -137,7 +145,7 @@ describe('CategorySearchUseCase', () => {
       );
 
       // Assert
-      expect(categoryRepository.find).toHaveBeenCalledWith(criteria);
+      expect(categoryRepository.findBy).toHaveBeenCalledWith(filterOptions);
       expect(result).toEqual(expectedCategories);
     });
   });
