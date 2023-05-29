@@ -1,4 +1,4 @@
-import { CategoryFilterCriteria } from '@modules/categories/application/usecases/categories-search.usecase';
+import { CategoriesFilterCriteria } from '@modules/categories/application/usecases/categories-search.usecase';
 import { Transform } from 'class-transformer';
 import { IsBoolean, IsOptional, IsString, IsUUID } from 'class-validator';
 
@@ -12,7 +12,7 @@ export class SearchByKeywordParams {
   keyword: string;
 }
 
-export class FilterCategoryByCriteriaParams implements CategoryFilterCriteria {
+export class FilterCategoryByCriteriaParams implements CategoriesFilterCriteria {
   @IsOptional()
   @IsString()
   name?: string;

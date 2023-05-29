@@ -6,7 +6,7 @@ import { Category } from '../../domain/entity/category.entity';
 
 describe('CategoriesUseCase', () => {
   let categoriesUseCase: CategoriesUseCase;
-  let categoryRepository: Repository<Category>;
+  let categoriesRepository: Repository<Category>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -20,7 +20,7 @@ describe('CategoriesUseCase', () => {
     }).compile();
 
     categoriesUseCase = module.get<CategoriesUseCase>(CategoriesUseCase);
-    categoryRepository = module.get<Repository<Category>>(
+    categoriesRepository = module.get<Repository<Category>>(
       getRepositoryToken(Category),
     );
   });
@@ -36,13 +36,13 @@ describe('CategoriesUseCase', () => {
         { id: '2', name: 'Category 2', isActive: true, createdAt: new Date() },
       ];
       jest
-        .spyOn(categoryRepository, 'find')
+        .spyOn(categoriesRepository, 'find')
         .mockResolvedValue(expectedCategories);
 
       const result = await categoriesUseCase.getAllCategories();
 
       expect(result).toEqual(expectedCategories);
-      expect(categoryRepository.find).toHaveBeenCalledTimes(1);
+      expect(categoriesRepository.find).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -56,27 +56,27 @@ describe('CategoriesUseCase', () => {
         createdAt: new Date(),
       };
       jest
-        .spyOn(categoryRepository, 'findOne')
+        .spyOn(categoriesRepository, 'findOne')
         .mockResolvedValue(expectedCategory);
 
       const result = await categoriesUseCase.getCategoryById(categoryId);
 
       expect(result).toEqual(expectedCategory);
-      expect(categoryRepository.findOne).toHaveBeenCalledTimes(1);
-      expect(categoryRepository.findOne).toHaveBeenCalledWith({
+      expect(categoriesRepository.findOne).toHaveBeenCalledTimes(1);
+      expect(categoriesRepository.findOne).toHaveBeenCalledWith({
         where: { id: categoryId },
       });
     });
 
     it('should return null when given an invalid id', async () => {
       const categoryId = '999';
-      jest.spyOn(categoryRepository, 'findOne').mockResolvedValue(null);
+      jest.spyOn(categoriesRepository, 'findOne').mockResolvedValue(null);
 
       const result = await categoriesUseCase.getCategoryById(categoryId);
 
       expect(result).toBeNull();
-      expect(categoryRepository.findOne).toHaveBeenCalledTimes(1);
-      expect(categoryRepository.findOne).toHaveBeenCalledWith({
+      expect(categoriesRepository.findOne).toHaveBeenCalledTimes(1);
+      expect(categoriesRepository.findOne).toHaveBeenCalledWith({
         where: { id: categoryId },
       });
     });
@@ -91,16 +91,20 @@ describe('CategoriesUseCase', () => {
         isActive: true,
         createdAt: new Date(),
       };
-      jest.spyOn(categoryRepository, 'create').mockReturnValue(createdCategory);
-      jest.spyOn(categoryRepository, 'save').mockResolvedValue(createdCategory);
+      jest
+        .spyOn(categoriesRepository, 'create')
+        .mockReturnValue(createdCategory);
+      jest
+        .spyOn(categoriesRepository, 'save')
+        .mockResolvedValue(createdCategory);
 
       const result = await categoriesUseCase.createCategory(categoryData);
 
       expect(result).toEqual(createdCategory);
-      expect(categoryRepository.create).toHaveBeenCalledTimes(1);
-      expect(categoryRepository.create).toHaveBeenCalledWith(categoryData);
-      expect(categoryRepository.save).toHaveBeenCalledTimes(1);
-      expect(categoryRepository.save).toHaveBeenCalledWith(createdCategory);
+      expect(categoriesRepository.create).toHaveBeenCalledTimes(1);
+      expect(categoriesRepository.create).toHaveBeenCalledWith(categoryData);
+      expect(categoriesRepository.save).toHaveBeenCalledTimes(1);
+      expect(categoriesRepository.save).toHaveBeenCalledWith(createdCategory);
     });
   });
 
@@ -119,9 +123,11 @@ describe('CategoriesUseCase', () => {
       });
 
       jest
-        .spyOn(categoryRepository, 'findOne')
+        .spyOn(categoriesRepository, 'findOne')
         .mockResolvedValue(existingCategory);
-      jest.spyOn(categoryRepository, 'save').mockResolvedValue(updatedCategory);
+      jest
+        .spyOn(categoriesRepository, 'save')
+        .mockResolvedValue(updatedCategory);
 
       const result = await categoriesUseCase.updateCategory(
         categoryId,
@@ -129,19 +135,19 @@ describe('CategoriesUseCase', () => {
       );
 
       expect(result).toEqual(updatedCategory);
-      expect(categoryRepository.findOne).toHaveBeenCalledTimes(1);
-      expect(categoryRepository.findOne).toHaveBeenCalledWith({
+      expect(categoriesRepository.findOne).toHaveBeenCalledTimes(1);
+      expect(categoriesRepository.findOne).toHaveBeenCalledWith({
         where: { id: categoryId },
       });
-      expect(categoryRepository.save).toHaveBeenCalledTimes(1);
-      expect(categoryRepository.save).toHaveBeenCalledWith(updatedCategory);
+      expect(categoriesRepository.save).toHaveBeenCalledTimes(1);
+      expect(categoriesRepository.save).toHaveBeenCalledWith(updatedCategory);
     });
 
     it('should return null when given an invalid id', async () => {
       const categoryId = '999';
       const categoryData: Partial<Category> = { name: 'Updated Category' };
-      jest.spyOn(categoryRepository, 'findOne').mockResolvedValue(null);
-      jest.spyOn(categoryRepository, 'save').mockResolvedValue(null);
+      jest.spyOn(categoriesRepository, 'findOne').mockResolvedValue(null);
+      jest.spyOn(categoriesRepository, 'save').mockResolvedValue(null);
 
       const result = await categoriesUseCase.updateCategory(
         categoryId,
@@ -149,11 +155,11 @@ describe('CategoriesUseCase', () => {
       );
 
       expect(result).toBeNull();
-      expect(categoryRepository.findOne).toHaveBeenCalledTimes(1);
-      expect(categoryRepository.findOne).toHaveBeenCalledWith({
+      expect(categoriesRepository.findOne).toHaveBeenCalledTimes(1);
+      expect(categoriesRepository.findOne).toHaveBeenCalledWith({
         where: { id: categoryId },
       });
-      expect(categoryRepository.save).not.toHaveBeenCalled();
+      expect(categoriesRepository.save).not.toHaveBeenCalled();
     });
   });
 
@@ -164,13 +170,15 @@ describe('CategoriesUseCase', () => {
         affected: 1,
         raw: null,
       };
-      jest.spyOn(categoryRepository, 'delete').mockResolvedValue(deleteResult);
+      jest
+        .spyOn(categoriesRepository, 'delete')
+        .mockResolvedValue(deleteResult);
 
       const result = await categoriesUseCase.deleteCategory(categoryId);
 
       expect(result).toBe(true);
-      expect(categoryRepository.delete).toHaveBeenCalledTimes(1);
-      expect(categoryRepository.delete).toHaveBeenCalledWith(categoryId);
+      expect(categoriesRepository.delete).toHaveBeenCalledTimes(1);
+      expect(categoriesRepository.delete).toHaveBeenCalledWith(categoryId);
     });
 
     it('should return false when given an invalid id', async () => {
@@ -179,13 +187,31 @@ describe('CategoriesUseCase', () => {
         affected: 0,
         raw: null,
       };
-      jest.spyOn(categoryRepository, 'delete').mockResolvedValue(deleteResult);
+      jest
+        .spyOn(categoriesRepository, 'delete')
+        .mockResolvedValue(deleteResult);
 
       const result = await categoriesUseCase.deleteCategory(categoryId);
 
       expect(result).toBe(false);
-      expect(categoryRepository.delete).toHaveBeenCalledTimes(1);
-      expect(categoryRepository.delete).toHaveBeenCalledWith(categoryId);
+      expect(categoriesRepository.delete).toHaveBeenCalledTimes(1);
+      expect(categoriesRepository.delete).toHaveBeenCalledWith(categoryId);
     });
   });
 });
+
+/*
+   GENERAL USECASE REQUIREMENTS
+
+   Each method should:
+   * Be defined
+   * Return the type of data expected
+   * Do the expected function
+
+   If the method needs parameters/body it should:
+   * Return error if it receives invalid inputs
+   * Return error if doesn't get the inputs it needs
+  
+   If the method performs a search
+   * Return error if no matches found
+*/

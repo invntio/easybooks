@@ -1,4 +1,8 @@
 import { Reflector } from '@nestjs/core';
+import {
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -12,16 +16,19 @@ import { ResponseMessageKey } from '@common/decorators/response.decorator';
 import { CATEGORIES_RESPONSES } from '../../common/categories.responses';
 import { CategoryPresenter } from '../presenters/category.presenter';
 import { CategoriesUseCase } from '@modules/categories/application/usecases/categories.usecase';
-import { CategorySearchUseCase } from '@modules/categories/application/usecases/categories-search.usecase';
+import { CategoriesSearchUseCase } from '@modules/categories/application/usecases/categories-search.usecase';
 import {
+  DeleteCategoryParams,
   FilterCategoryByCriteriaParams,
   SearchByKeywordParams,
+  UpdateCategoryParams,
 } from '../params/categories.params';
 
 describe('CategoriesController', () => {
-  let controller: CategoriesController;
-  let service: CategoriesService;
-  let searchUseCase: CategorySearchUseCase;
+  let categoriesController: CategoriesController;
+  let categoriesSearchUseCase: CategoriesSearchUseCase;
+  let categoriesUseCase: CategoriesUseCase;
+  let categoriesService: CategoriesService;
   let reflector: Reflector;
 
   beforeEach(async () => {
@@ -30,7 +37,7 @@ describe('CategoriesController', () => {
       providers: [
         CategoriesService,
         CategoriesUseCase,
-        CategorySearchUseCase,
+        CategoriesSearchUseCase,
         {
           provide: getRepositoryToken(Category),
           useClass: Repository,
@@ -38,25 +45,29 @@ describe('CategoriesController', () => {
       ],
     }).compile();
 
-    controller = module.get<CategoriesController>(CategoriesController);
-    service = module.get<CategoriesService>(CategoriesService);
-    searchUseCase = module.get<CategorySearchUseCase>(CategorySearchUseCase);
+    categoriesController =
+      module.get<CategoriesController>(CategoriesController);
+    categoriesUseCase = module.get<CategoriesUseCase>(CategoriesUseCase);
+    categoriesService = module.get<CategoriesService>(CategoriesService);
+    categoriesSearchUseCase = module.get<CategoriesSearchUseCase>(
+      CategoriesSearchUseCase,
+    );
     reflector = module.get<Reflector>(Reflector);
   });
 
   it('should be defined', () => {
-    expect(controller).toBeDefined();
+    expect(categoriesController).toBeDefined();
   });
 
   describe('create', () => {
     it('should be defined', () => {
-      expect(controller.create).toBeDefined();
+      expect(categoriesController.create).toBeDefined();
     });
 
     it('should have the corresponding response message', () => {
       const responseMessage = reflector.get<string>(
         ResponseMessageKey,
-        controller.create,
+        categoriesController.create,
       );
 
       expect(responseMessage).toBeDefined();
@@ -75,24 +86,60 @@ describe('CategoriesController', () => {
         isActive: true,
         createdAt: new Date(),
       };
-      jest.spyOn(service, 'create').mockResolvedValue(expected);
 
-      const result = await controller.create(createCategoryDto);
+      jest
+        .spyOn(categoriesUseCase, 'createCategory')
+        .mockResolvedValue(expected);
+      jest.spyOn(categoriesService, 'checkIfExists').mockResolvedValue(false);
+
+      const result = await categoriesController.create(createCategoryDto);
 
       expect(result).toEqual(expected);
-      expect(service.create).toHaveBeenCalledWith(createCategoryDto);
+      expect(categoriesUseCase.createCategory).toHaveBeenCalledWith(
+        createCategoryDto,
+      );
+    });
+
+    it('should return conflict exception if category already exists', async () => {
+      const createCategoryDto: CreateCategoryDto = {
+        name: 'Category Name',
+      };
+
+      jest.spyOn(categoriesService, 'checkIfExists').mockResolvedValue(true);
+
+      const result = categoriesController.create(createCategoryDto);
+
+      await expect(result).rejects.toThrow();
+    });
+
+    it('should throw InternalServerErrorException when category creation fails', async () => {
+      const createCategoryDto = { name: 'Category Name' };
+
+      jest
+        .spyOn(categoriesService, 'checkIfExists')
+        .mockResolvedValueOnce(false);
+      jest
+        .spyOn(categoriesUseCase, 'createCategory')
+        .mockResolvedValueOnce(null);
+
+      try {
+        await categoriesController.create(createCategoryDto);
+      } catch (error) {
+        expect(error).toBeInstanceOf(InternalServerErrorException);
+        expect(error.message).toBe(CATEGORIES_RESPONSES.NOT_CREATED);
+      }
     });
   });
 
   describe('findAll', () => {
     it('should be defined', () => {
-      expect(controller.findAll).toBeDefined();
+      expect(categoriesController.findAll).toBeDefined();
     });
 
     it('should have the corresponding response message', () => {
       const responseMessage = reflector.get<string>(
         ResponseMessageKey,
-        controller.findAll,
+        categoriesController.findAll,
       );
 
       expect(responseMessage).toBeDefined();
@@ -102,7 +149,7 @@ describe('CategoriesController', () => {
     it('should return an array of categories', async () => {
       const mockCategoryId = uuidV4();
 
-      const expected: CategoryPresenter[] = [
+      const expected: Category[] = [
         {
           id: mockCategoryId,
           name: 'Category Name',
@@ -110,24 +157,26 @@ describe('CategoriesController', () => {
           createdAt: new Date(),
         },
       ];
-      jest.spyOn(service, 'findAll').mockResolvedValue(expected);
+      jest
+        .spyOn(categoriesUseCase, 'getAllCategories')
+        .mockResolvedValue(expected);
 
-      const result = await controller.findAll();
+      const result = await categoriesController.findAll();
 
       expect(result).toEqual(expected);
-      expect(service.findAll).toHaveBeenCalled();
+      expect(categoriesUseCase.getAllCategories).toHaveBeenCalled();
     });
   });
 
   describe('findOne', () => {
     it('should be defined', () => {
-      expect(controller.findOne).toBeDefined();
+      expect(categoriesController.findOne).toBeDefined();
     });
 
     it('should have the corresponding response message', () => {
       const responseMessage = reflector.get<string>(
         ResponseMessageKey,
-        controller.findOne,
+        categoriesController.findOne,
       );
 
       expect(responseMessage).toBeDefined();
@@ -143,24 +192,41 @@ describe('CategoriesController', () => {
         isActive: true,
         createdAt: new Date(),
       };
-      jest.spyOn(service, 'findOne').mockResolvedValue(expected);
+      jest
+        .spyOn(categoriesUseCase, 'getCategoryById')
+        .mockResolvedValue(expected);
 
-      const result = await controller.findOne({ id: '1' });
+      const result = await categoriesController.findOne({ id: '1' });
 
       expect(result).toEqual(expected);
-      expect(service.findOne).toHaveBeenCalledWith('1');
+      expect(categoriesUseCase.getCategoryById).toHaveBeenCalledWith('1');
+    });
+
+    it('should throw NotFoundException when category is not found', async () => {
+      const categoryId = '123';
+
+      jest
+        .spyOn(categoriesUseCase, 'getCategoryById')
+        .mockResolvedValueOnce(null);
+
+      try {
+        await categoriesController.findOne({ id: categoryId });
+      } catch (error) {
+        expect(error).toBeInstanceOf(NotFoundException);
+        expect(error.message).toBe(CATEGORIES_RESPONSES.NOT_FOUND_ONE);
+      }
     });
   });
 
   describe('update', () => {
     it('should be defined', () => {
-      expect(controller.update).toBeDefined();
+      expect(categoriesController.update).toBeDefined();
     });
 
     it('should have the corresponding response message', () => {
       const responseMessage = reflector.get<string>(
         ResponseMessageKey,
-        controller.update,
+        categoriesController.update,
       );
 
       expect(responseMessage).toBeDefined();
@@ -168,22 +234,36 @@ describe('CategoriesController', () => {
     });
 
     it('should update a category', async () => {
-      const updateCategoryDto: UpdateCategoryDto = {
-        name: 'Category Name',
+      const oldCategory: Category = {
+        id: uuidV4(),
+        name: 'Old Category Name',
         isActive: true,
+        createdAt: new Date(),
       };
-      const categoryId = uuidV4();
-
-      jest.spyOn(service, 'update').mockResolvedValueOnce();
-
-      const result = await controller.update(
-        { id: categoryId },
+      const updateCategoryDto: UpdateCategoryDto = {
+        name: 'New Category Name',
+        isActive: false,
+      };
+      const newCategory: Category = Object.assign(
+        oldCategory,
         updateCategoryDto,
       );
 
-      expect(result).toBeUndefined();
-      expect(service.update).toHaveBeenCalledWith(
-        categoryId,
+      const updateCategoryParams: UpdateCategoryParams = { id: oldCategory.id };
+
+      jest
+        .spyOn(categoriesUseCase, 'updateCategory')
+        .mockResolvedValueOnce(newCategory);
+      jest.spyOn(categoriesService, 'checkIfExists').mockResolvedValue(false);
+
+      const result = await categoriesController.update(
+        updateCategoryParams,
+        updateCategoryDto,
+      );
+
+      expect(result).toEqual(newCategory);
+      expect(categoriesUseCase.updateCategory).toHaveBeenCalledWith(
+        updateCategoryParams.id,
         updateCategoryDto,
       );
     });
@@ -194,12 +274,28 @@ describe('CategoriesController', () => {
         isActive: false,
       };
       const categoryId = uuidV4();
+      const updateCategoryParams: UpdateCategoryParams = { id: categoryId };
 
-      jest.spyOn(service, 'update').mockImplementation(() => {
-        return Promise.reject(new Error('Category not found'));
-      });
+      jest
+        .spyOn(categoriesUseCase, 'updateCategory')
+        .mockResolvedValueOnce(null);
 
-      const result = controller.update({ id: categoryId }, updateCategoryDto);
+      const result = categoriesController.update(
+        updateCategoryParams,
+        updateCategoryDto,
+      );
+
+      await expect(result).rejects.toThrow();
+    });
+
+    it('should return conflict exception if category with desired name already exists', async () => {
+      const updateCategoryDto: CreateCategoryDto = {
+        name: 'Category Name',
+      };
+
+      jest.spyOn(categoriesService, 'checkIfExists').mockResolvedValue(true);
+
+      const result = categoriesController.create(updateCategoryDto);
 
       await expect(result).rejects.toThrow();
     });
@@ -207,13 +303,13 @@ describe('CategoriesController', () => {
 
   describe('remove', () => {
     it('should be defined', () => {
-      expect(controller.remove).toBeDefined();
+      expect(categoriesController.remove).toBeDefined();
     });
 
     it('should have the corresponding response message', () => {
       const responseMessage = reflector.get<string>(
         ResponseMessageKey,
-        controller.remove,
+        categoriesController.remove,
       );
 
       expect(responseMessage).toBeDefined();
@@ -222,22 +318,26 @@ describe('CategoriesController', () => {
 
     it('should delete a category', async () => {
       const categoryId = uuidV4();
+      const deleteCategoryParams: DeleteCategoryParams = { id: categoryId };
 
-      jest.spyOn(service, 'remove').mockResolvedValueOnce();
+      jest
+        .spyOn(categoriesUseCase, 'deleteCategory')
+        .mockResolvedValueOnce(true);
 
-      const result = await controller.remove({ id: categoryId });
+      const result = await categoriesController.remove(deleteCategoryParams);
 
       expect(result).toBeUndefined();
     });
 
     it('should throw an error when the category does not exist', async () => {
-      const categoryId = 'Non-existent-category';
+      const categoryId = uuidV4();
+      const deleteCategoryParams: DeleteCategoryParams = { id: categoryId };
 
-      jest.spyOn(service, 'remove').mockImplementation((): any => {
-        return Promise.reject(new Error('Category not found'));
-      });
+      jest
+        .spyOn(categoriesUseCase, 'deleteCategory')
+        .mockResolvedValueOnce(false);
 
-      const result = controller.remove({ id: categoryId });
+      const result = categoriesController.remove(deleteCategoryParams);
 
       await expect(result).rejects.toThrow();
     });
@@ -245,13 +345,13 @@ describe('CategoriesController', () => {
 
   describe('filter', () => {
     it('should be defined', () => {
-      expect(controller.filter).toBeDefined();
+      expect(categoriesController.filter).toBeDefined();
     });
 
     it('should have the corresponding response message', () => {
       const responseMessage = reflector.get<string>(
         ResponseMessageKey,
-        controller.filter,
+        categoriesController.filter,
       );
 
       expect(responseMessage).toBeDefined();
@@ -280,13 +380,15 @@ describe('CategoriesController', () => {
       ];
 
       jest
-        .spyOn(searchUseCase, 'filterCategoriesByCriteria')
+        .spyOn(categoriesSearchUseCase, 'filterCategoriesByCriteria')
         .mockResolvedValue(mockFilteredCategories);
 
-      const result = await controller.filter(mockCriteria);
+      const result = await categoriesController.filter(mockCriteria);
 
       expect(result).toEqual(mockFilteredCategories);
-      expect(searchUseCase.filterCategoriesByCriteria).toHaveBeenCalledWith({
+      expect(
+        categoriesSearchUseCase.filterCategoriesByCriteria,
+      ).toHaveBeenCalledWith({
         name: mockCriteria.name,
         isActive: mockCriteria.isActive,
       });
@@ -299,13 +401,15 @@ describe('CategoriesController', () => {
       };
 
       jest
-        .spyOn(searchUseCase, 'filterCategoriesByCriteria')
+        .spyOn(categoriesSearchUseCase, 'filterCategoriesByCriteria')
         .mockResolvedValue([]);
 
-      const result = await controller.filter(mockCriteria);
+      const result = await categoriesController.filter(mockCriteria);
 
       expect(result).toEqual([]);
-      expect(searchUseCase.filterCategoriesByCriteria).toHaveBeenCalledWith({
+      expect(
+        categoriesSearchUseCase.filterCategoriesByCriteria,
+      ).toHaveBeenCalledWith({
         name: mockCriteria.name,
         isActive: mockCriteria.isActive,
       });
@@ -314,13 +418,13 @@ describe('CategoriesController', () => {
 
   describe('search', () => {
     it('should be defined', () => {
-      expect(controller.search).toBeDefined();
+      expect(categoriesController.search).toBeDefined();
     });
 
     it('should have the corresponding response message', () => {
       const responseMessage = reflector.get<string>(
         ResponseMessageKey,
-        controller.search,
+        categoriesController.search,
       );
 
       expect(responseMessage).toBeDefined();
@@ -348,15 +452,15 @@ describe('CategoriesController', () => {
       ];
 
       jest
-        .spyOn(searchUseCase, 'searchCategoriesByKeyword')
+        .spyOn(categoriesSearchUseCase, 'searchCategoriesByKeyword')
         .mockResolvedValue(mockSearchResult);
 
-      const result = await controller.search(mockKeyword);
+      const result = await categoriesController.search(mockKeyword);
 
       expect(result).toEqual(mockSearchResult);
-      expect(searchUseCase.searchCategoriesByKeyword).toHaveBeenCalledWith(
-        mockKeyword.keyword,
-      );
+      expect(
+        categoriesSearchUseCase.searchCategoriesByKeyword,
+      ).toHaveBeenCalledWith(mockKeyword.keyword);
     });
 
     it('should return an empty array if no match is found', async () => {
@@ -365,15 +469,15 @@ describe('CategoriesController', () => {
       };
 
       jest
-        .spyOn(searchUseCase, 'searchCategoriesByKeyword')
+        .spyOn(categoriesSearchUseCase, 'searchCategoriesByKeyword')
         .mockResolvedValue([]);
 
-      const result = await controller.search(mockKeyword);
+      const result = await categoriesController.search(mockKeyword);
 
       expect(result).toEqual([]);
-      expect(searchUseCase.searchCategoriesByKeyword).toHaveBeenCalledWith(
-        mockKeyword.keyword,
-      );
+      expect(
+        categoriesSearchUseCase.searchCategoriesByKeyword,
+      ).toHaveBeenCalledWith(mockKeyword.keyword);
     });
   });
 });
