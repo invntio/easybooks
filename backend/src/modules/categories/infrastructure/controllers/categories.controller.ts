@@ -8,6 +8,10 @@ import {
   Patch,
   Post,
   Query,
+  HttpCode,
+  NotFoundException,
+  ConflictException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -33,16 +37,19 @@ import {
 } from '../params/categories.params';
 import { CATEGORIES_RESPONSES } from '../../common/categories.responses';
 import { CategoryPresenter } from '../presenters/category.presenter';
-import { CategorySearchUseCase } from '@modules/categories/application/usecases/categories-search.usecase';
+import { CategoriesSearchUseCase } from '@modules/categories/application/usecases/categories-search.usecase';
+import { CategoriesUseCase } from '@modules/categories/application/usecases/categories.usecase';
 
 @ApiTags('categories')
 @Controller('categories')
 export class CategoriesController {
   constructor(
     private readonly categoriesService: CategoriesService,
-    private readonly categoriesSearchUseCase: CategorySearchUseCase,
+    private readonly categoriesUseCase: CategoriesUseCase,
+    private readonly categoriesSearchUseCase: CategoriesSearchUseCase,
   ) {}
 
+  @Post()
   @ApiOperation({ summary: 'Create a new category' })
   @ApiCreatedResponse({
     description: 'The category has been successfully created.',
@@ -53,11 +60,24 @@ export class CategoriesController {
   })
   @ApiBody({ type: CreateCategoryDto })
   @ResponseMessage(CATEGORIES_RESPONSES.CREATED)
-  @Post()
-  create(
+  async create(
     @Body() createCategoryDto: CreateCategoryDto,
   ): Promise<CategoryPresenter> {
-    return this.categoriesService.create(createCategoryDto);
+    const alreadyExtists = await this.categoriesService.checkIfExists({
+      name: createCategoryDto.name,
+    });
+
+    if (alreadyExtists)
+      throw new ConflictException(CATEGORIES_RESPONSES.ALREADY_EXISTS);
+
+    const result = await this.categoriesUseCase.createCategory(
+      createCategoryDto,
+    );
+
+    if (!result)
+      throw new InternalServerErrorException(CATEGORIES_RESPONSES.NOT_CREATED);
+
+    return result;
   }
 
   @Get('search')
@@ -146,8 +166,15 @@ export class CategoriesController {
     description: 'The ID of the category',
   })
   @ResponseMessage(CATEGORIES_RESPONSES.FOUND_ONE)
-  findOne(@Param() params: FindOneCategoryParams): Promise<CategoryPresenter> {
-    return this.categoriesService.findOne(params.id);
+  async findOne(
+    @Param() params: FindOneCategoryParams,
+  ): Promise<CategoryPresenter> {
+    const result = await this.categoriesUseCase.getCategoryById(params.id);
+
+    if (!result)
+      throw new NotFoundException(CATEGORIES_RESPONSES.NOT_FOUND_ONE);
+
+    return result;
   }
 
   @Get()
@@ -159,7 +186,7 @@ export class CategoriesController {
   })
   @ResponseMessage(CATEGORIES_RESPONSES.FOUND_MANY)
   findAll(): Promise<CategoryPresenter[]> {
-    return this.categoriesService.findAll();
+    return this.categoriesUseCase.getAllCategories();
   }
 
   @Patch(':id')
@@ -181,14 +208,23 @@ export class CategoriesController {
   })
   @ApiBody({ type: UpdateCategoryDto })
   @ResponseMessage(CATEGORIES_RESPONSES.UPDATED)
-  update(
+  async update(
     @Param() params: UpdateCategoryParams,
     @Body() updateCategoryDto: UpdateCategoryDto,
-  ): Promise<void> {
-    return this.categoriesService.update(params.id, updateCategoryDto);
+  ): Promise<CategoryPresenter> {
+    const result = await this.categoriesUseCase.updateCategory(
+      params.id,
+      updateCategoryDto,
+    );
+
+    if (!result)
+      throw new NotFoundException(CATEGORIES_RESPONSES.NOT_FOUND_ONE);
+
+    return result;
   }
 
   @Delete(':id')
+  @HttpCode(204)
   @ApiOperation({ summary: 'Delete a category' })
   @ApiNoContentResponse({
     description: 'The category has been successfully deleted.',
@@ -206,7 +242,10 @@ export class CategoriesController {
     description: 'The ID of the category',
   })
   @ResponseMessage(CATEGORIES_RESPONSES.DELETED)
-  remove(@Param() params: DeleteCategoryParams): Promise<void> {
-    return this.categoriesService.remove(params.id);
+  async remove(@Param() params: DeleteCategoryParams): Promise<void> {
+    const result = await this.categoriesUseCase.deleteCategory(params.id);
+
+    if (!result)
+      throw new NotFoundException(CATEGORIES_RESPONSES.NOT_FOUND_ONE);
   }
 }
