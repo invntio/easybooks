@@ -1,18 +1,18 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CategorySearchUseCase } from './categories-search.usecase';
+import { CategoriesSearchUseCase } from './categories-search.usecase';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { FindOptionsWhere, Like, Repository } from 'typeorm';
 import { Category } from '../../domain/entity/category.entity';
 import { v4 as uuidV4 } from 'uuid';
 
 describe('CategorySearchUseCase', () => {
-  let categorySearchUseCase: CategorySearchUseCase;
+  let categorySearchUseCase: CategoriesSearchUseCase;
   let categoryRepository: Repository<Category>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        CategorySearchUseCase,
+        CategoriesSearchUseCase,
         {
           provide: getRepositoryToken(Category),
           useClass: Repository,
@@ -20,8 +20,8 @@ describe('CategorySearchUseCase', () => {
       ],
     }).compile();
 
-    categorySearchUseCase = module.get<CategorySearchUseCase>(
-      CategorySearchUseCase,
+    categorySearchUseCase = module.get<CategoriesSearchUseCase>(
+      CategoriesSearchUseCase,
     );
     categoryRepository = module.get<Repository<Category>>(
       getRepositoryToken(Category),

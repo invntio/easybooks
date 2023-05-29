@@ -4,13 +4,13 @@ import { FindManyOptions, FindOptionsWhere, Like, Repository } from 'typeorm';
 
 import { Category } from '../../domain/entity/category.entity';
 
-export class CategoryFilterCriteria {
+export class CategoriesFilterCriteria {
   name?: string;
   isActive?: boolean;
 }
 
 @Injectable()
-export class CategorySearchUseCase {
+export class CategoriesSearchUseCase {
   constructor(
     @InjectRepository(Category)
     private categoryRepository: Repository<Category>,
@@ -28,7 +28,7 @@ export class CategorySearchUseCase {
   }
 
   async filterCategoriesByCriteria(
-    criteria: CategoryFilterCriteria,
+    criteria: CategoriesFilterCriteria,
   ): Promise<Category[]> {
     const filterOptions: FindOptionsWhere<Category> = {
       name: criteria.name && Like(`%${criteria.name}%`),

@@ -4,12 +4,12 @@ import { CategoriesController } from './infrastructure/controllers/categories.co
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Category } from './domain/entity/category.entity';
 import { CategoriesUseCase } from './application/usecases/categories.usecase';
-import { CategorySearchUseCase } from './application/usecases/categories-search.usecase';
+import { CategoriesSearchUseCase } from './application/usecases/categories-search.usecase';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Category])],
   controllers: [CategoriesController],
-  providers: [CategoriesService, CategoriesUseCase, CategorySearchUseCase],
+  providers: [CategoriesService, CategoriesUseCase, CategoriesSearchUseCase],
   exports: [TypeOrmModule],
 })
 export class CategoriesModule {}
