@@ -138,7 +138,9 @@ export class CategoriesController {
     description: 'The active status of the category',
   })
   @ResponseMessage(CATEGORIES_RESPONSES.FOUND_MANY)
-  filter(@Query() criteria: FilterCategoryByCriteriaParams): Promise<any[]> {
+  filter(
+    @Query() criteria: FilterCategoryByCriteriaParams,
+  ): Promise<CategoryPresenter[]> {
     return this.categoriesSearchUseCase.filterCategoriesByCriteria({
       name: criteria.name,
       isActive: criteria.isActive,
