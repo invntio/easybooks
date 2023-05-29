@@ -68,6 +68,6 @@ export class CategoriesService {
   }
 
   async checkIfExists(props: Partial<Category>): Promise<boolean> {
-    return await this.categoriesRepository.exist({ where: props });
+    return this.categoriesRepository.exist({ where: props });
   }
 }
