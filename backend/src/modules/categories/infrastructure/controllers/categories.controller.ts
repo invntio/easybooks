@@ -8,7 +8,6 @@ import {
   Patch,
   Post,
   Query,
-  HttpCode,
   NotFoundException,
   ConflictException,
   InternalServerErrorException,
@@ -214,6 +213,13 @@ export class CategoriesController {
     @Param() params: UpdateCategoryParams,
     @Body() updateCategoryDto: UpdateCategoryDto,
   ): Promise<CategoryPresenter> {
+    const alreadyExtists = await this.categoriesService.checkIfExists({
+      name: updateCategoryDto.name,
+    });
+
+    if (alreadyExtists)
+      throw new ConflictException(CATEGORIES_RESPONSES.ALREADY_EXISTS);
+
     const result = await this.categoriesUseCase.updateCategory(
       params.id,
       updateCategoryDto,
@@ -226,7 +232,6 @@ export class CategoriesController {
   }
 
   @Delete(':id')
-  @HttpCode(204)
   @ApiOperation({ summary: 'Delete a category' })
   @ApiNoContentResponse({
     description: 'The category has been successfully deleted.',
@@ -249,5 +254,7 @@ export class CategoriesController {
 
     if (!result)
       throw new NotFoundException(CATEGORIES_RESPONSES.NOT_FOUND_ONE);
+
+    return;
   }
 }
