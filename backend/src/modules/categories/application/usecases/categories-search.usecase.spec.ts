@@ -7,7 +7,7 @@ import { v4 as uuidV4 } from 'uuid';
 
 describe('CategorySearchUseCase', () => {
   let categorySearchUseCase: CategoriesSearchUseCase;
-  let categoryRepository: Repository<Category>;
+  let categoriesRepository: Repository<Category>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -23,7 +23,7 @@ describe('CategorySearchUseCase', () => {
     categorySearchUseCase = module.get<CategoriesSearchUseCase>(
       CategoriesSearchUseCase,
     );
-    categoryRepository = module.get<Repository<Category>>(
+    categoriesRepository = module.get<Repository<Category>>(
       getRepositoryToken(Category),
     );
   });
@@ -47,7 +47,7 @@ describe('CategorySearchUseCase', () => {
         },
       ];
       jest
-        .spyOn(categoryRepository, 'find')
+        .spyOn(categoriesRepository, 'find')
         .mockResolvedValue(expectedCategories);
 
       // Act
@@ -56,7 +56,7 @@ describe('CategorySearchUseCase', () => {
       );
 
       // Assert
-      expect(categoryRepository.find).toHaveBeenCalledWith({
+      expect(categoriesRepository.find).toHaveBeenCalledWith({
         where: {
           name: keyword && Like(`%${keyword}%`),
         },
@@ -68,7 +68,7 @@ describe('CategorySearchUseCase', () => {
       // Arrange
       const keyword = 'example';
       const expectedCategories: Category[] = [];
-      jest.spyOn(categoryRepository, 'find').mockResolvedValue([]);
+      jest.spyOn(categoriesRepository, 'find').mockResolvedValue([]);
 
       // Act
       const result = await categorySearchUseCase.searchCategoriesByKeyword(
@@ -76,7 +76,7 @@ describe('CategorySearchUseCase', () => {
       );
 
       // Assert
-      expect(categoryRepository.find).toHaveBeenCalledWith({
+      expect(categoriesRepository.find).toHaveBeenCalledWith({
         where: {
           name: keyword && Like(`%${keyword}%`),
         },
@@ -111,7 +111,7 @@ describe('CategorySearchUseCase', () => {
         },
       ];
       jest
-        .spyOn(categoryRepository, 'findBy')
+        .spyOn(categoriesRepository, 'findBy')
         .mockResolvedValue(expectedCategories);
 
       // Act
@@ -120,7 +120,7 @@ describe('CategorySearchUseCase', () => {
       );
 
       // Assert
-      expect(categoryRepository.findBy).toHaveBeenCalledWith(filterOptions);
+      expect(categoriesRepository.findBy).toHaveBeenCalledWith(filterOptions);
       expect(result).toEqual(expectedCategories);
     });
 
@@ -137,7 +137,7 @@ describe('CategorySearchUseCase', () => {
       };
 
       const expectedCategories: Category[] = [];
-      jest.spyOn(categoryRepository, 'findBy').mockResolvedValue([]);
+      jest.spyOn(categoriesRepository, 'findBy').mockResolvedValue([]);
 
       // Act
       const result = await categorySearchUseCase.filterCategoriesByCriteria(
@@ -145,7 +145,7 @@ describe('CategorySearchUseCase', () => {
       );
 
       // Assert
-      expect(categoryRepository.findBy).toHaveBeenCalledWith(filterOptions);
+      expect(categoriesRepository.findBy).toHaveBeenCalledWith(filterOptions);
       expect(result).toEqual(expectedCategories);
     });
   });
