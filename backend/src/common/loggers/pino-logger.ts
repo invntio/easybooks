@@ -2,9 +2,10 @@ import { CORRELATION_ID_HEADER } from '@common/middlewares/correlation-id/correl
 import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
 import { Params } from 'nestjs-pino';
+import { Options } from 'pino-http';
 
 const pinoConsoleFileLogger = (configService: ConfigService): Params => {
-  return {
+  const config: { pinoHttp: Options } = {
     pinoHttp: {
       level: configService.get('NODE_ENV') === 'dev' ? 'debug' : 'info',
       transport: {
@@ -21,15 +22,25 @@ const pinoConsoleFileLogger = (configService: ConfigService): Params => {
           },
         ],
       },
-      autoLogging: true,
+      autoLogging: false,
       customProps: (req: Request) => {
         return {
           correlationId: req[CORRELATION_ID_HEADER],
         };
       },
+      serializers: {
+        req: () => {
+          return undefined;
+        },
+        res: () => {
+          return undefined;
+        },
+      },
       messageKey: 'message',
     },
   };
+
+  return config;
 };
 
 export default pinoConsoleFileLogger;
