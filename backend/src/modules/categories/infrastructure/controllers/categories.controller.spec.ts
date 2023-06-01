@@ -301,15 +301,15 @@ describe('CategoriesController', () => {
     });
   });
 
-  describe('remove', () => {
+  describe('delete', () => {
     it('should be defined', () => {
-      expect(categoriesController.remove).toBeDefined();
+      expect(categoriesController.delete).toBeDefined();
     });
 
     it('should have the corresponding response message', () => {
       const responseMessage = reflector.get<string>(
         ResponseMessageKey,
-        categoriesController.remove,
+        categoriesController.delete,
       );
 
       expect(responseMessage).toBeDefined();
@@ -324,7 +324,7 @@ describe('CategoriesController', () => {
         .spyOn(categoriesUseCase, 'deleteCategory')
         .mockResolvedValueOnce(true);
 
-      const result = await categoriesController.remove(deleteCategoryParams);
+      const result = await categoriesController.delete(deleteCategoryParams);
 
       expect(result).toBeUndefined();
     });
@@ -337,7 +337,7 @@ describe('CategoriesController', () => {
         .spyOn(categoriesUseCase, 'deleteCategory')
         .mockResolvedValueOnce(false);
 
-      const result = categoriesController.remove(deleteCategoryParams);
+      const result = categoriesController.delete(deleteCategoryParams);
 
       await expect(result).rejects.toThrow();
     });

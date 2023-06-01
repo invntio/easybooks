@@ -249,12 +249,10 @@ export class CategoriesController {
     description: 'The ID of the category',
   })
   @ResponseMessage(CATEGORIES_RESPONSES.DELETED)
-  async remove(@Param() params: DeleteCategoryParams): Promise<void> {
+  async delete(@Param() params: DeleteCategoryParams): Promise<void> {
     const result = await this.categoriesUseCase.deleteCategory(params.id);
 
     if (!result)
       throw new NotFoundException(CATEGORIES_RESPONSES.NOT_FOUND_ONE);
-
-    return;
   }
 }
