@@ -1,10 +1,22 @@
 erDiagram
      Product {
         uuid ProductID PK
+        string SKU PK
         string Name
         string Description
         Price Price
         uuid CategoryID FK
+    }
+
+    Tag {
+        uuid TagID PK
+        string Name
+    }
+
+    ProductTag {
+        uuid ProductTagID PK
+        uuid ProductID FK
+        uuid TagID FK
     }
 
     Category {
