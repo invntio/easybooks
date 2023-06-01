@@ -68,4 +68,12 @@ async function bootstrap() {
 
   await app.listen(port);
 }
-bootstrap();
+
+(async () => {
+  try {
+    await bootstrap();
+  } catch (error) {
+    console.error(error);
+    process.exit(1);
+  }
+})();
