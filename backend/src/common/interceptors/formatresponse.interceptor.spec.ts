@@ -33,12 +33,12 @@ describe('SerializerInterceptor', () => {
 
     reflector.get = jest.fn().mockReturnValue('Category found');
 
-    const ctxMock: Partial<ExecutionContext> | any = {
-      switchToHttp: () => ({
+    const ctxMock = createMock<ExecutionContext>({
+      switchToHttp: jest.fn().mockReturnValue({
         getResponse: () => ({ statusCode: 200 }),
       }),
       getHandler: () => ({}),
-    };
+    });
 
     const callHandlerMock = createMock<CallHandler>({
       handle: () => of(categoryData),
@@ -68,12 +68,12 @@ describe('SerializerInterceptor', () => {
       statusCode: 200,
     };
 
-    const ctxMock: Partial<ExecutionContext> | any = {
-      switchToHttp: () => ({
+    const ctxMock = createMock<ExecutionContext>({
+      switchToHttp: jest.fn().mockReturnValue({
         getResponse: () => ({ statusCode: 200 }),
       }),
       getHandler: () => ({}),
-    };
+    });
 
     const callHandlerMock = createMock<CallHandler>({
       handle: () => of(categoryData),

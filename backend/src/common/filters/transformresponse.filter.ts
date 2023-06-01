@@ -12,7 +12,7 @@ import { Response } from 'express';
 
 @Catch()
 export class TransformResponseFilter implements ExceptionFilter {
-  catch(exception: Error | any, host: ArgumentsHost) {
+  catch(exception: Error | string, host: ArgumentsHost) {
     const response: Response = host.getArgs()[1];
 
     let message = 'Internal Server Error';

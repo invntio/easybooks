@@ -225,7 +225,7 @@ describe('CategoriesController (e2e)', () => {
       const expectedStatusCode = HttpStatus.BAD_REQUEST;
       const unexpectedPropertyName = 'unexpectedProp';
 
-      const newCategory: CreateCategoryDto | any = {
+      const newCategory: CreateCategoryDto = {
         name: 'New Category',
         isActive: true,
         ...JSON.parse(
@@ -251,9 +251,9 @@ describe('CategoriesController (e2e)', () => {
     it('should throw an error when passed invalid type props', async () => {
       const expectedStatusCode = HttpStatus.BAD_REQUEST;
 
-      const newCategory: CreateCategoryDto | any = {
+      const newCategory: CreateCategoryDto = {
         name: 'New Category',
-        isActive: 'testing',
+        isActive: 'testing' as unknown as boolean,
       };
 
       const res = await request(app.getHttpServer())
