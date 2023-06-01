@@ -279,6 +279,7 @@ describe('CategoriesController', () => {
       jest
         .spyOn(categoriesUseCase, 'updateCategory')
         .mockResolvedValueOnce(null);
+      jest.spyOn(categoriesService, 'checkIfExists').mockResolvedValue(false);
 
       const result = categoriesController.update(
         updateCategoryParams,
@@ -289,13 +290,18 @@ describe('CategoriesController', () => {
     });
 
     it('should return conflict exception if category with desired name already exists', async () => {
-      const updateCategoryDto: CreateCategoryDto = {
+      const updateCategoryDto: UpdateCategoryDto = {
         name: 'Category Name',
       };
+      const categoryId = uuidV4();
+      const updateCategoryParams: UpdateCategoryParams = { id: categoryId };
 
       jest.spyOn(categoriesService, 'checkIfExists').mockResolvedValue(true);
 
-      const result = categoriesController.create(updateCategoryDto);
+      const result = categoriesController.update(
+        updateCategoryParams,
+        updateCategoryDto,
+      );
 
       await expect(result).rejects.toThrow();
     });
