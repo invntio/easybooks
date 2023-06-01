@@ -14,13 +14,18 @@ describe('TransformResponseFilter_class', () => {
     filter = new TransformResponseFilter();
   });
 
-  it('should transform error message', () => {
+  const setupMockHostAndResponse = (): [ArgumentsHost, Res] => {
     const host = createMock<ArgumentsHost>();
     const response = createMock<Res>({
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
     });
-    host.getArgs.mockReturnValueOnce([null, response, null, null]);
+    host.getArgs.mockReturnValue([null, response, null, null]);
+    return [host, response];
+  };
+
+  it('should transform error message', () => {
+    const [host, response] = setupMockHostAndResponse();
 
     const exception = new BadRequestException();
     filter.catch(exception, host);
@@ -36,14 +41,7 @@ describe('TransformResponseFilter_class', () => {
   });
 
   it('should transform error message for multiple types of errors', () => {
-    const host = createMock<ArgumentsHost>();
-    const response = createMock<Res>({
-      status: jest.fn().mockReturnThis(),
-      json: jest.fn(),
-    });
-    host.getArgs.mockReturnValueOnce([null, response, null, null]);
-    host.getArgs.mockReturnValueOnce([null, response, null, null]);
-    host.getArgs.mockReturnValueOnce([null, response, null, null]);
+    const [host, response] = setupMockHostAndResponse();
 
     const notFoundException = new NotFoundException();
     const badRequestSingleException = new BadRequestException('Bad Request');
@@ -56,7 +54,7 @@ describe('TransformResponseFilter_class', () => {
     filter.catch(badRequestSingleException, host);
     filter.catch(badRequestArrayException, host);
 
-    expect(response.status).toHaveBeenCalledWith(400);
+    expect(response.status).toHaveBeenCalledWith(404);
     expect(response.status).toHaveBeenCalledWith(400);
     expect(response.json).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -81,13 +79,8 @@ describe('TransformResponseFilter_class', () => {
     );
   });
 
-  it('should return transformed "Internal Server Error" message if its an unhandled error', () => {
-    const host = createMock<ArgumentsHost>();
-    const response = createMock<Res>({
-      status: jest.fn().mockReturnThis(),
-      json: jest.fn(),
-    });
-    host.getArgs.mockReturnValueOnce([null, response, null, null]);
+  it('should return transformed "Internal Server Error" message if it\'s an unhandled error', () => {
+    const [host, response] = setupMockHostAndResponse();
 
     const exception = 'Unknown error';
     filter.catch(exception, host);
