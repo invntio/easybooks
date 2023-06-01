@@ -2,89 +2,87 @@ import { Reflector } from '@nestjs/core';
 import { FormatResponseInterceptor } from './formatresponse.interceptor';
 import { CallHandler, ExecutionContext } from '@nestjs/common';
 import { lastValueFrom, of } from 'rxjs';
-import { Category } from '@modules/categories/domain/entity/category.entity';
 import { v4 as uuidV4 } from 'uuid';
 import { FormatedResponse } from '@common/interfaces/formatedresponses.interface';
 import { createMock } from '@golevelup/ts-jest';
 
+type ExampleEntityType = {
+  id: string;
+  name: string;
+  createdAt: Date;
+};
+
 describe('SerializerInterceptor', () => {
   let interceptor: FormatResponseInterceptor;
   let reflector: Reflector;
-
-  beforeEach(() => {
-    reflector = new Reflector();
-    interceptor = new FormatResponseInterceptor(reflector);
-  });
-
-  it('should return category data formated with message', async () => {
-    const categoryData: Category = {
-      id: uuidV4(),
-      name: 'Test Category',
-      createdAt: new Date('2023-03-22T20:26:54.000Z'),
-      isActive: true,
-    };
-
-    const expectedCategoryData: FormatedResponse<Category> = {
-      data: categoryData,
-      success: true,
-      message: 'Category found',
-      statusCode: 200,
-    };
-
-    reflector.get = jest.fn().mockReturnValue('Category found');
+  let entityData: ExampleEntityType;
+  const createExpectedResponseData = async (
+    responseData: ExampleEntityType,
+    responseStatusCpde: number,
+    responseMessage?: string,
+  ): Promise<FormatedResponse<ExampleEntityType>> => {
+    if (responseMessage) {
+      reflector.get = jest.fn().mockReturnValue('Entity found');
+    }
 
     const ctxMock = createMock<ExecutionContext>({
       switchToHttp: jest.fn().mockReturnValue({
-        getResponse: () => ({ statusCode: 200 }),
+        getResponse: () => ({ statusCode: responseStatusCpde }),
       }),
       getHandler: () => ({}),
     });
 
     const callHandlerMock = createMock<CallHandler>({
-      handle: () => of(categoryData),
+      handle: () => of(responseData),
     });
 
-    const categoryDataObservable = interceptor.intercept(
+    const entityDataObservable = interceptor.intercept(
       ctxMock,
       callHandlerMock,
     );
-    const formatedCategoryData = await lastValueFrom(categoryDataObservable);
+    const formatedResponse: FormatedResponse<ExampleEntityType> =
+      await lastValueFrom(entityDataObservable);
 
-    expect(formatedCategoryData).toEqual(expectedCategoryData);
+    return formatedResponse;
+  };
+
+  beforeEach(() => {
+    reflector = new Reflector();
+    interceptor = new FormatResponseInterceptor(reflector);
+    entityData = {
+      id: uuidV4(),
+      name: 'Test Entity',
+      createdAt: new Date(),
+    };
   });
 
-  it('should return category data formated with empty message if response message metadata not found', async () => {
-    const categoryData: Category = {
-      id: uuidV4(),
-      name: 'Test Category',
-      createdAt: new Date('2023-03-22T20:26:54.000Z'),
-      isActive: true,
+  it('should return entity data formated with message', async () => {
+    const expectedEntityData: FormatedResponse<ExampleEntityType> = {
+      data: entityData,
+      success: true,
+      message: 'Entity found',
+      statusCode: 200,
     };
 
-    const expectedCategoryData: FormatedResponse<Category> = {
-      data: categoryData,
+    const formatedResponse = await createExpectedResponseData(
+      entityData,
+      200,
+      'Entity found',
+    );
+
+    expect(formatedResponse).toEqual(expectedEntityData);
+  });
+
+  it('should return entity data formated with empty message if response message metadata not found', async () => {
+    const expectedEntityData: FormatedResponse<ExampleEntityType> = {
+      data: entityData,
       success: true,
       message: '',
       statusCode: 200,
     };
 
-    const ctxMock = createMock<ExecutionContext>({
-      switchToHttp: jest.fn().mockReturnValue({
-        getResponse: () => ({ statusCode: 200 }),
-      }),
-      getHandler: () => ({}),
-    });
+    const formatedResponse = await createExpectedResponseData(entityData, 200);
 
-    const callHandlerMock = createMock<CallHandler>({
-      handle: () => of(categoryData),
-    });
-
-    const categoryDataObservable = interceptor.intercept(
-      ctxMock,
-      callHandlerMock,
-    );
-    const formatedCategoryData = await lastValueFrom(categoryDataObservable);
-
-    expect(formatedCategoryData).toEqual(expectedCategoryData);
+    expect(formatedResponse).toEqual(expectedEntityData);
   });
 });
