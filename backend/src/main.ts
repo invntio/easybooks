@@ -51,14 +51,18 @@ async function bootstrap() {
   app.useGlobalFilters(new TransformResponseFilter());
 
   // Configure Swagger documentation
-  const options = new DocumentBuilder()
-    .setTitle('Invntio')
-    .setDescription('Open-source Inventory Management System')
-    .setVersion('0.1.0')
-    .setLicense('MIT', 'https://github.com/invntio/invntio/blob/main/LICENSE')
-    .build();
-  const document = SwaggerModule.createDocument(app, options);
-  SwaggerModule.setup('api', app, document);
+  const nodeEnv = configService.get('NODE_ENV');
+
+  if (nodeEnv === 'dev') {
+    const options = new DocumentBuilder()
+      .setTitle('Invntio')
+      .setDescription('Open-source Inventory Management System')
+      .setVersion('0.1.0')
+      .setLicense('MIT', 'https://github.com/invntio/invntio/blob/main/LICENSE')
+      .build();
+    const document = SwaggerModule.createDocument(app, options);
+    SwaggerModule.setup('api', app, document);
+  }
 
   // Set up logging with Pino
   app.useLogger(app.get(Logger));
