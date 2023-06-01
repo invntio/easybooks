@@ -19,33 +19,32 @@ describe('pinoConsolefileLogger', () => {
     mockRequest[CORRELATION_ID_HEADER] = uuidV4();
   });
 
-  it('should return the correct logger configuration for development environment', () => {
-    jest.spyOn(configService, 'get').mockReturnValue('dev');
-
+  const assertLoggerConfiguration = (
+    configService: ConfigService,
+    expectedLevel: string,
+    expectedTargetsCount: number,
+  ) => {
     const loggerConfig = pinoConsoleFileLogger(configService);
     const pinoHttp: Options = loggerConfig.pinoHttp as Options;
 
-    expect(pinoHttp.level).toBe('debug');
-    expect((pinoHttp.transport as TransportMultiOptions).targets.length).toBe(
-      2,
-    );
+    expect(pinoHttp.level).toBe(expectedLevel);
+    expect(
+      (pinoHttp.transport as TransportMultiOptions).targets.length,
+    ).toEqual(expectedTargetsCount);
     expect(pinoHttp.customProps(mockRequest, mockResponse)).toEqual({
       correlationId: mockRequest[CORRELATION_ID_HEADER],
     });
+    expect(pinoHttp.serializers.req(mockRequest)).toBeUndefined();
+    expect(pinoHttp.serializers.res(mockResponse)).toBeUndefined();
+  };
+
+  it('should return the correct logger configuration for development environment', () => {
+    jest.spyOn(configService, 'get').mockReturnValue('dev');
+    assertLoggerConfiguration(configService, 'debug', 2);
   });
 
   it('should return the correct logger configuration for production environment', () => {
     jest.spyOn(configService, 'get').mockReturnValue('prod');
-
-    const loggerConfig = pinoConsoleFileLogger(configService);
-    const pinoHttp: Options = loggerConfig.pinoHttp as Options;
-
-    expect(pinoHttp.level).toBe('info');
-    expect((pinoHttp.transport as TransportMultiOptions).targets.length).toBe(
-      2,
-    );
-    expect(pinoHttp.customProps(mockRequest, mockResponse)).toEqual({
-      correlationId: mockRequest[CORRELATION_ID_HEADER],
-    });
+    assertLoggerConfiguration(configService, 'info', 2);
   });
 });
