@@ -58,7 +58,7 @@ export class CategoriesController {
     description: 'The request was wrongly made.',
   })
   @ApiBody({ type: CreateCategoryDto })
-  @ResponseMessage(CATEGORIES_RESPONSES.CREATED)
+  @ResponseMessage({ okMessage: CATEGORIES_RESPONSES.CREATED })
   async create(
     @Body() createCategoryDto: CreateCategoryDto,
   ): Promise<CategoryPresenter> {
@@ -101,7 +101,10 @@ export class CategoriesController {
     required: false,
     description: 'The keyword to search in the categories',
   })
-  @ResponseMessage(CATEGORIES_RESPONSES.FOUND_MANY)
+  @ResponseMessage({
+    okMessage: CATEGORIES_RESPONSES.FOUND_MANY,
+    emptyArrayMessage: CATEGORIES_RESPONSES.NOT_FOUND_MANY,
+  })
   search(@Query() params: SearchByKeywordParams): Promise<CategoryPresenter[]> {
     return this.categoriesSearchUseCase.searchCategoriesByKeyword(
       params.keyword,
@@ -136,7 +139,10 @@ export class CategoriesController {
     required: false,
     description: 'The active status of the category',
   })
-  @ResponseMessage(CATEGORIES_RESPONSES.FOUND_MANY)
+  @ResponseMessage({
+    okMessage: CATEGORIES_RESPONSES.FOUND_MANY,
+    emptyArrayMessage: CATEGORIES_RESPONSES.NOT_FOUND_MANY,
+  })
   filter(
     @Query() criteria: FilterCategoryByCriteriaParams,
   ): Promise<CategoryPresenter[]> {
@@ -166,7 +172,7 @@ export class CategoriesController {
     format: 'uuid',
     description: 'The ID of the category',
   })
-  @ResponseMessage(CATEGORIES_RESPONSES.FOUND_ONE)
+  @ResponseMessage({ okMessage: CATEGORIES_RESPONSES.FOUND_ONE })
   async findOne(
     @Param() params: FindOneCategoryParams,
   ): Promise<CategoryPresenter> {
@@ -185,7 +191,7 @@ export class CategoriesController {
     type: CategoryPresenter,
     isArray: true,
   })
-  @ResponseMessage(CATEGORIES_RESPONSES.FOUND_MANY)
+  @ResponseMessage({ okMessage: CATEGORIES_RESPONSES.FOUND_MANY })
   findAll(): Promise<CategoryPresenter[]> {
     return this.categoriesUseCase.getAllCategories();
   }
@@ -208,7 +214,7 @@ export class CategoriesController {
     description: 'The ID of the category',
   })
   @ApiBody({ type: UpdateCategoryDto })
-  @ResponseMessage(CATEGORIES_RESPONSES.UPDATED)
+  @ResponseMessage({ okMessage: CATEGORIES_RESPONSES.UPDATED })
   async update(
     @Param() params: UpdateCategoryParams,
     @Body() updateCategoryDto: UpdateCategoryDto,
@@ -248,7 +254,7 @@ export class CategoriesController {
     format: 'uuid',
     description: 'The ID of the category',
   })
-  @ResponseMessage(CATEGORIES_RESPONSES.DELETED)
+  @ResponseMessage({ okMessage: CATEGORIES_RESPONSES.DELETED })
   async delete(@Param() params: DeleteCategoryParams): Promise<void> {
     const result = await this.categoriesUseCase.deleteCategory(params.id);
 
