@@ -12,7 +12,10 @@ import { CategoriesService } from '../../application/services/categories.service
 import { CreateCategoryDto } from '../dto/create-category.dto';
 import { UpdateCategoryDto } from '../dto/update-category.dto';
 import { Category } from '../../domain/entity/category.entity';
-import { ResponseMessageKey } from '@common/decorators/response.decorator';
+import {
+  ResponseMessageKey,
+  ResponseMessageOptions,
+} from '@common/decorators/response.decorator';
 import { CATEGORIES_RESPONSES } from '../../common/categories.responses';
 import { CategoryPresenter } from '../presenters/category.presenter';
 import { CategoriesUseCase } from '@modules/categories/application/usecases/categories.usecase';
@@ -65,13 +68,16 @@ describe('CategoriesController', () => {
     });
 
     it('should have the corresponding response message', () => {
-      const responseMessage = reflector.get<string>(
-        ResponseMessageKey,
-        categoriesController.create,
-      );
+      const responseMessageOptions: ResponseMessageOptions =
+        reflector.get<ResponseMessageOptions>(
+          ResponseMessageKey,
+          categoriesController.create,
+        );
 
-      expect(responseMessage).toBeDefined();
-      expect(responseMessage).toBe(CATEGORIES_RESPONSES.CREATED);
+      expect(responseMessageOptions).toBeDefined();
+      expect(responseMessageOptions).toEqual({
+        okMessage: CATEGORIES_RESPONSES.CREATED,
+      });
     });
 
     it('should create a category', async () => {
@@ -137,13 +143,16 @@ describe('CategoriesController', () => {
     });
 
     it('should have the corresponding response message', () => {
-      const responseMessage = reflector.get<string>(
-        ResponseMessageKey,
-        categoriesController.findAll,
-      );
+      const responseMessageOptions: ResponseMessageOptions =
+        reflector.get<ResponseMessageOptions>(
+          ResponseMessageKey,
+          categoriesController.findAll,
+        );
 
-      expect(responseMessage).toBeDefined();
-      expect(responseMessage).toBe(CATEGORIES_RESPONSES.FOUND_MANY);
+      expect(responseMessageOptions).toBeDefined();
+      expect(responseMessageOptions).toEqual({
+        okMessage: CATEGORIES_RESPONSES.FOUND_MANY,
+      });
     });
 
     it('should return an array of categories', async () => {
@@ -174,13 +183,16 @@ describe('CategoriesController', () => {
     });
 
     it('should have the corresponding response message', () => {
-      const responseMessage = reflector.get<string>(
-        ResponseMessageKey,
-        categoriesController.findOne,
-      );
+      const responseMessageOptions: ResponseMessageOptions =
+        reflector.get<ResponseMessageOptions>(
+          ResponseMessageKey,
+          categoriesController.findOne,
+        );
 
-      expect(responseMessage).toBeDefined();
-      expect(responseMessage).toBe(CATEGORIES_RESPONSES.FOUND_ONE);
+      expect(responseMessageOptions).toBeDefined();
+      expect(responseMessageOptions).toEqual({
+        okMessage: CATEGORIES_RESPONSES.FOUND_ONE,
+      });
     });
 
     it('should return a category', async () => {
@@ -224,13 +236,16 @@ describe('CategoriesController', () => {
     });
 
     it('should have the corresponding response message', () => {
-      const responseMessage = reflector.get<string>(
-        ResponseMessageKey,
-        categoriesController.update,
-      );
+      const responseMessageOptions: ResponseMessageOptions =
+        reflector.get<ResponseMessageOptions>(
+          ResponseMessageKey,
+          categoriesController.update,
+        );
 
-      expect(responseMessage).toBeDefined();
-      expect(responseMessage).toBe(CATEGORIES_RESPONSES.UPDATED);
+      expect(responseMessageOptions).toBeDefined();
+      expect(responseMessageOptions).toEqual({
+        okMessage: CATEGORIES_RESPONSES.UPDATED,
+      });
     });
 
     it('should update a category', async () => {
@@ -313,13 +328,16 @@ describe('CategoriesController', () => {
     });
 
     it('should have the corresponding response message', () => {
-      const responseMessage = reflector.get<string>(
-        ResponseMessageKey,
-        categoriesController.delete,
-      );
+      const responseMessageOptions: ResponseMessageOptions =
+        reflector.get<ResponseMessageOptions>(
+          ResponseMessageKey,
+          categoriesController.delete,
+        );
 
-      expect(responseMessage).toBeDefined();
-      expect(responseMessage).toBe(CATEGORIES_RESPONSES.DELETED);
+      expect(responseMessageOptions).toBeDefined();
+      expect(responseMessageOptions).toEqual({
+        okMessage: CATEGORIES_RESPONSES.DELETED,
+      });
     });
 
     it('should delete a category', async () => {
@@ -355,13 +373,17 @@ describe('CategoriesController', () => {
     });
 
     it('should have the corresponding response message', () => {
-      const responseMessage = reflector.get<string>(
-        ResponseMessageKey,
-        categoriesController.filter,
-      );
+      const responseMessageOptions: ResponseMessageOptions =
+        reflector.get<ResponseMessageOptions>(
+          ResponseMessageKey,
+          categoriesController.filter,
+        );
 
-      expect(responseMessage).toBeDefined();
-      expect(responseMessage).toBe(CATEGORIES_RESPONSES.FOUND_MANY);
+      expect(responseMessageOptions).toBeDefined();
+      expect(responseMessageOptions).toEqual({
+        okMessage: CATEGORIES_RESPONSES.FOUND_MANY,
+        emptyArrayMessage: CATEGORIES_RESPONSES.NOT_FOUND_MANY,
+      });
     });
 
     it('should return an array of categories', async () => {
@@ -428,13 +450,17 @@ describe('CategoriesController', () => {
     });
 
     it('should have the corresponding response message', () => {
-      const responseMessage = reflector.get<string>(
-        ResponseMessageKey,
-        categoriesController.search,
-      );
+      const responseMessageOptions: ResponseMessageOptions =
+        reflector.get<ResponseMessageOptions>(
+          ResponseMessageKey,
+          categoriesController.search,
+        );
 
-      expect(responseMessage).toBeDefined();
-      expect(responseMessage).toBe(CATEGORIES_RESPONSES.FOUND_MANY);
+      expect(responseMessageOptions).toBeDefined();
+      expect(responseMessageOptions).toEqual({
+        okMessage: CATEGORIES_RESPONSES.FOUND_MANY,
+        emptyArrayMessage: CATEGORIES_RESPONSES.NOT_FOUND_MANY,
+      });
     });
 
     it('should return an array of categories', async () => {
