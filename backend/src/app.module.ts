@@ -8,6 +8,7 @@ import { CategoriesModule } from './modules/categories/categories.module';
 import { LoggerModule } from 'nestjs-pino';
 import { CorrelationIdMiddleware } from '@common/middlewares/correlation-id/correlation-id.middleware';
 import pinoConsoleFileLogger from '@common/loggers/pino-logger';
+import { ProductsModule } from '@modules/products/products.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import pinoConsoleFileLogger from '@common/loggers/pino-logger';
       useFactory: pinoConsoleFileLogger,
     }),
     CategoriesModule,
+    ProductsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
