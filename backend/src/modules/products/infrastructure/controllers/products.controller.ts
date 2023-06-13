@@ -44,7 +44,6 @@ import { Repository } from 'typeorm';
 import { Product } from '@modules/products/domain/entity/product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ProductCategoriesService } from '@modules/products/application/services/products-categories-service.abstract';
-import { CATEGORIES_RESPONSES } from '@modules/categories/common/categories.responses';
 
 @ApiTags('products')
 @Controller('products')
