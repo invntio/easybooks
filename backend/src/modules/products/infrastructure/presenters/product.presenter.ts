@@ -26,7 +26,7 @@ export class ProductPresenter {
   updatedAt: Date;
 
   @ApiProperty()
-  deletedAt?: Date;
+  deletedAt: Date;
 
   @ApiProperty()
   price: Price;

@@ -9,14 +9,14 @@ export class Product extends BaseEntity {
   public name: string;
 
   @Column({ nullable: true, unique: true })
-  public sku: string;
+  public sku?: string;
 
   @Column({ nullable: true })
   public description?: string;
 
   @ManyToOne(() => Category, (category) => category.id, { nullable: true })
   @JoinColumn()
-  public category: Category;
+  public category?: Category;
 
   // @Column({ nullable: true, select: false })
   // public categoryId?: string;

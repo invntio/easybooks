@@ -33,7 +33,7 @@ export class CreateProductDto {
   })
   @IsOptional()
   @IsUUID('4')
-  public categoryId: string;
+  public categoryId?: string;
 
   @ApiProperty({
     example: {
