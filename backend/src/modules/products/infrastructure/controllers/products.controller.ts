@@ -39,10 +39,7 @@ import { PRODUCTS_RESPONSES } from '../../common/products.responses';
 import { ProductPresenter } from '../presenters/product.presenter';
 import { ProductsSearchUseCase } from '@modules/products/application/usecases/products-search.usecase';
 import { ProductsUseCase } from '@modules/products/application/usecases/products.usecase';
-import { CategoriesUseCase } from '@modules/categories/application/usecases/categories.usecase';
-import { Repository } from 'typeorm';
 import { Product } from '@modules/products/domain/entity/product.entity';
-import { InjectRepository } from '@nestjs/typeorm';
 import { ProductCategoriesService } from '@modules/products/application/services/products-categories-service.abstract';
 
 @ApiTags('products')
@@ -50,10 +47,7 @@ import { ProductCategoriesService } from '@modules/products/application/services
 export class ProductsController {
   constructor(
     private readonly productsService: ProductsService,
-    private readonly categoriesUseCase: CategoriesUseCase,
     private readonly productsUseCase: ProductsUseCase,
-    @InjectRepository(Product)
-    private readonly productsRepository: Repository<Product>,
     private readonly productsSearchUseCase: ProductsSearchUseCase,
     private readonly productCategoriesService: ProductCategoriesService,
   ) {}
@@ -72,78 +66,41 @@ export class ProductsController {
   async create(
     @Body() { categoryId, ...createProductDto }: CreateProductDto,
   ): Promise<ProductPresenter> {
-    const nameExist = await this.productsService.checkIfExists({
-      name: createProductDto.name,
-    });
+    if (createProductDto.name) {
+      const nameExist = await this.productsService.checkIfExists({
+        name: createProductDto.name,
+      });
+      if (nameExist)
+        throw new ConflictException(PRODUCTS_RESPONSES.ALREADY_EXISTS('name'));
+    }
 
-    if (nameExist)
-      throw new ConflictException(PRODUCTS_RESPONSES.ALREADY_EXISTS('name'));
+    if (createProductDto.sku) {
+      const skuExist = await this.productsService.checkIfExists({
+        sku: createProductDto.sku,
+      });
 
-    const skuExist = await this.productsService.checkIfExists({
-      sku: createProductDto.sku,
-    });
+      if (skuExist)
+        throw new ConflictException(PRODUCTS_RESPONSES.ALREADY_EXISTS('sku'));
+    }
 
-    if (skuExist)
-      throw new ConflictException(PRODUCTS_RESPONSES.ALREADY_EXISTS('sku'));
+    const productData: Partial<Product> = { ...createProductDto };
 
-    const category = await this.productCategoriesService.getCategoryById(
-      categoryId,
-    );
-    if (!category)
-      throw new BadRequestException(PRODUCTS_RESPONSES.CATEGORY_NOT_EXIST);
+    if (categoryId) {
+      const category = await this.productCategoriesService.getCategoryById(
+        categoryId,
+      );
+      if (!category)
+        throw new BadRequestException(PRODUCTS_RESPONSES.CATEGORY_NOT_EXIST);
 
-    const productData = { ...createProductDto, category };
+      productData.category = category;
+    }
+
     const result = await this.productsUseCase.createProduct(productData);
 
     if (!result)
       throw new InternalServerErrorException(PRODUCTS_RESPONSES.NOT_CREATED);
 
     return result;
-  }
-
-  async createProductWithCategoriesUseCase(
-    createProductDto: CreateProductDto,
-  ): Promise<ProductPresenter> {
-    const category = await this.categoriesUseCase.getCategoryById(
-      createProductDto.categoryId,
-    );
-    const productData = { ...createProductDto, category };
-    return this.productsUseCase.createProduct(productData);
-  }
-
-  async createProductWithEagerLoading(
-    createProductDto: CreateProductDto,
-  ): Promise<ProductPresenter> {
-    const product = this.productsRepository.create(createProductDto);
-    product.category = { id: createProductDto.categoryId } as any;
-    const result = await this.productsRepository.save(product);
-    return this.productsRepository.findOne({
-      where: { id: result.id },
-      relations: ['category'],
-    });
-  }
-
-  async createProductWithSimplificatedObject(
-    createProductDto: CreateProductDto,
-  ): Promise<ProductPresenter> {
-    const { categoryId, ...productData } = createProductDto;
-    const product = this.productsRepository.create({
-      ...productData,
-      category: { id: categoryId },
-    });
-    return await this.productsRepository.save(product);
-  }
-
-  async createProductWithAbstractService({
-    categoryId,
-    ...createProductDto
-  }: CreateProductDto): Promise<ProductPresenter> {
-    const category = await this.productCategoriesService.getCategoryById(
-      categoryId,
-    );
-    // Check if category exists
-    const productData = { ...createProductDto, category };
-    return this.productsUseCase.createProduct(productData);
   }
 
   @Get('search')
@@ -284,6 +241,12 @@ export class ProductsController {
     @Param() params: UpdateProductParams,
     @Body() { categoryId, ...updateProductDto }: UpdateProductDto,
   ): Promise<ProductPresenter> {
+    const productExist = await this.productsService.checkIfExists({
+      id: params.id,
+    });
+    if (!productExist)
+      throw new NotFoundException(PRODUCTS_RESPONSES.NOT_FOUND_ONE);
+
     if (updateProductDto.name) {
       const nameExist = await this.productsService.checkIfExists({
         name: updateProductDto.name,
@@ -318,7 +281,8 @@ export class ProductsController {
       productData,
     );
 
-    if (!result) throw new NotFoundException(PRODUCTS_RESPONSES.NOT_FOUND_ONE);
+    if (!result)
+      throw new InternalServerErrorException(PRODUCTS_RESPONSES.NOT_UPDATED);
 
     return result;
   }
