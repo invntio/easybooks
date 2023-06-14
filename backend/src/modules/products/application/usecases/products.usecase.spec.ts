@@ -38,6 +38,8 @@ describe('ProductsUseCase', () => {
         name: 'Mock Category',
         isActive: true,
         createdAt: new Date(),
+        updatedAt: new Date(),
+        deletedAt: null,
       };
       const expectedProducts: Product[] = [
         {
@@ -87,6 +89,8 @@ describe('ProductsUseCase', () => {
         name: 'Mock Category',
         isActive: true,
         createdAt: new Date(),
+        updatedAt: new Date(),
+        deletedAt: null,
       };
       const mockProductId = uuidv4();
       const expectedProduct: Product = {
@@ -139,6 +143,8 @@ describe('ProductsUseCase', () => {
         name: 'Mock Category',
         isActive: true,
         createdAt: new Date(),
+        updatedAt: new Date(),
+        deletedAt: null,
       };
       const mockProductId = uuidv4();
       const productData: Partial<Product> = {
@@ -189,6 +195,8 @@ describe('ProductsUseCase', () => {
         name: 'Mock Category',
         isActive: true,
         createdAt: new Date(),
+        updatedAt: new Date(),
+        deletedAt: null,
       };
       const existingProduct: Product = {
         id: uuidv4(),

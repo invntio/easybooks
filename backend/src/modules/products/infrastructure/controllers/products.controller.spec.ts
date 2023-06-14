@@ -93,6 +93,8 @@ describe('ProductsController', () => {
         name: 'Mock Category',
         isActive: true,
         createdAt: new Date(),
+        updatedAt: new Date(),
+        deletedAt: null,
       };
 
       const createProductDto: CreateProductDto = {
@@ -194,6 +196,8 @@ describe('ProductsController', () => {
         name: 'Mock Category',
         isActive: true,
         createdAt: new Date(),
+        updatedAt: new Date(),
+        deletedAt: null,
       };
 
       const createProductDto: CreateProductDto = {
@@ -257,6 +261,8 @@ describe('ProductsController', () => {
             name: 'Electronics',
             isActive: true,
             createdAt: new Date(),
+            updatedAt: new Date(),
+            deletedAt: null,
           },
         },
         {
@@ -276,6 +282,8 @@ describe('ProductsController', () => {
             name: 'Electronics',
             isActive: true,
             createdAt: new Date(),
+            updatedAt: new Date(),
+            deletedAt: null,
           },
         },
       ];
@@ -326,6 +334,8 @@ describe('ProductsController', () => {
           name: 'Electronics',
           isActive: true,
           createdAt: new Date(),
+          updatedAt: new Date(),
+          deletedAt: null,
         },
       };
       jest.spyOn(productsUseCase, 'getProductById').mockResolvedValue(expected);
@@ -376,6 +386,8 @@ describe('ProductsController', () => {
         name: 'Mock Category',
         isActive: true,
         createdAt: new Date(),
+        updatedAt: new Date(),
+        deletedAt: null,
       };
 
       const updateProductDto: UpdateProductDto = {
@@ -573,6 +585,8 @@ describe('ProductsController', () => {
             name: 'Electronics',
             isActive: true,
             createdAt: new Date(),
+            updatedAt: new Date(),
+            deletedAt: null,
           },
         },
         {
@@ -592,6 +606,8 @@ describe('ProductsController', () => {
             name: 'Electronics',
             isActive: true,
             createdAt: new Date(),
+            updatedAt: new Date(),
+            deletedAt: null,
           },
         },
       ];
@@ -672,6 +688,8 @@ describe('ProductsController', () => {
             name: 'Electronics',
             isActive: true,
             createdAt: new Date(),
+            updatedAt: new Date(),
+            deletedAt: null,
           },
         },
         {
@@ -691,6 +709,8 @@ describe('ProductsController', () => {
             name: 'Electronics',
             isActive: true,
             createdAt: new Date(),
+            updatedAt: new Date(),
+            deletedAt: null,
           },
         },
       ];

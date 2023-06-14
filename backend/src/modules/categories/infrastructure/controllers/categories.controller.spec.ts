@@ -91,6 +91,8 @@ describe('CategoriesController', () => {
         name: 'Category Name',
         isActive: true,
         createdAt: new Date(),
+        updatedAt: new Date(),
+        deletedAt: null,
       };
 
       jest
@@ -164,6 +166,8 @@ describe('CategoriesController', () => {
           name: 'Category Name',
           isActive: true,
           createdAt: new Date(),
+          updatedAt: new Date(),
+          deletedAt: null,
         },
       ];
       jest
@@ -203,6 +207,8 @@ describe('CategoriesController', () => {
         name: 'Category Name',
         isActive: true,
         createdAt: new Date(),
+        updatedAt: new Date(),
+        deletedAt: null,
       };
       jest
         .spyOn(categoriesUseCase, 'getCategoryById')
@@ -254,6 +260,8 @@ describe('CategoriesController', () => {
         name: 'Old Category Name',
         isActive: true,
         createdAt: new Date(),
+        updatedAt: new Date(),
+        deletedAt: null,
       };
       const updateCategoryDto: UpdateCategoryDto = {
         name: 'New Category Name',
@@ -398,12 +406,16 @@ describe('CategoriesController', () => {
           name: 'Category 1',
           isActive: true,
           createdAt: new Date(),
+          updatedAt: new Date(),
+          deletedAt: null,
         },
         {
           id: '2',
           name: 'Category 2',
           isActive: true,
           createdAt: new Date(),
+          updatedAt: new Date(),
+          deletedAt: null,
         },
       ];
 
@@ -474,12 +486,16 @@ describe('CategoriesController', () => {
           name: 'Category 1',
           isActive: true,
           createdAt: new Date(),
+          updatedAt: new Date(),
+          deletedAt: null,
         },
         {
           id: '2',
           name: 'Category 2',
           isActive: true,
           createdAt: new Date(),
+          updatedAt: new Date(),
+          deletedAt: null,
         },
       ];
 

@@ -21,6 +21,8 @@ describe('ProductPresenter', () => {
           name: 'Electronics',
           isActive: true,
           createdAt: new Date(),
+          updatedAt: new Date(),
+          deletedAt: null,
         },
       };
 
