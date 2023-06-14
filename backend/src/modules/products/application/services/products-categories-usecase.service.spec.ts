@@ -47,6 +47,8 @@ describe('ProductsService', () => {
         name: 'Mock Category',
         isActive: true,
         createdAt: new Date(),
+        updatedAt: new Date(),
+        deletedAt: null,
       };
 
       jest
@@ -66,6 +68,8 @@ describe('ProductsService', () => {
         name: 'Mock Category',
         isActive: true,
         createdAt: new Date(),
+        updatedAt: new Date(),
+        deletedAt: null,
       };
 
       jest.spyOn(categoriesUseCase, 'getCategoryById').mockResolvedValue(null);

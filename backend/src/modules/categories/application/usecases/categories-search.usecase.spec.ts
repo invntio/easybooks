@@ -38,12 +38,16 @@ describe('CategorySearchUseCase', () => {
           name: 'Category 1',
           isActive: true,
           createdAt: new Date(),
+          updatedAt: new Date(),
+          deletedAt: null,
         },
         {
           id: uuidV4(),
           name: 'Category 2',
           isActive: true,
           createdAt: new Date(),
+          updatedAt: new Date(),
+          deletedAt: null,
         },
       ];
       jest
@@ -102,12 +106,16 @@ describe('CategorySearchUseCase', () => {
           name: 'Category 1',
           isActive: true,
           createdAt: new Date(),
+          updatedAt: new Date(),
+          deletedAt: null,
         },
         {
           id: uuidV4(),
           name: 'Category 2',
           isActive: true,
           createdAt: new Date(),
+          updatedAt: new Date(),
+          deletedAt: null,
         },
       ];
       jest

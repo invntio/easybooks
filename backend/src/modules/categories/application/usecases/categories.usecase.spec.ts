@@ -32,8 +32,22 @@ describe('CategoriesUseCase', () => {
   describe('getAllCategories', () => {
     it('should return an array of categories', async () => {
       const expectedCategories: Category[] = [
-        { id: '1', name: 'Category 1', isActive: true, createdAt: new Date() },
-        { id: '2', name: 'Category 2', isActive: true, createdAt: new Date() },
+        {
+          id: '1',
+          name: 'Category 1',
+          isActive: true,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          deletedAt: null,
+        },
+        {
+          id: '2',
+          name: 'Category 2',
+          isActive: true,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          deletedAt: null,
+        },
       ];
       jest
         .spyOn(categoriesRepository, 'find')
@@ -54,6 +68,8 @@ describe('CategoriesUseCase', () => {
         name: 'Category 1',
         isActive: true,
         createdAt: new Date(),
+        updatedAt: new Date(),
+        deletedAt: null,
       };
       jest
         .spyOn(categoriesRepository, 'findOne')
@@ -90,6 +106,8 @@ describe('CategoriesUseCase', () => {
         name: 'Category 1',
         isActive: true,
         createdAt: new Date(),
+        updatedAt: new Date(),
+        deletedAt: null,
       };
       jest
         .spyOn(categoriesRepository, 'create')
@@ -117,6 +135,8 @@ describe('CategoriesUseCase', () => {
         name: 'Old Category',
         isActive: true,
         createdAt: new Date(),
+        updatedAt: new Date(),
+        deletedAt: null,
       };
       const updatedCategory: Category = Object.assign(existingCategory, {
         name: 'Updated Category',

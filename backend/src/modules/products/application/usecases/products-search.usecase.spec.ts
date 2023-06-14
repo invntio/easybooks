@@ -37,6 +37,8 @@ describe('ProductSearchUseCase', () => {
         name: 'Mock Category',
         isActive: true,
         createdAt: new Date(),
+        updatedAt: new Date(),
+        deletedAt: null,
       };
       const expectedProducts: Product[] = [
         {
@@ -121,6 +123,8 @@ describe('ProductSearchUseCase', () => {
         name: 'Mock Category',
         isActive: true,
         createdAt: new Date(),
+        updatedAt: new Date(),
+        deletedAt: null,
       };
       const expectedProducts: Product[] = [
         {

@@ -1,12 +1,8 @@
-import {
-  PrimaryGeneratedColumn,
-  Column,
-  Entity,
-  CreateDateColumn,
-} from 'typeorm';
+import { BaseEntity } from '@common/entities/base.entity';
+import { PrimaryGeneratedColumn, Column, Entity } from 'typeorm';
 
 @Entity()
-export class Category {
+export class Category extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -15,7 +11,4 @@ export class Category {
 
   @Column({ default: true })
   isActive: boolean;
-
-  @CreateDateColumn()
-  createdAt: Date;
 }

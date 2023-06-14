@@ -10,6 +10,8 @@ describe('CategoryPresenter', () => {
         name: 'Category 1',
         isActive: true,
         createdAt: new Date(),
+        updatedAt: new Date(),
+        deletedAt: null,
       };
 
       const presenter = new CategoryPresenter(category);

@@ -14,6 +14,12 @@ export class CategoryPresenter {
   @ApiProperty()
   createdAt: Date;
 
+  @ApiProperty()
+  updatedAt: Date;
+
+  @ApiProperty()
+  deletedAt: Date;
+
   constructor(partial: Partial<Category>) {
     Object.assign(this, partial);
   }
