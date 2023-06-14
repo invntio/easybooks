@@ -12,7 +12,9 @@ export class SearchByKeywordParams {
   keyword: string;
 }
 
-export class FilterCategoryByCriteriaParams implements CategoriesFilterCriteria {
+export class FilterCategoryByCriteriaParams
+  implements CategoriesFilterCriteria
+{
   @IsOptional()
   @IsString()
   name?: string;

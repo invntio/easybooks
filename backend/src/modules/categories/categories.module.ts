@@ -10,6 +10,6 @@ import { CategoriesSearchUseCase } from './application/usecases/categories-searc
   imports: [TypeOrmModule.forFeature([Category])],
   controllers: [CategoriesController],
   providers: [CategoriesService, CategoriesUseCase, CategoriesSearchUseCase],
-  exports: [TypeOrmModule],
+  exports: [TypeOrmModule, CategoriesUseCase],
 })
 export class CategoriesModule {}
