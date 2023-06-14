@@ -1,11 +1,12 @@
 import { Reflector } from '@nestjs/core';
 import {
-  InternalServerErrorException,
   NotFoundException,
+  ConflictException,
+  BadRequestException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { v4 as uuidV4 } from 'uuid';
 import { ProductsController } from './products.controller';
 import { ProductsService } from '../../application/services/products.service';
@@ -24,33 +25,38 @@ import {
   DeleteProductParams,
   FilterProductByCriteriaParams,
   SearchProductByKeywordParams,
-  UpdateProductParams,
 } from '../params/products.params';
+import { ProductCategoriesService } from '@modules/products/application/services/products-categories-service.abstract';
+import { ProductsModule } from '@modules/products/products.module';
+import { Category } from '@modules/categories/domain/entity/category.entity';
 
 describe('ProductsController', () => {
   let productsController: ProductsController;
   let productsSearchUseCase: ProductsSearchUseCase;
   let productsUseCase: ProductsUseCase;
   let productsService: ProductsService;
+  let productCategoriesService: ProductCategoriesService;
   let reflector: Reflector;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [ProductsController],
-      providers: [
-        ProductsService,
-        ProductsUseCase,
-        ProductsSearchUseCase,
-        {
-          provide: getRepositoryToken(Product),
-          useClass: Repository,
-        },
+      imports: [
+        TypeOrmModule.forRoot({
+          type: 'sqlite',
+          database: ':memory:',
+          autoLoadEntities: true,
+          synchronize: true,
+        }),
+        ProductsModule,
       ],
     }).compile();
 
     productsController = module.get<ProductsController>(ProductsController);
     productsUseCase = module.get<ProductsUseCase>(ProductsUseCase);
     productsService = module.get<ProductsService>(ProductsService);
+    productCategoriesService = module.get<ProductCategoriesService>(
+      ProductCategoriesService,
+    );
     productsSearchUseCase = module.get<ProductsSearchUseCase>(
       ProductsSearchUseCase,
     );
@@ -82,50 +88,135 @@ describe('ProductsController', () => {
     it('should create a product', async () => {
       const mockProductId = uuidV4();
 
+      const mockCategory: Category = {
+        id: uuidV4(),
+        name: 'Mock Category',
+        isActive: true,
+        createdAt: new Date(),
+      };
+
       const createProductDto: CreateProductDto = {
         name: 'Product Name',
+        price: {
+          value: 100,
+          currencyCode: 'USD',
+        },
+        categoryId: mockCategory.id,
+        sku: 'SKU-001',
+        description: 'Short description',
       };
       const expected: ProductPresenter = {
         id: mockProductId,
         name: 'Product Name',
+        sku: 'SKU-001',
+        description: 'A super laptop',
+        price: {
+          value: 100,
+          currencyCode: 'USD',
+        },
+        category: mockCategory,
         createdAt: new Date(),
+        updatedAt: new Date(),
+        deletedAt: null,
       };
 
       jest.spyOn(productsUseCase, 'createProduct').mockResolvedValue(expected);
       jest.spyOn(productsService, 'checkIfExists').mockResolvedValue(false);
+      jest
+        .spyOn(productCategoriesService, 'getCategoryById')
+        .mockResolvedValue(mockCategory);
 
       const result = await productsController.create(createProductDto);
 
       expect(result).toEqual(expected);
-      expect(productsUseCase.createProduct).toHaveBeenCalledWith(
-        createProductDto,
+    });
+
+    it('should throw a ConflictException if the product name already exists', async () => {
+      // Mock de los datos de entrada
+      const createProductDto = {
+        name: 'Laptop',
+        sku: 'SKU-001',
+        description: 'A super laptop',
+        categoryId: 'f313b4ac-7c7b-48d3-8ca3-208a2c770324',
+        price: { value: 100, currencyCode: 'USD' },
+      };
+
+      // Mock de checkIfExists para que retorne verdadero cuando se verifica el nombre
+      jest.spyOn(productsService, 'checkIfExists').mockResolvedValue(true);
+
+      await expect(productsController.create(createProductDto)).rejects.toThrow(
+        ConflictException,
       );
     });
 
-    it('should return conflict exception if product already exists', async () => {
-      const createProductDto: CreateProductDto = {
-        name: 'Product Name',
+    it('should throw a ConflictException if the product SKU already exists', async () => {
+      // Mock de los datos de entrada
+      const createProductDto = {
+        name: 'Laptop',
+        sku: 'SKU-001',
+        description: 'A super laptop',
+        categoryId: 'f313b4ac-7c7b-48d3-8ca3-208a2c770324',
+        price: { value: 100, currencyCode: 'USD' },
       };
 
+      // Mock de checkIfExists para que retorne verdadero cuando se verifica el SKU
+      jest.spyOn(productsService, 'checkIfExists').mockResolvedValueOnce(false);
       jest.spyOn(productsService, 'checkIfExists').mockResolvedValue(true);
 
-      const result = productsController.create(createProductDto);
-
-      await expect(result).rejects.toThrow();
+      await expect(productsController.create(createProductDto)).rejects.toThrow(
+        ConflictException,
+      );
     });
 
-    it('should throw InternalServerErrorException when product creation fails', async () => {
-      const createProductDto = { name: 'Product Name' };
+    it('should throw a BadRequestException if the product category does not exist', async () => {
+      // Mock de los datos de entrada
+      const createProductDto = {
+        name: 'Laptop',
+        sku: 'SKU-001',
+        description: 'A super laptop',
+        categoryId: 'f313b4ac-7c7b-48d3-8ca3-208a2c770324',
+        price: { value: 100, currencyCode: 'USD' },
+      };
 
-      jest.spyOn(productsService, 'checkIfExists').mockResolvedValueOnce(false);
-      jest.spyOn(productsUseCase, 'createProduct').mockResolvedValueOnce(null);
+      // Mock de getCategoryById para que retorne null
+      jest
+        .spyOn(productCategoriesService, 'getCategoryById')
+        .mockResolvedValue(null);
 
-      try {
-        await productsController.create(createProductDto);
-      } catch (error) {
-        expect(error).toBeInstanceOf(InternalServerErrorException);
-        expect(error.message).toBe(PRODUCTS_RESPONSES.NOT_CREATED);
-      }
+      await expect(productsController.create(createProductDto)).rejects.toThrow(
+        BadRequestException,
+      );
+    });
+
+    it('should throw a InternalServerErrorException if product creation fails', async () => {
+      const mockCategory: Category = {
+        id: uuidV4(),
+        name: 'Mock Category',
+        isActive: true,
+        createdAt: new Date(),
+      };
+
+      const createProductDto: CreateProductDto = {
+        name: 'Product Name',
+        price: {
+          value: 100,
+          currencyCode: 'USD',
+        },
+        categoryId: mockCategory.id,
+        sku: 'SKU-001',
+        description: 'Short description',
+      };
+
+      jest.spyOn(productsService, 'checkIfExists').mockResolvedValue(false);
+      jest
+        .spyOn(productCategoriesService, 'getCategoryById')
+        .mockResolvedValue(mockCategory);
+
+      jest.spyOn(productsUseCase, 'createProduct').mockResolvedValue(null);
+
+      await expect(productsController.create(createProductDto)).rejects.toThrow(
+        InternalServerErrorException,
+      );
     });
   });
 
@@ -148,13 +239,44 @@ describe('ProductsController', () => {
     });
 
     it('should return an array of products', async () => {
-      const mockProductId = uuidV4();
-
       const expected: Product[] = [
         {
-          id: mockProductId,
-          name: 'Product Name',
+          id: '38a9e8a3-9394-4ebf-ac71-bd65715e605e',
           createdAt: new Date(),
+          updatedAt: new Date(),
+          deletedAt: null,
+          name: 'Product 1',
+          sku: 'SKU-001',
+          description: 'A super product',
+          price: {
+            value: 100,
+            currencyCode: 'USD',
+          },
+          category: {
+            id: 'e6aa8568-b090-4912-87dc-5f3ce5e2e867',
+            name: 'Electronics',
+            isActive: true,
+            createdAt: new Date(),
+          },
+        },
+        {
+          id: '3b4c6861-aeba-42c5-9987-b6175f5ab459',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          deletedAt: null,
+          name: 'Product 2',
+          sku: 'SKU-002',
+          description: 'A super product 2.0',
+          price: {
+            value: 100,
+            currencyCode: 'USD',
+          },
+          category: {
+            id: 'e6aa8568-b090-4912-87dc-5f3ce5e2e867',
+            name: 'Electronics',
+            isActive: true,
+            createdAt: new Date(),
+          },
         },
       ];
       jest.spyOn(productsUseCase, 'getAllProducts').mockResolvedValue(expected);
@@ -189,8 +311,22 @@ describe('ProductsController', () => {
 
       const expected: ProductPresenter = {
         id: mockProductId1,
-        name: 'Product Name',
         createdAt: new Date(),
+        updatedAt: new Date(),
+        deletedAt: null,
+        name: 'Product 2',
+        sku: 'SKU-002',
+        description: 'A super product 2.0',
+        price: {
+          value: 100,
+          currencyCode: 'USD',
+        },
+        category: {
+          id: 'e6aa8568-b090-4912-87dc-5f3ce5e2e867',
+          name: 'Electronics',
+          isActive: true,
+          createdAt: new Date(),
+        },
       };
       jest.spyOn(productsUseCase, 'getProductById').mockResolvedValue(expected);
 
@@ -233,68 +369,124 @@ describe('ProductsController', () => {
     });
 
     it('should update a product', async () => {
-      const oldProduct: Product = {
+      const mockProductId = uuidV4();
+
+      const mockCategory: Category = {
         id: uuidV4(),
-        name: 'Old Product Name',
+        name: 'Mock Category',
+        isActive: true,
         createdAt: new Date(),
       };
+
       const updateProductDto: UpdateProductDto = {
-        name: 'New Product Name',
+        name: 'Updated Product Name',
+        price: {
+          value: 200,
+          currencyCode: 'USD',
+        },
+        categoryId: mockCategory.id,
+        sku: 'SKU-002',
+        description: 'Updated description',
       };
-      const newProduct: Product = Object.assign(oldProduct, updateProductDto);
 
-      const updateProductParams: UpdateProductParams = { id: oldProduct.id };
+      const expected: ProductPresenter = {
+        id: mockProductId,
+        name: 'Updated Product Name',
+        sku: 'SKU-002',
+        description: 'Updated description',
+        price: {
+          value: 200,
+          currencyCode: 'USD',
+        },
+        category: mockCategory,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        deletedAt: null,
+      };
 
-      jest
-        .spyOn(productsUseCase, 'updateProduct')
-        .mockResolvedValueOnce(newProduct);
+      jest.spyOn(productsService, 'checkIfExists').mockResolvedValueOnce(true);
+      jest.spyOn(productsUseCase, 'updateProduct').mockResolvedValue(expected);
       jest.spyOn(productsService, 'checkIfExists').mockResolvedValue(false);
+      jest
+        .spyOn(productCategoriesService, 'getCategoryById')
+        .mockResolvedValue(mockCategory);
 
       const result = await productsController.update(
-        updateProductParams,
+        { id: 'product-id' },
         updateProductDto,
       );
 
-      expect(result).toEqual(newProduct);
-      expect(productsUseCase.updateProduct).toHaveBeenCalledWith(
-        updateProductParams.id,
-        updateProductDto,
-      );
+      expect(result).toEqual(expected);
     });
 
-    it('should throw an error when the product does not exist', async () => {
-      const updateProductDto: UpdateProductDto = {
-        name: 'new name',
+    it('should throw a ConflictException if the updated product name already exists', async () => {
+      const updateProductDto = {
+        name: 'Laptop',
       };
-      const productId = uuidV4();
-      const updateProductParams: UpdateProductParams = { id: productId };
 
-      jest.spyOn(productsUseCase, 'updateProduct').mockResolvedValueOnce(null);
-      jest.spyOn(productsService, 'checkIfExists').mockResolvedValue(false);
-
-      const result = productsController.update(
-        updateProductParams,
-        updateProductDto,
-      );
-
-      await expect(result).rejects.toThrow();
-    });
-
-    it('should return conflict exception if product with desired name already exists', async () => {
-      const updateProductDto: UpdateProductDto = {
-        name: 'Product Name',
-      };
-      const productId = uuidV4();
-      const updateProductParams: UpdateProductParams = { id: productId };
-
+      jest.spyOn(productsService, 'checkIfExists').mockResolvedValueOnce(true);
       jest.spyOn(productsService, 'checkIfExists').mockResolvedValue(true);
 
-      const result = productsController.update(
-        updateProductParams,
-        updateProductDto,
-      );
+      await expect(
+        productsController.update({ id: 'product-id' }, updateProductDto),
+      ).rejects.toThrow(ConflictException);
+    });
 
-      await expect(result).rejects.toThrow();
+    it('should throw a ConflictException if the updated product SKU already exists', async () => {
+      const updateProductDto = {
+        sku: 'SKU-001',
+      };
+
+      jest.spyOn(productsService, 'checkIfExists').mockResolvedValueOnce(true);
+      jest.spyOn(productsService, 'checkIfExists').mockResolvedValue(true);
+
+      await expect(
+        productsController.update({ id: 'product-id' }, updateProductDto),
+      ).rejects.toThrow(ConflictException);
+    });
+
+    it('should throw a BadRequestException if the updated product category does not exist', async () => {
+      const mockProductId = uuidV4();
+      const updateProductDto = {
+        categoryId: uuidV4(),
+      };
+
+      jest.spyOn(productsService, 'checkIfExists').mockResolvedValueOnce(true);
+      jest
+        .spyOn(productCategoriesService, 'getCategoryById')
+        .mockResolvedValue(null);
+
+      await expect(
+        productsController.update({ id: mockProductId }, updateProductDto),
+      ).rejects.toThrow(BadRequestException);
+    });
+
+    it('should throw a NotFoundException if the product to update is not found', async () => {
+      const mockProductId = uuidV4();
+      const updateProductDto = {
+        name: 'Updated name',
+      };
+
+      jest.spyOn(productsService, 'checkIfExists').mockResolvedValue(false);
+
+      await expect(
+        productsController.update({ id: mockProductId }, updateProductDto),
+      ).rejects.toThrow(NotFoundException);
+    });
+
+    it('should throw a InternalServerErrorException if product update fails', async () => {
+      const mockProductId = uuidV4();
+      const updateProductDto = {
+        name: 'Updated name',
+      };
+
+      jest.spyOn(productsService, 'checkIfExists').mockResolvedValueOnce(true);
+      jest.spyOn(productsService, 'checkIfExists').mockResolvedValueOnce(false);
+      jest.spyOn(productsUseCase, 'updateProduct').mockResolvedValueOnce(null);
+
+      await expect(
+        productsController.update({ id: mockProductId }, updateProductDto),
+      ).rejects.toThrow(InternalServerErrorException);
     });
   });
 
@@ -365,14 +557,42 @@ describe('ProductsController', () => {
 
       const mockFilteredProducts: Product[] = [
         {
-          id: '1',
-          name: 'Product 1',
+          id: '38a9e8a3-9394-4ebf-ac71-bd65715e605e',
           createdAt: new Date(),
+          updatedAt: new Date(),
+          deletedAt: null,
+          name: 'Product 1',
+          sku: 'SKU-001',
+          description: 'A super product',
+          price: {
+            value: 100,
+            currencyCode: 'USD',
+          },
+          category: {
+            id: 'e6aa8568-b090-4912-87dc-5f3ce5e2e867',
+            name: 'Electronics',
+            isActive: true,
+            createdAt: new Date(),
+          },
         },
         {
-          id: '2',
-          name: 'Product 2',
+          id: '3b4c6861-aeba-42c5-9987-b6175f5ab459',
           createdAt: new Date(),
+          updatedAt: new Date(),
+          deletedAt: null,
+          name: 'Product 2',
+          sku: 'SKU-002',
+          description: 'A super product 2.0',
+          price: {
+            value: 100,
+            currencyCode: 'USD',
+          },
+          category: {
+            id: 'e6aa8568-b090-4912-87dc-5f3ce5e2e867',
+            name: 'Electronics',
+            isActive: true,
+            createdAt: new Date(),
+          },
         },
       ];
 
@@ -436,14 +656,42 @@ describe('ProductsController', () => {
 
       const mockSearchResult: Product[] = [
         {
-          id: '1',
-          name: 'Product 1',
+          id: '38a9e8a3-9394-4ebf-ac71-bd65715e605e',
           createdAt: new Date(),
+          updatedAt: new Date(),
+          deletedAt: null,
+          name: 'Product 1',
+          sku: 'SKU-001',
+          description: 'A super product',
+          price: {
+            value: 100,
+            currencyCode: 'USD',
+          },
+          category: {
+            id: 'e6aa8568-b090-4912-87dc-5f3ce5e2e867',
+            name: 'Electronics',
+            isActive: true,
+            createdAt: new Date(),
+          },
         },
         {
-          id: '2',
-          name: 'Product 2',
+          id: '3b4c6861-aeba-42c5-9987-b6175f5ab459',
           createdAt: new Date(),
+          updatedAt: new Date(),
+          deletedAt: null,
+          name: 'Product 2',
+          sku: 'SKU-002',
+          description: 'A super product 2.0',
+          price: {
+            value: 100,
+            currencyCode: 'USD',
+          },
+          category: {
+            id: 'e6aa8568-b090-4912-87dc-5f3ce5e2e867',
+            name: 'Electronics',
+            isActive: true,
+            createdAt: new Date(),
+          },
         },
       ];
 

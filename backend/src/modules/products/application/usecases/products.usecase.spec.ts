@@ -3,6 +3,8 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
 import { ProductsUseCase } from './products.usecase';
 import { Product } from '../../domain/entity/product.entity';
+import { Category } from '@modules/categories/domain/entity/category.entity';
+import { v4 as uuidv4 } from 'uuid';
 
 describe('ProductsUseCase', () => {
   let productsUseCase: ProductsUseCase;
@@ -31,9 +33,41 @@ describe('ProductsUseCase', () => {
 
   describe('getAllProducts', () => {
     it('should return an array of products', async () => {
+      const mockCategory: Category = {
+        id: uuidv4(),
+        name: 'Mock Category',
+        isActive: true,
+        createdAt: new Date(),
+      };
       const expectedProducts: Product[] = [
-        { id: '1', name: 'Product 1', createdAt: new Date() },
-        { id: '2', name: 'Product 2', createdAt: new Date() },
+        {
+          id: uuidv4(),
+          name: 'Product 1',
+          sku: 'SKU-001',
+          description: 'A super product',
+          price: {
+            value: 100,
+            currencyCode: 'USD',
+          },
+          category: mockCategory,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          deletedAt: null,
+        },
+        {
+          id: uuidv4(),
+          name: 'Product 2',
+          sku: 'SKU-002',
+          description: 'A super product 2.0',
+          price: {
+            value: 100,
+            currencyCode: 'USD',
+          },
+          category: mockCategory,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          deletedAt: null,
+        },
       ];
       jest
         .spyOn(productsRepository, 'find')
@@ -48,23 +82,38 @@ describe('ProductsUseCase', () => {
 
   describe('getProductById', () => {
     it('should return a product when given a valid id', async () => {
-      const productId = '1';
-      const expectedProduct: Product = {
-        id: '1',
-        name: 'Product 1',
+      const mockCategory: Category = {
+        id: uuidv4(),
+        name: 'Mock Category',
         isActive: true,
         createdAt: new Date(),
+      };
+      const mockProductId = uuidv4();
+      const expectedProduct: Product = {
+        id: mockProductId,
+        name: 'Product Name',
+        sku: 'SKU-001',
+        description: 'A super product',
+        price: {
+          value: 100,
+          currencyCode: 'USD',
+        },
+        category: mockCategory,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        deletedAt: null,
       };
       jest
         .spyOn(productsRepository, 'findOne')
         .mockResolvedValue(expectedProduct);
 
-      const result = await productsUseCase.getProductById(productId);
+      const result = await productsUseCase.getProductById(mockProductId);
 
       expect(result).toEqual(expectedProduct);
       expect(productsRepository.findOne).toHaveBeenCalledTimes(1);
       expect(productsRepository.findOne).toHaveBeenCalledWith({
-        where: { id: productId },
+        relations: ['category'],
+        where: { id: mockProductId },
       });
     });
 
@@ -77,6 +126,7 @@ describe('ProductsUseCase', () => {
       expect(result).toBeNull();
       expect(productsRepository.findOne).toHaveBeenCalledTimes(1);
       expect(productsRepository.findOne).toHaveBeenCalledWith({
+        relations: ['category'],
         where: { id: productId },
       });
     });
@@ -84,13 +134,39 @@ describe('ProductsUseCase', () => {
 
   describe('createProduct', () => {
     it('should create a new product', async () => {
-      const productData: Partial<Product> = { name: 'New Product' };
-      const createdProduct: Product = {
-        id: '1',
-        name: 'Product 1',
+      const mockCategory: Category = {
+        id: uuidv4(),
+        name: 'Mock Category',
         isActive: true,
         createdAt: new Date(),
       };
+      const mockProductId = uuidv4();
+      const productData: Partial<Product> = {
+        id: mockProductId,
+        name: 'Product Name',
+        sku: 'SKU-001',
+        description: 'A super product',
+        price: {
+          value: 100,
+          currencyCode: 'USD',
+        },
+        category: mockCategory,
+      };
+      const createdProduct: Product = {
+        id: mockProductId,
+        name: 'Product Name',
+        sku: 'SKU-001',
+        description: 'A super product',
+        price: {
+          value: 100,
+          currencyCode: 'USD',
+        },
+        category: mockCategory,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        deletedAt: null,
+      };
+
       jest.spyOn(productsRepository, 'create').mockReturnValue(createdProduct);
       jest.spyOn(productsRepository, 'save').mockResolvedValue(createdProduct);
 
@@ -107,12 +183,26 @@ describe('ProductsUseCase', () => {
   describe('updateProduct', () => {
     it('should update an existing product when given a valid id and product data', async () => {
       const productId = '1';
-      const productData: Partial<Product> = { name: 'Updated Product' };
-      const existingProduct: Product = {
-        id: '1',
-        name: 'Old Product',
+      const updateProductData: Partial<Product> = { name: 'Updated Product' };
+      const mockCategory: Category = {
+        id: uuidv4(),
+        name: 'Mock Category',
         isActive: true,
         createdAt: new Date(),
+      };
+      const existingProduct: Product = {
+        id: uuidv4(),
+        name: 'Product Name',
+        sku: 'SKU-001',
+        description: 'A super product',
+        price: {
+          value: 100,
+          currencyCode: 'USD',
+        },
+        category: mockCategory,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        deletedAt: null,
       };
       const updatedProduct: Product = Object.assign(existingProduct, {
         name: 'Updated Product',
@@ -125,12 +215,13 @@ describe('ProductsUseCase', () => {
 
       const result = await productsUseCase.updateProduct(
         productId,
-        productData,
+        updateProductData,
       );
 
       expect(result).toEqual(updatedProduct);
       expect(productsRepository.findOne).toHaveBeenCalledTimes(1);
       expect(productsRepository.findOne).toHaveBeenCalledWith({
+        relations: ['category'],
         where: { id: productId },
       });
       expect(productsRepository.save).toHaveBeenCalledTimes(1);
@@ -139,18 +230,19 @@ describe('ProductsUseCase', () => {
 
     it('should return null when given an invalid id', async () => {
       const productId = '999';
-      const productData: Partial<Product> = { name: 'Updated Product' };
+      const updateProductData: Partial<Product> = { name: 'Updated Product' };
       jest.spyOn(productsRepository, 'findOne').mockResolvedValue(null);
       jest.spyOn(productsRepository, 'save').mockResolvedValue(null);
 
       const result = await productsUseCase.updateProduct(
         productId,
-        productData,
+        updateProductData,
       );
 
       expect(result).toBeNull();
       expect(productsRepository.findOne).toHaveBeenCalledTimes(1);
       expect(productsRepository.findOne).toHaveBeenCalledWith({
+        relations: ['category'],
         where: { id: productId },
       });
       expect(productsRepository.save).not.toHaveBeenCalled();

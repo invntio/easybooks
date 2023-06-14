@@ -3,7 +3,8 @@ import { ProductsSearchUseCase } from './products-search.usecase';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { FindOptionsWhere, Like, Repository } from 'typeorm';
 import { Product } from '../../domain/entity/product.entity';
-import { v4 as uuidV4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
+import { Category } from '@modules/categories/domain/entity/category.entity';
 
 describe('ProductSearchUseCase', () => {
   let productSearchUseCase: ProductsSearchUseCase;
@@ -30,18 +31,41 @@ describe('ProductSearchUseCase', () => {
 
   describe('searchProductsByKeyword', () => {
     it('should return products that match the keyword', async () => {
-      // Arrange
       const keyword = 'example';
+      const mockCategory: Category = {
+        id: uuidv4(),
+        name: 'Mock Category',
+        isActive: true,
+        createdAt: new Date(),
+      };
       const expectedProducts: Product[] = [
         {
-          id: uuidV4(),
+          id: uuidv4(),
           name: 'Product 1',
+          sku: 'SKU-001',
+          description: 'A super product',
+          price: {
+            value: 100,
+            currencyCode: 'USD',
+          },
+          category: mockCategory,
           createdAt: new Date(),
+          updatedAt: new Date(),
+          deletedAt: null,
         },
         {
-          id: uuidV4(),
+          id: uuidv4(),
           name: 'Product 2',
+          sku: 'SKU-002',
+          description: 'A super product 2.0',
+          price: {
+            value: 100,
+            currencyCode: 'USD',
+          },
+          category: mockCategory,
           createdAt: new Date(),
+          updatedAt: new Date(),
+          deletedAt: null,
         },
       ];
       jest
@@ -88,24 +112,44 @@ describe('ProductSearchUseCase', () => {
       // Arrange
       const criteria: Partial<Product> = {
         name: 'Product',
-        isActive: true,
       };
       const filterOptions: FindOptionsWhere<Product> = {
         name: criteria.name && Like(`%${criteria.name}%`),
-        isActive: criteria.isActive,
+      };
+      const mockCategory: Category = {
+        id: uuidv4(),
+        name: 'Mock Category',
+        isActive: true,
+        createdAt: new Date(),
       };
       const expectedProducts: Product[] = [
         {
-          id: uuidV4(),
+          id: uuidv4(),
           name: 'Product 1',
-          isActive: true,
+          sku: 'SKU-001',
+          description: 'A super product',
+          price: {
+            value: 100,
+            currencyCode: 'USD',
+          },
+          category: mockCategory,
           createdAt: new Date(),
+          updatedAt: new Date(),
+          deletedAt: null,
         },
         {
-          id: uuidV4(),
+          id: uuidv4(),
           name: 'Product 2',
-          isActive: true,
+          sku: 'SKU-002',
+          description: 'A super product 2.0',
+          price: {
+            value: 100,
+            currencyCode: 'USD',
+          },
+          category: mockCategory,
           createdAt: new Date(),
+          updatedAt: new Date(),
+          deletedAt: null,
         },
       ];
       jest
@@ -126,12 +170,10 @@ describe('ProductSearchUseCase', () => {
       // Arrange
       const criteria: Partial<Product> = {
         name: 'Product ABC',
-        isActive: true,
       };
 
       const filterOptions: FindOptionsWhere<Product> = {
         name: criteria.name && Like(`%${criteria.name}%`),
-        isActive: criteria.isActive,
       };
 
       const expectedProducts: Product[] = [];

@@ -3,7 +3,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { ProductsService } from './products.service';
 import { Product } from '../../domain/entity/product.entity';
 import { Repository } from 'typeorm';
-import { CreateProductDto } from '../../infrastructure/dto/create-product.dto';
+import { UpdateProductDto } from '@modules/products/infrastructure/dto/update-product.dto';
 
 describe('ProductsService', () => {
   let service: ProductsService;
@@ -35,8 +35,8 @@ describe('ProductsService', () => {
       expect(service.checkIfExists).toBeDefined();
     });
 
-    it('should return true if product exists', async () => {
-      const createProductDto: CreateProductDto = {
+    it('should return true if product with name exists', async () => {
+      const createProductDto: UpdateProductDto = {
         name: 'Product 1',
       };
 
@@ -49,8 +49,8 @@ describe('ProductsService', () => {
       expect(result).toEqual(true);
     });
 
-    it('should return false if product not exists', async () => {
-      const createProductDto: CreateProductDto = {
+    it('should return false if product with name does not exists', async () => {
+      const createProductDto: UpdateProductDto = {
         name: 'Product 1',
       };
 
