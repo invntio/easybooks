@@ -15,7 +15,7 @@
 </p>
 
 **Invntio - An open-source inventory management system.**
-
+ 
 
 <!-- [![Invntio](https://img.shields.io/badge/discord-tio-%237289da.svg?logo=discord)](https://discord.gg/dAuKfZS) -->
 
