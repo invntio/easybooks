@@ -12,7 +12,6 @@ import { ProductsController } from './products.controller';
 import { ProductsService } from '../../application/services/products.service';
 import { CreateProductDto } from '../dto/create-product.dto';
 import { UpdateProductDto } from '../dto/update-product.dto';
-import { Product } from '../../domain/entity/product.entity';
 import {
   ResponseMessageKey,
   ResponseMessageOptions,
