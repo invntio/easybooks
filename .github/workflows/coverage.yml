@@ -24,8 +24,8 @@ jobs:
           TEST_DATABASE_NAME: ":memory:"
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
-        env: 
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        #env: 
+          #CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         with:
           files: ./backend/coverage/lcov.info
           #flags: unittests # optional
