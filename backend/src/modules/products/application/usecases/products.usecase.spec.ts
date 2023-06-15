@@ -9,6 +9,44 @@ import { v4 as uuidv4 } from 'uuid';
 describe('ProductsUseCase', () => {
   let productsUseCase: ProductsUseCase;
   let productsRepository: Repository<Product>;
+  const mockCategory: Category = {
+    id: uuidv4(),
+    name: 'Mock Category',
+    isActive: true,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    deletedAt: null,
+  };
+  const mockProductList: Product[] = [
+    {
+      id: uuidv4(),
+      name: 'Product 1',
+      sku: 'SKU-001',
+      description: 'A super product',
+      price: {
+        value: 100,
+        currencyCode: 'USD',
+      },
+      category: mockCategory,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      deletedAt: null,
+    },
+    {
+      id: uuidv4(),
+      name: 'Product 2',
+      sku: 'SKU-002',
+      description: 'A super product 2.0',
+      price: {
+        value: 100,
+        currencyCode: 'USD',
+      },
+      category: mockCategory,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      deletedAt: null,
+    },
+  ];
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -25,6 +63,9 @@ describe('ProductsUseCase', () => {
     productsRepository = module.get<Repository<Product>>(
       getRepositoryToken(Product),
     );
+
+    productsRepository.find = jest.fn(async () => mockProductList);
+    productsRepository.findBy = jest.fn(async () => mockProductList);
   });
 
   afterEach(() => {
@@ -33,51 +74,9 @@ describe('ProductsUseCase', () => {
 
   describe('getAllProducts', () => {
     it('should return an array of products', async () => {
-      const mockCategory: Category = {
-        id: uuidv4(),
-        name: 'Mock Category',
-        isActive: true,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        deletedAt: null,
-      };
-      const expectedProducts: Product[] = [
-        {
-          id: uuidv4(),
-          name: 'Product 1',
-          sku: 'SKU-001',
-          description: 'A super product',
-          price: {
-            value: 100,
-            currencyCode: 'USD',
-          },
-          category: mockCategory,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          deletedAt: null,
-        },
-        {
-          id: uuidv4(),
-          name: 'Product 2',
-          sku: 'SKU-002',
-          description: 'A super product 2.0',
-          price: {
-            value: 100,
-            currencyCode: 'USD',
-          },
-          category: mockCategory,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          deletedAt: null,
-        },
-      ];
-      jest
-        .spyOn(productsRepository, 'find')
-        .mockResolvedValue(expectedProducts);
-
       const result = await productsUseCase.getAllProducts();
 
-      expect(result).toEqual(expectedProducts);
+      expect(result).toEqual(mockProductList);
       expect(productsRepository.find).toHaveBeenCalledTimes(1);
     });
   });
@@ -93,7 +92,7 @@ describe('ProductsUseCase', () => {
         deletedAt: null,
       };
       const mockProductId = uuidv4();
-      const expectedProduct: Product = {
+      const mockProductList: Product = {
         id: mockProductId,
         name: 'Product Name',
         sku: 'SKU-001',
@@ -109,11 +108,11 @@ describe('ProductsUseCase', () => {
       };
       jest
         .spyOn(productsRepository, 'findOne')
-        .mockResolvedValue(expectedProduct);
+        .mockResolvedValue(mockProductList);
 
       const result = await productsUseCase.getProductById(mockProductId);
 
-      expect(result).toEqual(expectedProduct);
+      expect(result).toEqual(mockProductList);
       expect(productsRepository.findOne).toHaveBeenCalledTimes(1);
       expect(productsRepository.findOne).toHaveBeenCalledWith({
         relations: ['category'],

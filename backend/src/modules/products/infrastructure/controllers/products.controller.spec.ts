@@ -38,6 +38,51 @@ describe('ProductsController', () => {
   let productCategoriesService: ProductCategoriesService;
   let reflector: Reflector;
 
+  const mockProductList: Product[] = [
+    {
+      id: '38a9e8a3-9394-4ebf-ac71-bd65715e605e',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      deletedAt: null,
+      name: 'Product 1',
+      sku: 'SKU-001',
+      description: 'A super product',
+      price: {
+        value: 100,
+        currencyCode: 'USD',
+      },
+      category: {
+        id: 'e6aa8568-b090-4912-87dc-5f3ce5e2e867',
+        name: 'Electronics',
+        isActive: true,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        deletedAt: null,
+      },
+    },
+    {
+      id: '3b4c6861-aeba-42c5-9987-b6175f5ab459',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      deletedAt: null,
+      name: 'Product 2',
+      sku: 'SKU-002',
+      description: 'A super product 2.0',
+      price: {
+        value: 100,
+        currencyCode: 'USD',
+      },
+      category: {
+        id: 'e6aa8568-b090-4912-87dc-5f3ce5e2e867',
+        name: 'Electronics',
+        isActive: true,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        deletedAt: null,
+      },
+    },
+  ];
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -243,55 +288,13 @@ describe('ProductsController', () => {
     });
 
     it('should return an array of products', async () => {
-      const expected: Product[] = [
-        {
-          id: '38a9e8a3-9394-4ebf-ac71-bd65715e605e',
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          deletedAt: null,
-          name: 'Product 1',
-          sku: 'SKU-001',
-          description: 'A super product',
-          price: {
-            value: 100,
-            currencyCode: 'USD',
-          },
-          category: {
-            id: 'e6aa8568-b090-4912-87dc-5f3ce5e2e867',
-            name: 'Electronics',
-            isActive: true,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            deletedAt: null,
-          },
-        },
-        {
-          id: '3b4c6861-aeba-42c5-9987-b6175f5ab459',
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          deletedAt: null,
-          name: 'Product 2',
-          sku: 'SKU-002',
-          description: 'A super product 2.0',
-          price: {
-            value: 100,
-            currencyCode: 'USD',
-          },
-          category: {
-            id: 'e6aa8568-b090-4912-87dc-5f3ce5e2e867',
-            name: 'Electronics',
-            isActive: true,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            deletedAt: null,
-          },
-        },
-      ];
-      jest.spyOn(productsUseCase, 'getAllProducts').mockResolvedValue(expected);
+      jest
+        .spyOn(productsUseCase, 'getAllProducts')
+        .mockResolvedValue(mockProductList);
 
       const result = await productsController.findAll();
 
-      expect(result).toEqual(expected);
+      expect(result).toEqual(mockProductList);
       expect(productsUseCase.getAllProducts).toHaveBeenCalled();
     });
   });
@@ -567,58 +570,13 @@ describe('ProductsController', () => {
         name: 'Product',
       };
 
-      const mockFilteredProducts: Product[] = [
-        {
-          id: '38a9e8a3-9394-4ebf-ac71-bd65715e605e',
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          deletedAt: null,
-          name: 'Product 1',
-          sku: 'SKU-001',
-          description: 'A super product',
-          price: {
-            value: 100,
-            currencyCode: 'USD',
-          },
-          category: {
-            id: 'e6aa8568-b090-4912-87dc-5f3ce5e2e867',
-            name: 'Electronics',
-            isActive: true,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            deletedAt: null,
-          },
-        },
-        {
-          id: '3b4c6861-aeba-42c5-9987-b6175f5ab459',
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          deletedAt: null,
-          name: 'Product 2',
-          sku: 'SKU-002',
-          description: 'A super product 2.0',
-          price: {
-            value: 100,
-            currencyCode: 'USD',
-          },
-          category: {
-            id: 'e6aa8568-b090-4912-87dc-5f3ce5e2e867',
-            name: 'Electronics',
-            isActive: true,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            deletedAt: null,
-          },
-        },
-      ];
-
       jest
         .spyOn(productsSearchUseCase, 'filterProductsByCriteria')
-        .mockResolvedValue(mockFilteredProducts);
+        .mockResolvedValue(mockProductList);
 
       const result = await productsController.filter(mockCriteria);
 
-      expect(result).toEqual(mockFilteredProducts);
+      expect(result).toEqual(mockProductList);
       expect(
         productsSearchUseCase.filterProductsByCriteria,
       ).toHaveBeenCalledWith({
@@ -670,58 +628,13 @@ describe('ProductsController', () => {
         keyword: 'Product',
       };
 
-      const mockSearchResult: Product[] = [
-        {
-          id: '38a9e8a3-9394-4ebf-ac71-bd65715e605e',
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          deletedAt: null,
-          name: 'Product 1',
-          sku: 'SKU-001',
-          description: 'A super product',
-          price: {
-            value: 100,
-            currencyCode: 'USD',
-          },
-          category: {
-            id: 'e6aa8568-b090-4912-87dc-5f3ce5e2e867',
-            name: 'Electronics',
-            isActive: true,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            deletedAt: null,
-          },
-        },
-        {
-          id: '3b4c6861-aeba-42c5-9987-b6175f5ab459',
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          deletedAt: null,
-          name: 'Product 2',
-          sku: 'SKU-002',
-          description: 'A super product 2.0',
-          price: {
-            value: 100,
-            currencyCode: 'USD',
-          },
-          category: {
-            id: 'e6aa8568-b090-4912-87dc-5f3ce5e2e867',
-            name: 'Electronics',
-            isActive: true,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            deletedAt: null,
-          },
-        },
-      ];
-
       jest
         .spyOn(productsSearchUseCase, 'searchProductsByKeyword')
-        .mockResolvedValue(mockSearchResult);
+        .mockResolvedValue(mockProductList);
 
       const result = await productsController.search(mockKeyword);
 
-      expect(result).toEqual(mockSearchResult);
+      expect(result).toEqual(mockProductList);
       expect(
         productsSearchUseCase.searchProductsByKeyword,
       ).toHaveBeenCalledWith(mockKeyword.keyword);
