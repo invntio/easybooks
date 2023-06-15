@@ -5,6 +5,11 @@ import { ProductsUseCase } from './products.usecase';
 import { Product } from '../../domain/entity/product.entity';
 import { Category } from '@modules/categories/domain/entity/category.entity';
 import { v4 as uuidv4 } from 'uuid';
+import {
+  mockProduct,
+  mockProductList,
+} from '@modules/products/domain/mocks/product.mock';
+import { mockCategory } from '@modules/categories/domain/mocks/category.mock';
 
 describe('ProductsUseCase', () => {
   let productsUseCase: ProductsUseCase;
@@ -25,6 +30,9 @@ describe('ProductsUseCase', () => {
     productsRepository = module.get<Repository<Product>>(
       getRepositoryToken(Product),
     );
+
+    productsRepository.find = jest.fn(async () => mockProductList);
+    productsRepository.findBy = jest.fn(async () => mockProductList);
   });
 
   afterEach(() => {
@@ -33,51 +41,9 @@ describe('ProductsUseCase', () => {
 
   describe('getAllProducts', () => {
     it('should return an array of products', async () => {
-      const mockCategory: Category = {
-        id: uuidv4(),
-        name: 'Mock Category',
-        isActive: true,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        deletedAt: null,
-      };
-      const expectedProducts: Product[] = [
-        {
-          id: uuidv4(),
-          name: 'Product 1',
-          sku: 'SKU-001',
-          description: 'A super product',
-          price: {
-            value: 100,
-            currencyCode: 'USD',
-          },
-          category: mockCategory,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          deletedAt: null,
-        },
-        {
-          id: uuidv4(),
-          name: 'Product 2',
-          sku: 'SKU-002',
-          description: 'A super product 2.0',
-          price: {
-            value: 100,
-            currencyCode: 'USD',
-          },
-          category: mockCategory,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          deletedAt: null,
-        },
-      ];
-      jest
-        .spyOn(productsRepository, 'find')
-        .mockResolvedValue(expectedProducts);
-
       const result = await productsUseCase.getAllProducts();
 
-      expect(result).toEqual(expectedProducts);
+      expect(result).toEqual(mockProductList);
       expect(productsRepository.find).toHaveBeenCalledTimes(1);
     });
   });
@@ -93,7 +59,7 @@ describe('ProductsUseCase', () => {
         deletedAt: null,
       };
       const mockProductId = uuidv4();
-      const expectedProduct: Product = {
+      const mockProductList: Product = {
         id: mockProductId,
         name: 'Product Name',
         sku: 'SKU-001',
@@ -109,11 +75,11 @@ describe('ProductsUseCase', () => {
       };
       jest
         .spyOn(productsRepository, 'findOne')
-        .mockResolvedValue(expectedProduct);
+        .mockResolvedValue(mockProductList);
 
       const result = await productsUseCase.getProductById(mockProductId);
 
-      expect(result).toEqual(expectedProduct);
+      expect(result).toEqual(mockProductList);
       expect(productsRepository.findOne).toHaveBeenCalledTimes(1);
       expect(productsRepository.findOne).toHaveBeenCalledWith({
         relations: ['category'],
@@ -138,14 +104,6 @@ describe('ProductsUseCase', () => {
 
   describe('createProduct', () => {
     it('should create a new product', async () => {
-      const mockCategory: Category = {
-        id: uuidv4(),
-        name: 'Mock Category',
-        isActive: true,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        deletedAt: null,
-      };
       const mockProductId = uuidv4();
       const productData: Partial<Product> = {
         id: mockProductId,
@@ -188,41 +146,16 @@ describe('ProductsUseCase', () => {
 
   describe('updateProduct', () => {
     it('should update an existing product when given a valid id and product data', async () => {
-      const productId = '1';
       const updateProductData: Partial<Product> = { name: 'Updated Product' };
-      const mockCategory: Category = {
-        id: uuidv4(),
-        name: 'Mock Category',
-        isActive: true,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        deletedAt: null,
-      };
-      const existingProduct: Product = {
-        id: uuidv4(),
-        name: 'Product Name',
-        sku: 'SKU-001',
-        description: 'A super product',
-        price: {
-          value: 100,
-          currencyCode: 'USD',
-        },
-        category: mockCategory,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        deletedAt: null,
-      };
-      const updatedProduct: Product = Object.assign(existingProduct, {
+      const updatedProduct: Product = Object.assign(mockProduct, {
         name: 'Updated Product',
       });
 
-      jest
-        .spyOn(productsRepository, 'findOne')
-        .mockResolvedValue(existingProduct);
+      jest.spyOn(productsRepository, 'findOne').mockResolvedValue(mockProduct);
       jest.spyOn(productsRepository, 'save').mockResolvedValue(updatedProduct);
 
       const result = await productsUseCase.updateProduct(
-        productId,
+        mockProduct.id,
         updateProductData,
       );
 
@@ -230,7 +163,7 @@ describe('ProductsUseCase', () => {
       expect(productsRepository.findOne).toHaveBeenCalledTimes(1);
       expect(productsRepository.findOne).toHaveBeenCalledWith({
         relations: ['category'],
-        where: { id: productId },
+        where: { id: mockProduct.id },
       });
       expect(productsRepository.save).toHaveBeenCalledTimes(1);
       expect(productsRepository.save).toHaveBeenCalledWith(updatedProduct);
@@ -259,7 +192,7 @@ describe('ProductsUseCase', () => {
 
   describe('deleteProduct', () => {
     it('should delete an existing product when given a valid id', async () => {
-      const productId = '1';
+      const productId = mockProduct.id;
       const deleteResult: DeleteResult | Promise<DeleteResult> = {
         affected: 1,
         raw: null,
