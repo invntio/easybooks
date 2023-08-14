@@ -37,6 +37,8 @@
 </div>
 
 ---
+## **Note - Project renaming coming soon**
+This project will be renamed to "Invntio Easy Books" soon. Thanks for choosing us!
 
 ## **Disclaimer - Project under construction**
 This project is currently under early stages of construction.
