@@ -14,7 +14,7 @@
     </picture>
 </p>
     
-**Invntio - An open-source inventory management system.**
+**EasyBooks - An open-source inventory management system.**
 
 
 <!-- [![Invntio](https://img.shields.io/badge/discord-tio-%237289da.svg?logo=discord)](https://discord.gg/dAuKfZS) -->
@@ -37,8 +37,8 @@
 </div>
 
 ---
-## **Note - Project renaming coming soon**
-This project will be renamed to "Invntio EasyBooks" soon. Thanks for choosing us!
+## **Note - Project renaming**
+<This project was renamed from "Invntio" to "Invntio EasyBooks". Thanks for choosing us!
 
 ## **Disclaimer - Project under construction**
 This project is currently under early stages of construction.
@@ -57,16 +57,16 @@ It is **not recommended** to use it yet due to possible:
 ---
 ## What is Invntio?
 
-<!-- Invntio is a cloud-based inventory management solution designed to streamline your business operations. With a user-friendly interface and powerful features for tracking inventory, orders, and customers, Invntio empowers you to manage your business with ease.  -->
+<!-- EasyBooks is a cloud-based inventory management solution designed to streamline your business operations. With a user-friendly interface and powerful features for tracking inventory, orders, and customers, EasyBooks empowers you to manage your business with ease.  -->
 
-Invntio is an open-source, module-based, inventory management solution designed to streamline your business operations. With its simple understanding and powerful features for tracking inventory, orders, and customers, Invntio empowers you to manage your business with ease.
+EasyBooks is an open-source, module-based, inventory management solution designed to streamline your business operations. With its simple understanding and powerful features for tracking inventory, orders, and customers, EasyBooks empowers you to manage your business with ease.
 
-From small businesses to large enterprises, Invntio scales to meet your needs, improving every day to help you overcome the challenges that your business faces.
+From small businesses to large enterprises, EasyBooks scales to meet your needs, improving every day to help you overcome the challenges that your business faces.
 
-With Invntio, you can focus on what you do best - growing your business 🚀.
+With EasyBooks, you can focus on what you do best - growing your business 🚀.
 
 ## Technologies Used
-Invntio is built using the following technologies:
+EasyBooks is built using the following technologies:
 
 ### Backend
 [![NestJS](https://img.shields.io/badge/nestjs-%23E0234E.svg?style=for-the-badge&logo=nestjs&logoColor=white)](https://nestjs.com)
@@ -94,10 +94,10 @@ Invntio is built using the following technologies:
 ### Documentation
 [![Mintlify](https://custom-icon-badges.demolab.com/badge/Mintlify-black?style=for-the-badge&logo=mintlify)](https://mintlify.com/)
 ## Installation
-To get started with Invntio, follow these steps:
+To get started with EasyBooks, follow these steps:
 
 ### Requirements
-Before installing Invntio, make sure you have the following requirements:
+Before installing EasyBooks, make sure you have the following requirements:
 * [Node.js](https://nodejs.org/)
 * [NestJS CLI](https://docs.nestjs.com/)
 * [Angular CLI](https://angular.io/cli)
@@ -106,7 +106,7 @@ Before installing Invntio, make sure you have the following requirements:
 Clone the project repository to your local machine:
 
 ``` bash
-git clone https://github.com/vvelc/invntio.git
+git clone https://github.com/invntio/EasyBooks.git
 ```
 
 ### Setup
@@ -115,20 +115,20 @@ git clone https://github.com/vvelc/invntio.git
 
 ```bash
 # move to backend directory
-cd invntio/backend
+cd easybooks/backend
 # Install dependencies
 npm install
 ```
 
 #### 2. Configure database settings.
 
-> Note: Invntio currently supports the following databases:
+> Note: EasyBooks currently supports the following databases:
 > * PostgreSQL
 > * SQLite
 >
 > Make sure you use one of these in your configuration files
 
-There are 4 configuration files you must configure in order to use Invntio properly
+There are 4 configuration files you must configure in order to use EasyBooks properly
 
 <p class="codeblock-label">.env</p>
 
@@ -186,7 +186,7 @@ npm run start:dev
 
 ``` bash
 # Move to frontend directory
-cd invntio/frontend
+cd easybooks/frontend
 # Install dependencies
 npm install
 ```
@@ -224,7 +224,7 @@ The backend is built with NestJS and uses a module-based architecture. Each modu
 
 We are using a [CLEAN Arquitecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html) approach, trying to achieve a reliable and scalable architecture
 
-For more information about Invntio's architecture, please refer to [arquitecture documentation](https://inventio.mintlify.app/docs/introduction/getting-started/arquitecture)
+For more information about EasyBooks's architecture, please refer to [arquitecture documentation](https://inventio.mintlify.app/docs/introduction/getting-started/arquitecture)
 
 <!-- The frontend is built with Angular and follows a component architecture. Each component represents a section of the user interface, such as the product list, product creation form, and product details view. -->
 
@@ -249,10 +249,10 @@ For more information about tests, please refer to [tests documentation](https://
 
 We appreciate feedback and contribution to this project! Before you get started, please see the following:
 
-* [Invntio's Contributor Guidelines](CONTRIBUTING.md)
-* [Invntio's Contributor Terms](CONTRIBUTING.md#contributor-terms)
+* [EasyBooks's Contributor Guidelines](CONTRIBUTING.md)
+* [EasyBooks's Contributor Terms](CONTRIBUTING.md#contributor-terms)
 
-Any contribution intentionally submitted for inclusion in the Invntio project, shall comply with the MIT License and therefore licensed as described below, without any additional terms or conditions:
+Any contribution intentionally submitted for inclusion in the EasyBooks project, shall comply with the MIT License and therefore licensed as described below, without any additional terms or conditions:
 
 ## License
 Inventio is licensed under the MIT License. See [LICENSE](LICENSE) for more information.
