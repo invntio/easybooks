@@ -38,7 +38,7 @@
 
 ---
 ## **Note - Project renaming**
-<This project was renamed from "Invntio" to "Invntio EasyBooks". Thanks for choosing us!
+> This project was renamed from "Invntio" to "Invntio EasyBooks". Thanks for choosing us!
 
 ## **Disclaimer - Project under construction**
 This project is currently under early stages of construction.
