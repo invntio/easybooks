@@ -20,7 +20,7 @@
 <!-- [![Invntio](https://img.shields.io/badge/discord-tio-%237289da.svg?logo=discord)](https://discord.gg/dAuKfZS) -->
 
 
-[![Invntio](https://img.shields.io/website?url=https%3A%2F%2Finvntio.com)](https://invntio.com)
+[![Invntio](https://img.shields.io/badge/website-up-green.svg)](https://invntio.com)
 [![Docs](https://img.shields.io/badge/docs-open%20source-teal.svg)](https://invntio.mintlify.app)
 [![GitHub issues](https://img.shields.io/github/issues/invntio/invntio)](https://github.com/invntio/invntio/issues)
 [![Build](https://github.com/invntio/invntio/actions/workflows/build.yml/badge.svg)](https://github.com/invntio/invntio/actions/workflows/build.yml)
